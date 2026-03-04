@@ -340,7 +340,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
         <div class="tier-pill">
           <span class="tp-icon">🌿</span>
           <div class="tp-info"><div class="tp-name">Apartment Sublet</div><div class="tp-meta">Short-term sublet · up to 10 photos · 7 days</div></div>
-          <span class="tp-price price-free">Free</span>
+          <span class="tp-price price-paid">£5</span>
         </div>
       </div>
     </div>
@@ -544,7 +544,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
               <span class="tc-icon">🌿</span>
               <div class="tc-name">Apartment Sublet</div>
               <div class="tc-desc">Subletting short-term? Post it for free — no card needed, ever.</div>
-              <div class="tc-price"><span class="free-big">Free</span></div>
+              <div class="tc-price"><span class="free-big">£5</span></div>
               <div class="nl-chip g">✓ Debuts Thursday</div>
               <ul class="tc-feats">
                 <li><span class="chk-g">✓</span> Up to 10 photos</li>
@@ -553,7 +553,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
                 <li><span class="chk-g">✓</span> Enquiry form</li>
                 <li><span class="chk-g">✓</span> Thursday newsletter to 8,100+</li>
               </ul>
-              <button class="btn btn-green btn-sm" style="width:100%">Select — Free →</button>
+              <button class="btn btn-green btn-sm" style="width:100%">Select →</button>
             </div>
           </div>
         </div>
@@ -964,9 +964,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 <script>
 // ══ PROMO CODES (edit these to add/remove/change codes) ══
 let PROMO_CODES = {
-  'NESTFREE':   { desc:'Free flatshare listing', type:'free-flatshare', uses:0, maxUses:null, expires:null, note:'Launch code', active:true },
-  'LAUNCH2024': { desc:'Free flatshare listing', type:'free-flatshare', uses:3, maxUses:50,   expires:'2025-12-31', note:'2024 launch campaign', active:true },
-  'FRIEND50':   { desc:'Free flatshare listing', type:'free-flatshare', uses:12, maxUses:null, expires:null, note:'Referral reward', active:true },
+  'HOMEFOLK':   { desc:'Free flatshare listing', type:'free-flatshare', uses:0, maxUses:null, expires:null, note:'Brand launch code', active:true },
+  'WELCOME10':  { desc:'Free flatshare listing', type:'free-flatshare', uses:0, maxUses:100,  expires:null, note:'Welcome offer', active:true },
+  'FIRSTLIST':  { desc:'Free flatshare listing', type:'free-flatshare', uses:0, maxUses:null, expires:null, note:'First listing free', active:true },
+  'FREEFLAT':   { desc:'Free flatshare listing', type:'free-flatshare', uses:0, maxUses:null, expires:null, note:'General free code', active:true },
+  'FRIEND':     { desc:'Free flatshare listing', type:'free-flatshare', uses:0, maxUses:null, expires:null, note:'Referral reward', active:true },
 };
 
 // ══ SUBSCRIBER LIST ══
@@ -982,7 +984,7 @@ let SUBSCRIBERS = [
 const PLANS = {
   flatshare: { name:'Flatshare', icon:'🏠', price:10, label:'£10.00', free:false, maxPhotos:20 },
   rental:    { name:'Apartment Rental', icon:'🏢', price:15, label:'£15.00', free:false, maxPhotos:20 },
-  sublet:    { name:'Apartment Sublet', icon:'🌿', price:0, label:'Free', free:true, maxPhotos:10 },
+  sublet:    { name:'Apartment Sublet', icon:'🌿', price:5, label:'£5.00', free:false, maxPhotos:10 },
 };
 
 let currentTier = null;
@@ -1074,8 +1076,8 @@ function selectTier(tier) {
   ['flatshare','rental','sublet'].forEach(t => document.getElementById('tc-'+t).classList.remove('sel','sel-g'));
   document.getElementById('tc-'+tier).classList.add(P.free ? 'sel-g' : 'sel');
   document.getElementById('form-b-title').textContent = P.icon+' '+P.name+' — Property details';
-  document.getElementById('f-price-lbl').textContent = P.free ? 'Suggested price (£, optional)' : 'Monthly rent (£)';
-  document.getElementById('f-avail-lbl').textContent = P.free ? 'Sublet from' : 'Available from';
+  document.getElementById('f-price-lbl').textContent = 'Monthly rent (£)';
+  document.getElementById('f-avail-lbl').textContent = 'Available from';
   document.getElementById('f-until-wrap').style.display = P.free ? '' : 'none';
   document.getElementById('c-max').textContent = P.maxPhotos;
   goStep('b');
@@ -1805,7 +1807,7 @@ async function getAIResponse() {
 
   // Smart local answers - no API key needed
   if (q.includes('price') || q.includes('cost') || q.includes('how much')) {
-    reply = 'Our fees are simple:\n\n🏠 Flatshare — £10 one-off\n🏢 Apartment Rental — £15 one-off\n🌿 Sublet — completely free\n\nAll listings run 7 days and debut in Thursday newsletter to 8,100+ renters!';
+    reply = 'Our fees are simple:\n\n🏠 Flatshare — £10 one-off\n🏢 Apartment Rental — £15 one-off\n🌿 Sublet — £5 one-off\n\nAll listings run 7 days and debut in Thursday newsletter to 8,100+ renters! Use code HOMEFOLK for a free flatshare listing 🎉';
   } else if (q.includes('thursday') || q.includes('debut') || q.includes('when')) {
     reply = 'Every listing debuts on Thursday when our newsletter sends to 8,100+ subscribers. Post any day — it goes live that Thursday! 📰';
   } else if (q.includes('newsletter') || q.includes('subscribe')) {
@@ -1815,7 +1817,7 @@ async function getAIResponse() {
   } else if (q.includes('promo') || q.includes('discount') || q.includes('code') || q.includes('free')) {
     reply = 'Yes! If you have a promo code you can get a free flatshare listing. Enter it at the payment step and the £10 fee is waived. 🎉';
   } else if (q.includes('sublet')) {
-    reply = 'Sublets are completely free to list! Up to 10 photos, 7 days, and included in the Thursday newsletter. No card needed. 🌿';
+    reply = 'Sublets are £5 to list. Up to 10 photos, 7 days, and included in the Thursday newsletter. 🌿 Use code HOMEFOLK for a free flatshare listing!';
   } else if (q.includes('flatshare')) {
     reply = 'Flatshare listings are £10 one-off. You get 20 photos, 7 days featured at the top of search, enquiry inbox, and Thursday newsletter inclusion. 🏠';
   } else if (q.includes('rental') || q.includes('apartment')) {
