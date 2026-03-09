@@ -721,7 +721,12 @@ function closeUnlockModal() {
 
 async function startTenantSubscription() {
   const token = getToken()
-  if (!token) { showScreen('auth'); return }
+  if (!token) {
+    const m = document.getElementById('unlock-modal')
+    if (m) m.style.display = 'none'
+    showScreen('auth')
+    return
+  }
   const data = await api('/api/checkout/tenant', { method: 'POST' })
   if (data.url) window.location.href = data.url
   else toast(data.error || 'Something went wrong')
