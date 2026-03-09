@@ -140,6 +140,8 @@ function showScreen(name) {
     s.classList.remove('active')
     s.style.display = 'none'
   })
+  const pubBrowse = document.getElementById('public-browse-screen')
+  if (pubBrowse) pubBrowse.style.display = 'none'
   if (name === 'landing') {
     const el = document.getElementById('landing-screen')
     el.classList.add('active'); el.style.display = 'flex'
