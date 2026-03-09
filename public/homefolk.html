@@ -687,7 +687,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
           <div class="pb-line" id="pbl2"></div>
           <div class="pb-step" id="pb3"><div class="pb-dot">3</div>Photos</div>
           <div class="pb-line" id="pbl3"></div>
-          <div class="pb-step" id="pb4"><div class="pb-dot">4</div>Payment</div>
+          <div class="pb-step" id="pb4"><div class="pb-dot">4</div>Confirm</div>
           <div class="pb-line" id="pbl4"></div>
           <div class="pb-step" id="pb5"><div class="pb-dot">✓</div>Live!</div>
         </div>
@@ -900,50 +900,21 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
           </div>
         </div>
 
-        <!-- STEP D: Payment -->
+        <!-- STEP D: Confirm -->
         <div id="psd" style="display:none" class="slide-in">
           <div class="fcard">
-            <div class="fcard-title" id="pay-title-h">💳 Review & pay</div>
+            <div class="fcard-title">📅 Review & confirm</div>
             <div class="fcard-sub">Your listing will go live this Thursday when the newsletter sends.</div>
-
             <div class="pay-summary" id="pay-summary"></div>
-
-            <!-- Promo code (flatshare only) -->
-            <div id="promo-section" style="display:none">
-              <div class="promo-wrap">
-                <div class="promo-label">🏷️ Have a promo code? Apply for a free listing</div>
-                <div class="promo-input-row">
-                  <input class="promo-input" type="text" id="promo-input" placeholder="ENTER CODE">
-                  <button class="promo-apply" onclick="applyPromo()">Apply</button>
-                </div>
-                <div class="promo-result" id="promo-result"></div>
-              </div>
+            <div class="info-box">
+              <span>📰</span>
+              <span>Your listing will be featured in <strong>Thursday's newsletter</strong> to renters and go live on the browse page.</span>
             </div>
-
-            <!-- FREE sublet or promo-unlocked -->
-            <div id="free-path" style="display:none">
-              <div class="info-box green">
-                <span>✅</span>
-                <span id="free-path-msg">Your free sublet will go live this Thursday when the newsletter sends to subscribers.</span>
-              </div>
-              <button class="btn btn-green" onclick="publishListing()">Confirm & schedule for Thursday →</button>
-            </div>
-
-            <!-- PAID path -->
-            <div id="paid-path">
-              <div class="info-box">
-                <span>📰</span>
-                <span>Your listing will be <strong>featured at the top of search</strong> and in <strong>Thursday's newsletter</strong> to renters. It goes live Thursday when the newsletter sends.</span>
-              </div>
-              <div class="field"><label>Name on card</label><input type="text" placeholder="Alex Smith"></div>
-              <div class="stripe-box"><div class="stripe-mock">💳 &nbsp; Card number &nbsp;·&nbsp; MM / YY &nbsp;·&nbsp; CVC</div></div>
-              <div class="field-row">
-                <div class="field"><label>Billing postcode</label><input type="text" placeholder="EC1A 1BB"></div>
-                <div class="field"><label>Country</label><select><option>United Kingdom</option><option>Ireland</option></select></div>
-              </div>
-              <div class="stripe-sec">🔒 Secured by <strong>&nbsp;Stripe</strong> · 256-bit TLS encryption</div>
-              <button class="btn btn-primary" onclick="publishListing()">Pay <span id="pay-btn-amt"></span> & schedule for Thursday →</button>
-            </div>
+            <!-- Hidden elements to avoid JS errors -->
+            <div id="promo-section" style="display:none"><input id="promo-input"><div id="promo-result"></div></div>
+            <div id="free-path" style="display:none"><span id="free-path-msg"></span></div>
+            <div id="paid-path" style="display:none"><span id="pay-btn-amt"></span></div>
+            <button class="btn btn-primary" onclick="publishListing()">Confirm & schedule for Thursday →</button>
           </div>
           <button class="btn btn-ghost" style="margin-top:0.5rem" onclick="goStep('c')">← Back to photos</button>
         </div>

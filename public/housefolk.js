@@ -441,26 +441,13 @@ async function publishListing() {
 
   currentListingId = listingResult.listing.id
 
-  // 3. Handle payment
-  if (promoApplied) {
-    // Free via promo code
-    const checkoutResult = await api('/api/checkout', {
-      method: 'POST',
-      body: JSON.stringify({ listing_id: currentListingId, type: currentTier, promo_code: promoApplied }),
-    })
-    resetBtn()
-    if (checkoutResult.error) { toast(checkoutResult.error); return }
-    showSuccessScreen(true)
-  } else {
-    // Paid — redirect to Stripe Checkout
-    const checkoutResult = await api('/api/checkout', {
-      method: 'POST',
-      body: JSON.stringify({ listing_id: currentListingId, type: currentTier }),
-    })
-    resetBtn()
-    if (checkoutResult.error) { toast(checkoutResult.error); return }
-    if (checkoutResult.url) window.location.href = checkoutResult.url
-  }
+  // 3. Skip payment for now — activate listing directly
+  await api('/api/listings/' + currentListingId, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: 'pending' }),
+  })
+  resetBtn()
+  showSuccessScreen(true)
   } catch (err) {
     resetBtn()
     toast('Something went wrong: ' + (err.message || err))
