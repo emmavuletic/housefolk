@@ -162,9 +162,12 @@ function launchDash(first, last) {
   document.getElementById('u-name').textContent = first + (last ? ' ' + last[0] + '.' : '')
   document.getElementById('greeting-name').textContent = first
 
-  // Show admin badge if admin
+  // Show admin badge and admin sidebar items if admin
   const adminBadge = document.getElementById('admin-badge')
-  if (adminBadge && currentUser?.role === 'admin') adminBadge.style.display = 'inline'
+  if (currentUser?.role === 'admin') {
+    if (adminBadge) adminBadge.style.display = 'inline'
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = '')
+  }
 
   showScreen('dash')
   calcThursday()

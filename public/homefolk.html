@@ -617,10 +617,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
       <button class="sb-item" id="si-post" onclick="showPanel('post')"><span class="sb-icon">➕</span> Post a listing</button>
       <button class="sb-item" id="si-listings" onclick="showPanel('mylistings')"><span class="sb-icon">🏠</span> My listings</button>
       <button class="sb-item" id="si-inbox" onclick="showPanel('inbox')"><span class="sb-icon">💬</span> Enquiries <span class="sb-badge" id="inbox-badge">3</span></button>
-      <div class="sb-label">Newsletter</div>
-      <button class="sb-item" id="si-nl" onclick="showPanel('newsletter')"><span class="sb-icon">📰</span> Newsletter <span class="sb-badge green">Thu</span></button>
-      <div class="sb-label">Admin</div>
-      <button class="sb-item" id="si-promos" onclick="showPanel('promos')"><span class="sb-icon">🏷️</span> Promo codes</button>
+      <div class="sb-label admin-only" style="display:none">Newsletter</div>
+      <button class="sb-item admin-only" id="si-nl" onclick="showPanel('newsletter')" style="display:none"><span class="sb-icon">📰</span> Newsletter <span class="sb-badge green">Thu</span></button>
+      <div class="sb-label admin-only" style="display:none">Admin</div>
+      <button class="sb-item admin-only" id="si-promos" onclick="showPanel('promos')" style="display:none"><span class="sb-icon">🏷️</span> Promo codes</button>
       <div class="sb-label">Account</div>
       <button class="sb-item" id="si-tenant" onclick="showPanel('tenant')"><span class="sb-icon">🔍</span> Renter account</button>
       <button class="sb-item" id="si-profile" onclick="showPanel('profile')"><span class="sb-icon">👤</span> Profile</button>
