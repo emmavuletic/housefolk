@@ -393,6 +393,8 @@ async function publishListing() {
 
   const resetBtn = () => { if (btn) { btn.disabled = false; btn.textContent = 'Confirm' } }
 
+  try {
+
   // 1. Upload photos to Supabase Storage
   uploadedPhotoUrls = []
   for (const p of photos) {
@@ -458,6 +460,10 @@ async function publishListing() {
     resetBtn()
     if (checkoutResult.error) { toast(checkoutResult.error); return }
     if (checkoutResult.url) window.location.href = checkoutResult.url
+  }
+  } catch (err) {
+    resetBtn()
+    toast('Something went wrong: ' + (err.message || err))
   }
 }
 
