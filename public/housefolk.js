@@ -30,6 +30,8 @@ async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
   if (token) headers['Authorization'] = `Bearer ${token}`
   const res = await fetch(path, { ...opts, headers })
+  const ct = res.headers.get('content-type') || ''
+  if (!ct.includes('application/json')) return { error: `Unexpected response (${res.status})` }
   return res.json()
 }
 
