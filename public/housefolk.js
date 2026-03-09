@@ -444,6 +444,7 @@ async function publishListing() {
       method: 'POST',
       body: JSON.stringify({ listing_id: currentListingId, type: currentTier, promo_code: promoApplied }),
     })
+    if (btn) { btn.disabled = false; btn.textContent = 'Confirm' }
     if (checkoutResult.error) { toast(checkoutResult.error); return }
     showSuccessScreen(true)
   } else {
