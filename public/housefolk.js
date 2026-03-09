@@ -391,6 +391,8 @@ async function publishListing() {
   const btn = event?.target
   if (btn) { btn.disabled = true; btn.textContent = 'Processing…' }
 
+  const resetBtn = () => { if (btn) { btn.disabled = false; btn.textContent = 'Confirm' } }
+
   // 1. Upload photos to Supabase Storage
   uploadedPhotoUrls = []
   for (const p of photos) {
@@ -429,9 +431,9 @@ async function publishListing() {
     body: JSON.stringify(listingData),
   })
 
-  if (listingResult.error) {
-    toast(listingResult.error)
-    if (btn) { btn.disabled = false; btn.textContent = 'Confirm' }
+  if (listingResult.error || !listingResult.listing) {
+    toast(listingResult.error || 'Failed to create listing. Please try again.')
+    resetBtn()
     return
   }
 
@@ -444,7 +446,7 @@ async function publishListing() {
       method: 'POST',
       body: JSON.stringify({ listing_id: currentListingId, type: currentTier, promo_code: promoApplied }),
     })
-    if (btn) { btn.disabled = false; btn.textContent = 'Confirm' }
+    resetBtn()
     if (checkoutResult.error) { toast(checkoutResult.error); return }
     showSuccessScreen(true)
   } else {
@@ -453,6 +455,7 @@ async function publishListing() {
       method: 'POST',
       body: JSON.stringify({ listing_id: currentListingId, type: currentTier }),
     })
+    resetBtn()
     if (checkoutResult.error) { toast(checkoutResult.error); return }
     if (checkoutResult.url) window.location.href = checkoutResult.url
   }
