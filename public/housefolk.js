@@ -100,7 +100,7 @@ async function doSignUp() {
   btn.textContent = 'Create my account →'
 
   if (data.error) { toast(data.error); return }
-  toast('✓ Account created — please check your email to verify', 'green')
+  toast('✓ Account created — you can sign in now', 'green')
   setTimeout(() => switchTab('in'), 2000)
 }
 
