@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   const { data, error } = await supabase.auth.admin.createUser({
     email: email.toLowerCase().trim(),
     password,
-    email_confirm: false,
+    email_confirm: true,
     user_metadata: { first_name, last_name, role: role || 'tenant' },
   })
 
