@@ -4,6 +4,7 @@ import { stripe, PRICES } from '@/lib/stripe'
 
 // POST /api/checkout — create Stripe Checkout session for a listing
 export async function POST(req: NextRequest) {
+  try {
   const supabase = createServerClient()
   const auth = req.headers.get('authorization')
   if (!auth) return NextResponse.json({ error: 'Unauthorised.' }, { status: 401 })
@@ -79,4 +80,8 @@ export async function POST(req: NextRequest) {
   })
 
   return NextResponse.json({ url: session.url })
+  } catch (err: any) {
+    console.error('Checkout error:', err)
+    return NextResponse.json({ error: err.message || 'Internal server error' }, { status: 500 })
+  }
 }
