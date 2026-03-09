@@ -2041,8 +2041,7 @@ function addUserMessage(text) {
   const div = document.createElement('div');
   div.className = 'msg user';
   div.innerHTML = `
-    <div class="msg-bubble">${text.replace(/
-/g,'<br>')}</div>
+    <div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>
     <div class="msg-avatar">U</div>`;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
@@ -2053,8 +2052,7 @@ function addAdminMessage(text) {
   const div = document.createElement('div');
   div.className = 'msg admin-msg';
   div.innerHTML = `
-    <div class="msg-bubble">${text.replace(/
-/g,'<br>')}</div>
+    <div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>
     <div class="msg-avatar" style="background:linear-gradient(135deg,var(--green),#4CAF7D)">A</div>`;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
