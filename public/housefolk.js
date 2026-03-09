@@ -698,6 +698,19 @@ function showUnlockModal() {
   const modal = document.getElementById('unlock-modal')
   if (modal) modal.style.display = 'flex'
 }
+
+async function pubUnlockContacts() {
+  const token = getToken()
+  if (!token) {
+    document.getElementById('pub-unlock-modal').style.display = 'none'
+    showScreen('auth')
+    switchTab('up')
+    return
+  }
+  const data = await api('/api/checkout/tenant', { method: 'POST' })
+  if (data.url) window.location.href = data.url
+  else toast(data.error || 'Something went wrong')
+}
 function closeUnlockModal() {
   const modal = document.getElementById('unlock-modal')
   if (modal) modal.style.display = 'none'
