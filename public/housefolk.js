@@ -702,9 +702,12 @@ function showUnlockModal() {
 async function pubUnlockContacts() {
   const token = getToken()
   if (!token) {
-    document.getElementById('pub-unlock-modal').style.display = 'none'
-    showScreen('auth')
-    switchTab('up')
+    toast('Create a free account first, then subscribe to message landlords')
+    setTimeout(() => {
+      document.getElementById('pub-unlock-modal').style.display = 'none'
+      showScreen('auth')
+      switchTab('up')
+    }, 1800)
     return
   }
   const data = await api('/api/checkout/tenant', { method: 'POST' })
