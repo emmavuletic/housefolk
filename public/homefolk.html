@@ -2031,8 +2031,7 @@ function addBotMessage(text) {
   div.className = 'msg bot';
   div.innerHTML = `
     <div class="msg-avatar">N</div>
-    <div class="msg-bubble">${text.replace(/
-/g,'<br>')}</div>`;
+    <div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div>`;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
