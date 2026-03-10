@@ -299,7 +299,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 .nav-tab.active { background:var(--card); color:var(--dark); font-weight:600; box-shadow:var(--shadow-sm); }
 
 /* BROWSE SCREEN */
-#browse-screen { display:none; flex:1; flex-direction:column; overflow-y:auto; background:var(--warm-white); }
+#browse-screen { display:none; flex:1; flex-direction:column; overflow-y:auto; background:#fff; }
 #browse-screen.active { display:flex; }
 .browse-hero { background:var(--dark); padding:2.5rem 2.5rem 1.5rem; }
 .browse-hero h2 { font-family:"Playfair Display",serif; color:var(--cream); font-size:1.6rem; margin-bottom:0.3rem; }
@@ -1337,7 +1337,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 
 
 <!-- ══════════════ PUBLIC BROWSE SCREEN ══════════════ -->
-<div id="public-browse-screen" style="display:none;flex-direction:column;min-height:100vh;background:var(--warm-white)">
+<div id="public-browse-screen" style="display:none;flex-direction:column;min-height:100vh;background:#fff">
 
   <!-- Nav -->
   <nav style="background:var(--card);border-bottom:1px solid var(--border);padding:0 2rem;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50">
@@ -1373,7 +1373,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
   </div>
 
   <!-- Sign in banner -->
-  <div style="background:linear-gradient(135deg,#f2937c,#a84e1f);padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
+  <div style="background:#C4856A;padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
     <div style="color:#fff;font-size:0.85rem">🔒 Sign in to message landlords directly</div>
     <button onclick="showPubUnlockModal()" style="background:#fff;color:#f2937c;border:none;border-radius:8px;padding:0.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign in to message →</button>
   </div>
@@ -1503,7 +1503,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
   </div>
 
   <!-- Sign in banner -->
-  <div id="unlock-banner" style="background:linear-gradient(135deg,#f2937c,#a84e1f);padding:0.75rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
+  <div id="unlock-banner" style="background:#C4856A;padding:0.75rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
     <div style="color:#fff;font-size:0.85rem">🔒 Sign in to message landlords directly</div>
     <button onclick="showUnlockModal()" style="background:#fff;color:#f2937c;border:none;border-radius:8px;padding:0.42rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign in to message →</button>
   </div>
