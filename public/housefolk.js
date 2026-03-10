@@ -122,8 +122,14 @@ function signOut() {
 
 // ── SCREEN NAV ──
 function goToBrowse() {
-  showScreen('browse')
-  loadBrowseListings()
+  const token = getToken()
+  if (token) {
+    showScreen('dash')
+    switchMainTab('browse')
+  } else {
+    showScreen('auth')
+    switchTab('up')
+  }
 }
 function goToPost() {
   const token = getToken()
