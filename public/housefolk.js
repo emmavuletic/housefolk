@@ -701,21 +701,17 @@ function showUnlockModal() {
   if (modal) modal.style.display = 'flex'
 }
 
-async function pubUnlockContacts() {
-  const token = getToken()
-  if (!token) {
-    toast('Create a free account first, then subscribe to message landlords')
-    setTimeout(() => {
-      document.getElementById('pub-unlock-modal').style.display = 'none'
-      showScreen('auth')
-      switchTab('up')
-    }, 1800)
-    return
-  }
-  const data = await api('/api/checkout/tenant', { method: 'POST' })
-  if (data.url) window.location.href = data.url
-  else toast(data.error || 'Something went wrong')
+function pubUnlockContacts() {
+  document.getElementById('pub-unlock-modal').style.display = 'none'
+  showScreen('auth')
+  switchTab('up')
 }
+function showPubUnlockModal() {
+  // Take unauthenticated users straight to sign-up
+  showScreen('auth')
+  switchTab('up')
+}
+
 function closeUnlockModal() {
   const modal = document.getElementById('unlock-modal')
   if (modal) modal.style.display = 'none'
