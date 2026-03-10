@@ -1,6 +1,7 @@
 {
   "redirects": [
     { "source": "/", "destination": "/homefolk.html", "permanent": false },
-    { "source": "/post", "destination": "/homefolk.html?goto=post", "permanent": false }
+    { "source": "/post", "destination": "/homefolk.html?goto=post", "permanent": false },
+    { "source": "/browse", "destination": "/homefolk.html?goto=browse", "permanent": false }
   ]
 }

@@ -1075,10 +1075,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check Stripe return params
   checkSuccessParam()
 
-  // Direct deep-link: ?goto=post
-  if (new URLSearchParams(window.location.search).get('goto') === 'post') {
-    goToPost()
-  }
+  // Direct deep-link: ?goto=post or ?goto=browse
+  const goto = new URLSearchParams(window.location.search).get('goto')
+  if (goto === 'post') goToPost()
+  else if (goto === 'browse') goToBrowse()
 
   // Close dropdowns on outside click
   document.addEventListener('click', e => {
