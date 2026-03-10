@@ -225,9 +225,9 @@ function calcThursday() {
 
 // ── POST A LISTING FLOW ──
 const PLANS = {
-  flatshare: { name: 'Flatshare', icon: '🏠', price: 10, label: '£10.00', maxPhotos: 20 },
-  rental: { name: 'Apartment Rental', icon: '🏢', price: 15, label: '£15.00', maxPhotos: 20 },
-  sublet: { name: 'Apartment Sublet', icon: '🌿', price: 15, label: '£15.00', maxPhotos: 10 },
+  flatshare: { name: 'Flatshare', icon: '🏠', price: 0, label: 'Free', maxPhotos: 20 },
+  rental: { name: 'Apartment Rental', icon: '🏢', price: 0, label: 'Free', maxPhotos: 20 },
+  sublet: { name: 'Apartment Sublet', icon: '🌿', price: 0, label: 'Free', maxPhotos: 10 },
 }
 
 let currentTier = null
@@ -685,7 +685,7 @@ async function loadBrowseListings(type = '', location = '') {
             <span class="lc-avail">${l.available_date ? 'From ' + new Date(l.available_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Available now'}</span>
             ${hasSubscription
               ? `<button class="lc-contact-btn" onclick="event.stopPropagation();openEnquiryModal('${l.id}','${l.landlord_id}')">Message →</button>`
-              : `<button class="lc-locked-btn" onclick="event.stopPropagation();showUnlockModal()">🔒 £15/mo</button>`}
+              : `<button class="lc-locked-btn" onclick="event.stopPropagation();showUnlockModal()">Sign in to message →</button>`}
           </div>
         </div>
       </div>`

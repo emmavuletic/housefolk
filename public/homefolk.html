@@ -485,15 +485,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
   <!-- Preview listings -->
   <div class="landing-listings-preview">
     <h2>This week's listings</h2>
-    <p>New homes added every Thursday · Unlock contacts from £15/month</p>
+    <p>New homes added every Thursday · Sign in to message landlords</p>
     <div class="preview-grid" id="landing-preview-grid"></div>
   </div>
 
   <!-- Stats bar -->
   <div class="landing-stats">
     <div class="l-stat"><div class="num">✨</div><div class="lbl">Mindful renters, real homes</div></div>
-    <div class="l-stat"><div class="num">£10</div><div class="lbl">To post a flatshare</div></div>
-    <div class="l-stat"><div class="num">£15</div><div class="lbl">To contact landlords / month</div></div>
+    <div class="l-stat"><div class="num">Free</div><div class="lbl">To post a listing</div></div>
+    <div class="l-stat"><div class="num">Free</div><div class="lbl">To message landlords</div></div>
     <div class="l-stat"><div class="num">Thursday</div><div class="lbl">New listings every week</div></div>
   </div>
 
@@ -510,17 +510,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
         <div class="tier-pill">
           <span class="tp-icon">🏠</span>
           <div class="tp-info"><div class="tp-name">Flatshare</div><div class="tp-meta">Find a flatmate · up to 20 photos · 7 days</div></div>
-          <span class="tp-price price-paid">£10</span>
+          <span class="tp-price price-paid">Free</span>
         </div>
         <div class="tier-pill">
           <span class="tp-icon">🏢</span>
           <div class="tp-info"><div class="tp-name">Apartment Rental</div><div class="tp-meta">Full rental · up to 20 photos · 7 days</div></div>
-          <span class="tp-price price-paid">£15</span>
+          <span class="tp-price price-paid">Free</span>
         </div>
         <div class="tier-pill">
           <span class="tp-icon">🌿</span>
           <div class="tp-info"><div class="tp-name">Apartment Sublet</div><div class="tp-meta">Short-term sublet · up to 10 photos · 7 days</div></div>
-          <span class="tp-price price-paid">£15</span>
+          <span class="tp-price price-paid">Free</span>
         </div>
       </div>
     </div>
@@ -1230,7 +1230,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
             <div>
               <div style="font-weight:700;color:var(--green);font-size:1rem">✅ Active subscription</div>
-              <div style="font-size:0.83rem;color:var(--mid);margin-top:0.2rem">£15/month · Renews 4 Apr 2026 · Contact any landlord</div>
+              <div style="font-size:0.83rem;color:var(--mid);margin-top:0.2rem">Active · Contact any landlord</div>
             </div>
             <button class="btn btn-ghost btn-auto btn-sm" style="color:#C0392B;border-color:#FADBD8">Cancel subscription</button>
           </div>
@@ -1240,9 +1240,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
             <div>
               <div style="font-weight:700;color:var(--dark);font-size:1rem">🔒 No active subscription</div>
-              <div style="font-size:0.83rem;color:var(--mid);margin-top:0.2rem">Subscribe for £15/month to contact any landlord directly</div>
+              <div style="font-size:0.83rem;color:var(--mid);margin-top:0.2rem">Sign in to contact any landlord directly</div>
             </div>
-            <button class="btn btn-primary btn-auto" style="padding:0.6rem 1.3rem" onclick="showPanel('browse');showUnlockModal()">Subscribe — £15/mo →</button>
+            <button class="btn btn-primary btn-auto" style="padding:0.6rem 1.3rem" onclick="showPanel('browse')">Browse listings →</button>
           </div>
         </div>
 
@@ -1273,8 +1273,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
           <table class="data-table">
             <thead><tr><th style="padding-left:1.4rem">Date</th><th>Description</th><th>Amount</th><th>Status</th><th></th></tr></thead>
             <tbody>
-              <tr><td style="padding-left:1.4rem;font-size:0.81rem;color:var(--light)">28 Feb 2025</td><td><div style="font-weight:600;font-size:0.86rem">Flatshare — Sunny double room, Hackney</div><div style="font-size:0.73rem;color:var(--light)">7-day listing + newsletter debut</div></td><td style="font-weight:700">£10.00</td><td><span class="badge badge-live">Paid</span></td><td><button class="btn btn-ghost btn-sm">Receipt</button></td></tr>
-              <tr><td style="padding-left:1.4rem;font-size:0.81rem;color:var(--light)">14 Feb 2025</td><td><div style="font-weight:600;font-size:0.86rem">Apartment Rental — Modern 2-bed, Salford</div><div style="font-size:0.73rem;color:var(--light)">7-day listing + newsletter debut</div></td><td style="font-weight:700">£15.00</td><td><span class="badge badge-live">Paid</span></td><td><button class="btn btn-ghost btn-sm">Receipt</button></td></tr>
+              <tr><td style="padding-left:1.4rem;font-size:0.81rem;color:var(--light)">28 Feb 2025</td><td><div style="font-weight:600;font-size:0.86rem">Flatshare — Sunny double room, Hackney</div><div style="font-size:0.73rem;color:var(--light)">7-day listing + newsletter debut</div></td><td style="font-weight:700;color:var(--green)">Free</td><td><span class="badge badge-live">Published</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+              <tr><td style="padding-left:1.4rem;font-size:0.81rem;color:var(--light)">14 Feb 2025</td><td><div style="font-weight:600;font-size:0.86rem">Apartment Rental — Modern 2-bed, Salford</div><div style="font-size:0.73rem;color:var(--light)">7-day listing + newsletter debut</div></td><td style="font-weight:700;color:var(--green)">Free</td><td><span class="badge badge-live">Published</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
               <tr><td style="padding-left:1.4rem;font-size:0.81rem;color:var(--light)">2 Jan 2025</td><td><div style="font-weight:600;font-size:0.86rem">Sublet — Studio, Bristol</div><div style="font-size:0.73rem;color:var(--light)">Free listing</div></td><td style="font-weight:700;color:var(--green)">Free</td><td><span class="badge badge-live">Published</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
             </tbody>
           </table>
@@ -1372,10 +1372,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
     </div>
   </div>
 
-  <!-- £15/month banner -->
+  <!-- Sign in banner -->
   <div style="background:linear-gradient(135deg,#f2937c,#a84e1f);padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
-    <div style="color:#fff;font-size:0.85rem">🔒 <strong>£15/month</strong> to unlock contact details — cancel anytime</div>
-    <button onclick="showPubUnlockModal()" style="background:#fff;color:#f2937c;border:none;border-radius:8px;padding:0.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Subscribe — £15/month →</button>
+    <div style="color:#fff;font-size:0.85rem">🔒 Sign in to message landlords directly</div>
+    <button onclick="showPubUnlockModal()" style="background:#fff;color:#f2937c;border:none;border-radius:8px;padding:0.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign in to message →</button>
   </div>
   <div id="pub-unlocked-banner" style="display:none;background:#E8F5EE;border-bottom:1px solid rgba(46,125,82,0.2);padding:0.65rem 2rem;font-size:0.83rem;color:#2E7D52;font-weight:600">✅ Subscribed — contact any landlord directly</div>
 
@@ -1452,18 +1452,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 <div id="pub-unlock-modal" style="display:none;position:fixed;inset:0;background:rgba(26,21,16,0.55);z-index:300;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)" onclick="if(event.target===this)this.style.display='none'">
   <div style="background:var(--card);border-radius:24px;padding:2.5rem;max-width:400px;width:100%;box-shadow:var(--shadow-lg);animation:fadeUp 0.3s ease both">
     <div style="font-size:2.5rem;margin-bottom:0.8rem">🔑</div>
-    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:0.5rem">Subscribe to contact landlords</div>
-    <p style="font-size:0.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.2rem">£15/month, cancel anytime. Message any landlord directly — flatshares, sublets and rentals.</p>
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:0.5rem">Sign in to contact landlords</div>
+    <p style="font-size:0.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.2rem">Create a free account to message landlords directly — flatshares, sublets and rentals.</p>
     <div style="background:var(--cream);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.83rem;color:var(--mid);line-height:2.1">
-      ✅ Message any landlord directly<br>✅ All listings — flatshares, sublets, rentals<br>✅ New listings every Thursday<br>✅ Cancel anytime · Secured by Stripe
-    </div>
-    <div style="display:flex;justify-content:space-between;font-weight:700;font-size:0.95rem;margin-bottom:1.2rem;padding:0.6rem 0;border-top:1px solid var(--border)">
-      <span>Monthly subscription</span><span style="color:#f2937c">£15/month</span>
+      ✅ Message any landlord directly<br>✅ All listings — flatshares, sublets, rentals<br>✅ New listings every Thursday<br>✅ Free to use
     </div>
     <div class="field" style="margin-bottom:0.8rem"><label>Email address</label><input type="email" id="pub-unlock-email" placeholder="you@example.com"></div>
-    <button class="btn btn-primary" onclick="pubUnlockContacts()" style="margin-bottom:0.6rem">Subscribe — £15/month →</button>
+    <button class="btn btn-primary" onclick="pubUnlockContacts()" style="margin-bottom:0.6rem">Sign in to message →</button>
     <button class="btn btn-ghost" onclick="document.getElementById('pub-unlock-modal').style.display='none'">Maybe later</button>
-    <div style="text-align:center;font-size:0.72rem;color:var(--light);margin-top:0.8rem">🔒 Secured by Stripe · Cancel anytime</div>
   </div>
 </div>
 
@@ -1506,10 +1502,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
     </div>
   </div>
 
-  <!-- Unlock banner -->
+  <!-- Sign in banner -->
   <div id="unlock-banner" style="background:linear-gradient(135deg,#f2937c,#a84e1f);padding:0.75rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
-    <div style="color:#fff;font-size:0.85rem">🔒 <strong>Unlock contact details</strong> — unlock contacts from £15/month to message any landlord</div>
-    <button onclick="showUnlockModal()" style="background:#fff;color:#f2937c;border:none;border-radius:8px;padding:0.42rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Unlock now — £15/mo →</button>
+    <div style="color:#fff;font-size:0.85rem">🔒 Sign in to message landlords directly</div>
+    <button onclick="showUnlockModal()" style="background:#fff;color:#f2937c;border:none;border-radius:8px;padding:0.42rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign in to message →</button>
   </div>
   <div id="unlocked-banner" style="display:none;background:#E8F5EE;border-bottom:1px solid rgba(46,125,82,0.2);padding:0.65rem 2.5rem;font-size:0.83rem;color:#2E7D52;font-weight:600">✅ Contacts unlocked — message any landlord for 30 days</div>
 
@@ -1545,13 +1541,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 <div id="unlock-modal" style="display:none;position:fixed;inset:0;background:rgba(26,21,16,0.55);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)" onclick="if(event.target===this)this.style.display='none'">
   <div style="background:var(--card);border-radius:24px;padding:2.5rem;max-width:400px;width:100%;box-shadow:var(--shadow-lg);animation:fadeUp 0.3s ease both">
     <div style="font-size:2.5rem;margin-bottom:0.8rem">🔑</div>
-    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:0.5rem">Unlock all contacts</div>
-    <p style="font-size:0.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.2rem">Pay once and message any landlord on Housefolk for 30 days. No subscription.</p>
+    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:0.5rem">Sign in to message landlords</div>
+    <p style="font-size:0.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.2rem">Create a free account to message any landlord — flatshares, sublets and rentals.</p>
     <div style="background:var(--cream);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.83rem;color:var(--mid);line-height:2">
-      ✅ Message any landlord directly<br>✅ All contacts unlocked for 30 days<br>✅ Flatshares, sublets &amp; rentals<br>✅ Secure payment via Stripe
+      ✅ Message any landlord directly<br>✅ All listings — flatshares, sublets &amp; rentals<br>✅ New listings every Thursday<br>✅ Free to use
     </div>
-    <div style="display:flex;justify-content:space-between;font-weight:700;font-size:0.95rem;margin-bottom:1.2rem;padding:0.6rem 0;border-top:1px solid var(--border)"><span>Monthly subscription</span><span style="color:var(--accent)">£15/month</span></div>
-    <button class="btn btn-primary" onclick="startTenantSubscription()" style="margin-bottom:0.6rem">Pay £15/month &amp; unlock contacts →</button>
+    <button class="btn btn-primary" onclick="startTenantSubscription()" style="margin-bottom:0.6rem">Sign in to message landlords →</button>
     <button class="btn btn-ghost" onclick="document.getElementById('unlock-modal').style.display='none'">Maybe later</button>
   </div>
 </div>
@@ -1916,19 +1911,16 @@ You help two types of users:
 1. LANDLORDS & HOSTS — people posting flatshares, apartment rentals, or sublets
 2. RENTERS & TENANTS — people looking for a home
 
-KEY FACTS ABOUT NESTIO:
-- Flatshare listings cost £10 (one-off). Find a flatmate for a spare room.
-- Apartment Rental listings cost £15 (one-off). Rent out a whole property.
-- Apartment Sublets are FREE. For short-term subletting.
+KEY FACTS ABOUT HOUSEFOLK:
+- Listing is completely free for landlords. Post flatshares, rentals, or sublets at no cost.
 - All listings run for 7 days.
 - All listings DEBUT on Thursday — they go live when the Thursday newsletter sends.
 - The Thursday newsletter goes to subscribers every week.
-- Paid listings appear at the top of search results (featured).
-- Promo codes can make flatshare listings free. Users enter them at checkout.
+- Tenants sign in for free to message landlords directly.
 - After signing up, users can manage listings, view enquiries, and post from their dashboard.
 - The newsletter is sent every Thursday at 8am. Landlords can write a custom intro message.
 - Social links (Instagram, LinkedIn, X, Facebook) appear in the newsletter footer.
-- Stripe is used for secure card payments.
+- Listing is completely free for landlords.
 - Housefolk is hosted separately and linked from a Squarespace website.
 
 TONE: Warm, friendly, concise. British English. Use "£" not "$". Keep answers short and helpful — 2-4 sentences max unless more detail is needed. Use emojis occasionally but not excessively.
@@ -2049,7 +2041,7 @@ async function getAIResponse() {
 
   // Smart local answers - no API key needed
   if (q.includes('price') || q.includes('cost') || q.includes('how much')) {
-    reply = 'Our fees are simple:\n\n🏠 Flatshare — £10 one-off\n🏢 Apartment Rental — £15 one-off\n🌿 Sublet — £5 one-off\n\nAll listings run 7 days and debut in Thursday newsletter to renters renters! Use code HOMEFOLK for a free flatshare listing 🎉';
+    reply = 'Listing is completely free! 🎉\n\n🏠 Flatshare — Free\n🏢 Apartment Rental — Free\n🌿 Sublet — Free\n\nAll listings run 7 days and debut in the Thursday newsletter to renters!';
   } else if (q.includes('thursday') || q.includes('debut') || q.includes('when')) {
     reply = 'Every listing debuts on Thursday when our newsletter sends to subscribers. Post any day — it goes live that Thursday! 📰';
   } else if (q.includes('newsletter') || q.includes('subscribe')) {
@@ -2057,17 +2049,17 @@ async function getAIResponse() {
   } else if (q.includes('photo') || q.includes('picture')) {
     reply = 'You can upload up to 20 photos for paid listings, 10 for free sublets. Drag and drop straight from your device! 📷';
   } else if (q.includes('promo') || q.includes('discount') || q.includes('code') || q.includes('free')) {
-    reply = 'Yes! If you have a promo code you can get a free flatshare listing. Enter it at the payment step and the £10 fee is waived. 🎉';
+    reply = 'Listing on Housefolk is completely free! Just sign up and post your listing. 🎉';
   } else if (q.includes('sublet')) {
-    reply = 'Sublets are £5 to list. Up to 10 photos, 7 days, and included in the Thursday newsletter. 🌿 Use code HOMEFOLK for a free flatshare listing!';
+    reply = 'Sublets are free to list! Up to 10 photos, 7 days, and included in the Thursday newsletter. 🌿';
   } else if (q.includes('flatshare')) {
-    reply = 'Flatshare listings are £10 one-off. You get 20 photos, 7 days featured at the top of search, enquiry inbox, and Thursday newsletter inclusion. 🏠';
+    reply = 'Flatshare listings are free! You get 20 photos, 7 days, enquiry inbox, and Thursday newsletter inclusion. 🏠';
   } else if (q.includes('rental') || q.includes('apartment')) {
-    reply = 'Apartment Rental listings are £15 one-off. Full property listing with 20 photos, 7 days featured, enquiry inbox and newsletter. 🏢';
+    reply = 'Apartment Rental listings are free! Full property listing with 20 photos, 7 days, enquiry inbox and newsletter. 🏢';
   } else if (q.includes('contact') || q.includes('help') || q.includes('support') || q.includes('human')) {
     reply = 'For extra help you can reach the Housefolk team directly. We will get back to you within 24 hours! 🙏';
   } else if (q.includes('stripe') || q.includes('pay') || q.includes('card')) {
-    reply = 'Payments are handled securely by Stripe — the same system used by millions of businesses. Your card details are never stored by us. 🔒';
+    reply = 'Listing and messaging on Housefolk is completely free. No payment required! 🎉';
   } else {
     reply = 'Great question! The Housefolk team will follow up on that. In the meantime I can help with pricing, listings, the newsletter, or how to get started. What would you like to know? 😊';
   }
@@ -2160,15 +2152,15 @@ setTimeout(() => {
     <div style="padding:1.8rem;font-size:0.86rem;color:var(--mid);line-height:1.8" id="terms-body">
       <h3 style="font-family:'Playfair Display',serif;color:var(--dark);margin-bottom:0.5rem">Housefolk Terms of Service</h3>
       <p>Last updated: March 2026</p>
-      <p style="margin-top:1rem"><strong style="color:var(--dark)">1. Listing fees</strong><br>Flatshare listings are £10, apartment rentals £15, and sublets £5 — all one-off payments per listing. Listings run for 7 days from their Thursday debut date.</p>
-      <p style="margin-top:1rem"><strong style="color:var(--dark)">2. Tenant subscription</strong><br>Tenants pay £15/month to access landlord contact details. Subscriptions auto-renew monthly and can be cancelled at any time.</p>
+      <p style="margin-top:1rem"><strong style="color:var(--dark)">1. Listing fees</strong><br>Listing on Housefolk is currently free for landlords. Listings run for 7 days from their Thursday debut date.</p>
+      <p style="margin-top:1rem"><strong style="color:var(--dark)">2. Contacting landlords</strong><br>Tenants create a free account to message landlords directly.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">3. Thursday debut</strong><br>All listings debut exclusively on Thursday when the newsletter sends to subscribers. Listings posted any day of the week will go live that Thursday.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">4. Accuracy of listings</strong><br>Landlords are responsible for the accuracy of their listings. Housefolk does not verify properties and accepts no liability for inaccurate information.</p>
-      <p style="margin-top:1rem"><strong style="color:var(--dark)">5. Refunds</strong><br>Listing fees are non-refundable once a listing has been published. Tenant subscriptions can be cancelled before the next billing date.</p>
+      <p style="margin-top:1rem"><strong style="color:var(--dark)">5. Service</strong><br>Housefolk reserves the right to remove listings that violate these terms. Accounts may be suspended for misuse.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">6. Prohibited content</strong><br>Listings must be genuine UK properties. Fraudulent, misleading or illegal listings will be removed without refund.</p>
       <h3 style="font-family:'Playfair Display',serif;color:var(--dark);margin:1.5rem 0 0.5rem">Privacy Policy</h3>
-      <p><strong style="color:var(--dark)">Data we collect</strong><br>Name, email address, property details you submit, and payment information (processed securely by Stripe — we never store card details).</p>
-      <p style="margin-top:1rem"><strong style="color:var(--dark)">How we use it</strong><br>To publish your listing, send the Thursday newsletter, process payments, and send enquiry notifications. We never sell your data.</p>
+      <p><strong style="color:var(--dark)">Data we collect</strong><br>Name, email address, and property details you submit.</p>
+      <p style="margin-top:1rem"><strong style="color:var(--dark)">How we use it</strong><br>To publish your listing, send the Thursday newsletter, and send enquiry notifications. We never sell your data.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">Cookies</strong><br>We use essential cookies to keep you signed in and remember your preferences. No advertising cookies.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">Your rights</strong><br>You can request deletion of your account and data at any time by emailing <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="87efe2ebebe8c7efe8eae2e1e8ebeca9e4e8a9f2ec">[email&#160;protected]</a></p>
       <p style="margin-top:1rem"><strong style="c
