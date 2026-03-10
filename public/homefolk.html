@@ -17,7 +17,7 @@
   --shadow-lg: 0 20px 60px rgba(26,26,26,0.15);
 }
 html { scroll-behavior: smooth; }
-body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); overflow-x: hidden; min-height: 100vh; }
+body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dark); overflow-x: hidden; min-height: 100vh; }
 
 /* SCREENS */
 .screen { display: none; min-height: 100vh; }
@@ -53,7 +53,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 .price-free { color: #4CAF7D; }
 .auth-left-foot { font-size: 0.73rem; color: #6A5F55; position: relative; z-index: 1; }
 
-.auth-right { width: 500px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 3rem 2.5rem; background: #fff; }
+.auth-right { width: 500px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 3rem 2.5rem; background: #FDF1EA; }
 .auth-box { width: 100%; max-width: 400px; }
 .auth-tabs { display: flex; background: var(--cream); border-radius: 6px; padding: 4px; margin-bottom: 2rem; }
 .auth-tab { flex: 1; text-align: center; padding: 0.6rem; border: none; background: transparent; border-radius: 5px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; cursor: pointer; color: var(--light); transition: all 0.2s; }
@@ -299,7 +299,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 .nav-tab.active { background:var(--card); color:var(--dark); font-weight:600; box-shadow:var(--shadow-sm); }
 
 /* BROWSE SCREEN */
-#browse-screen { display:none; flex:1; flex-direction:column; overflow-y:auto; background:#fff; }
+#browse-screen { display:none; flex:1; flex-direction:column; overflow-y:auto; background:#FDF1EA; }
 #browse-screen.active { display:flex; }
 .browse-hero { background:var(--dark); padding:2.5rem 2.5rem 1.5rem; }
 .browse-hero h2 { font-family:"Playfair Display",serif; color:var(--cream); font-size:1.6rem; margin-bottom:0.3rem; }
@@ -366,12 +366,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 .region-btn.active { background:var(--dark);color:#fff;border-color:var(--dark);font-weight:600; }
 @media(max-width:1100px){#listing-grid{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:700px){#listing-grid{grid-template-columns:1fr!important}#region-nav{padding:0.6rem 1rem}#listing-detail-page [style*="grid-template-columns:1fr 320px"]{grid-template-columns:1fr!important}}
-.landing-screen { min-height:100vh; display:none; flex-direction:column; background:#fff; }
+.landing-screen { min-height:100vh; display:none; flex-direction:column; background:#FDF1EA; }
 .landing-screen.active { display:flex; }
 .landing-nav { height:124px; background:var(--card); border-bottom:1px solid var(--border); padding:0 2.5rem; display:flex; align-items:center; justify-content:space-between; }
 .landing-logo { font-family:"Playfair Display",serif; font-size:3.2rem; font-weight:400; color:#000; text-decoration:none; letter-spacing:0.08em; }
 .landing-logo span { color:#000; }
-.landing-hero { background:#fff; padding:5rem 2.5rem 4rem; text-align:center; position:relative; overflow:hidden; }
+.landing-hero { background:#FDF1EA; padding:5rem 2.5rem 4rem; text-align:center; position:relative; overflow:hidden; }
 .landing-hero::before { content:''; position:absolute; inset:0; background:none; pointer-events:none; }
 .landing-hero h1 { font-family:"Playfair Display",serif; font-size:clamp(1.6rem,3.5vw,2.4rem); color:var(--dark); letter-spacing:-0.5px; line-height:1.1; margin-bottom:1rem; position:relative; font-weight:400; }
 .landing-hero h1 em { font-style:italic; color:#f2937c; }
@@ -393,7 +393,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 .preview-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
 .preview-blur { position:relative; }
 .preview-blur::after { content:"Sign in to see contact details"; position:absolute; bottom:0; left:0; right:0; height:60%; background:linear-gradient(to bottom, transparent, var(--warm-white)); border-radius:0 0 18px 18px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:1rem; font-size:0.78rem; color:var(--mid); font-weight:600; }
-.landing-stats { background:#fff; border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; justify-content:center; gap:4rem; flex-wrap:wrap; }
+.landing-stats { background:#FDF1EA; border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; justify-content:center; gap:4rem; flex-wrap:wrap; }
 .l-stat { text-align:center; }
 .l-stat .num { font-family:"Playfair Display",serif; font-size:2rem; font-weight:700; color:var(--dark); }
 .l-stat .lbl { font-size:0.78rem; color:var(--mid); margin-top:0.2rem; }
@@ -1337,7 +1337,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 
 
 <!-- ══════════════ PUBLIC BROWSE SCREEN ══════════════ -->
-<div id="public-browse-screen" style="display:none;flex-direction:column;min-height:100vh;background:#fff">
+<div id="public-browse-screen" style="display:none;flex-direction:column;min-height:100vh;background:#FDF1EA">
 
   <!-- Nav -->
   <nav style="background:var(--card);border-bottom:1px solid var(--border);padding:0 2rem;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50">
