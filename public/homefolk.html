@@ -9,8 +9,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --cream: #FAF7F5; --warm-white: #FDF1EA; --dark: #1A1A1A; --mid: #5A4F45;
-  --light: #8A7E74; --accent: #f2937c; --accent-light: #f7bfb0;
-  --gold: #f2937c; --green: #2E7D52; --green-light: #E8F5EE;
+  --light: #8A7E74; --accent: #f7b188; --accent-light: #fad4b8;
+  --gold: #f7b188; --green: #2E7D52; --green-light: #E8F5EE;
   --border: #E2D9CE; --card: #FFFFFF;
   --shadow-sm: 0 2px 12px rgba(26,26,26,0.07);
   --shadow: 0 6px 28px rgba(26,26,26,0.1);
@@ -37,10 +37,10 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 }
 .auth-logo { font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 400; color: #000; text-decoration: none; letter-spacing: 0.08em; position: relative; z-index: 1; }
 .auth-logo span { color: #000; }
-.auth-left-body h2 em { color: #f2937c; }
+.auth-left-body h2 em { color: #f7b188; }
 .auth-left-body { position: relative; z-index: 1; }
 .auth-left-body h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3vw, 2.7rem); color: var(--dark); line-height: 1.15; letter-spacing: -1px; margin-bottom: 1rem; }
-.auth-left-body h2 em { font-style: italic; color: #f2937c; }
+.auth-left-body h2 em { font-style: italic; color: #f7b188; }
 .auth-left-body p { color: #5A4F45; font-size: 0.88rem; line-height: 1.7; max-width: 340px; margin-bottom: 2rem; }
 .tier-pills { display: flex; flex-direction: column; gap: 0.65rem; }
 .tier-pill { display: flex; align-items: center; gap: 0.9rem; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.08); border-radius: 6px; padding: 0.85rem 1.1rem; }
@@ -309,12 +309,12 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 .search-bar input::placeholder { color:#6A5E54; }
 .search-bar select { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:0.65rem 0.9rem; font-family:"DM Sans",sans-serif; font-size:0.86rem; color:var(--cream); outline:none; cursor:pointer; }
 .search-bar select option { background:#1A1510; }
-.search-bar .btn-search { background:#f2937c; color:#1A1A1A; border:none; border-radius:10px; padding:0.65rem 1.3rem; font-family:"DM Sans",sans-serif; font-size:0.86rem; font-weight:600; cursor:pointer; white-space:nowrap; }
+.search-bar .btn-search { background:#f7b188; color:#1A1A1A; border:none; border-radius:10px; padding:0.65rem 1.3rem; font-family:"DM Sans",sans-serif; font-size:0.86rem; font-weight:600; cursor:pointer; white-space:nowrap; }
 
 /* LISTING TABS */
 .listing-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); padding:0 2.5rem; background:var(--card); }
 .listing-tab { padding:0.9rem 1.3rem; border:none; background:transparent; font-family:"DM Sans",sans-serif; font-size:0.86rem; font-weight:500; color:var(--light); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.2s; }
-.listing-tab.active { color:var(--dark); font-weight:700; border-bottom-color:#f2937c; }
+.listing-tab.active { color:var(--dark); font-weight:700; border-bottom-color:#f7b188; }
 
 /* LISTING GRID */
 .listing-grid { padding:2rem 2.5rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1.3rem; }
@@ -324,7 +324,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 .lc-photo img { width:100%; height:100%; object-fit:cover; }
 .lc-photo-placeholder { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:3rem; background:linear-gradient(135deg,#F0EFED,#E8E4DF); }
 .lc-type-badge { position:absolute; top:0.7rem; left:0.7rem; background:rgba(26,21,16,0.75); color:#fff; font-size:0.68rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:6px; backdrop-filter:blur(4px); }
-.lc-thu-badge { position:absolute; top:0.7rem; right:0.7rem; background:#f2937c; color:#fff; font-size:0.65rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:6px; }
+.lc-thu-badge { position:absolute; top:0.7rem; right:0.7rem; background:#f7b188; color:#fff; font-size:0.65rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:6px; }
 .lc-body { padding:1rem 1.2rem; }
 .lc-price { font-family:"Playfair Display",serif; font-size:1.3rem; font-weight:700; color:var(--dark); }
 .lc-price span { font-size:0.75rem; font-weight:400; color:var(--light); font-family:"DM Sans",sans-serif; }
@@ -333,11 +333,11 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 .lc-meta { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.6rem; }
 .lc-tag { background:var(--cream); border:1px solid var(--border); border-radius:6px; padding:0.2rem 0.55rem; font-size:0.71rem; color:var(--mid); }
 .lc-desc { font-size:0.78rem; color:var(--mid); line-height:1.5; margin-bottom:0.6rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.lc-motto { font-size:0.76rem; color:#f2937c; font-style:italic; margin-bottom:0.8rem; border-left:2px solid #f2937c; padding-left:0.6rem; }
+.lc-motto { font-size:0.76rem; color:#f7b188; font-style:italic; margin-bottom:0.8rem; border-left:2px solid #f7b188; padding-left:0.6rem; }
 .lc-footer { display:flex; align-items:center; justify-content:space-between; padding-top:0.7rem; border-top:1px solid var(--border); }
 .lc-avail { font-size:0.73rem; color:var(--light); }
 .lc-contact-btn { background:#1A1510; color:#fff; border:none; border-radius:8px; padding:0.45rem 1rem; font-family:"DM Sans",sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; transition:background 0.2s; }
-.lc-contact-btn:hover { background:#f2937c; }
+.lc-contact-btn:hover { background:#f7b188; }
 .lc-locked-btn { background:var(--cream); color:var(--mid); border:1px solid var(--border); border-radius:8px; padding:0.45rem 1rem; font-family:"DM Sans",sans-serif; font-size:0.78rem; font-weight:600; cursor:pointer; }
 
 /* UNLOCK MODAL */
@@ -360,7 +360,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 
 /* ANIMATIONS */
 .listing-tab { padding:0.85rem 1.2rem;border:none;background:transparent;font-family:"DM Sans",sans-serif;font-size:0.86rem;font-weight:500;color:var(--light);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;white-space:nowrap; }
-.listing-tab.active { color:var(--dark);font-weight:700;border-bottom-color:#f2937c; }
+.listing-tab.active { color:var(--dark);font-weight:700;border-bottom-color:#f7b188; }
 .region-btn { background:var(--cream);border:1px solid var(--border);border-radius:20px;padding:0.3rem 0.85rem;font-family:"DM Sans",sans-serif;font-size:0.78rem;font-weight:500;color:var(--mid);cursor:pointer;transition:all 0.15s;white-space:nowrap; }
 .region-btn:hover { background:var(--dark);color:#fff;border-color:var(--dark); }
 .region-btn.active { background:var(--dark);color:#fff;border-color:var(--dark);font-weight:600; }
@@ -374,19 +374,19 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 .landing-hero { background:#FDF1EA; padding:5rem 2.5rem 4rem; text-align:center; position:relative; overflow:hidden; }
 .landing-hero::before { content:''; position:absolute; inset:0; background:none; pointer-events:none; }
 .landing-hero h1 { font-family:"Playfair Display",serif; font-size:clamp(1.6rem,3.5vw,2.4rem); color:var(--dark); letter-spacing:-0.5px; line-height:1.1; margin-bottom:1rem; position:relative; font-weight:400; }
-.landing-hero h1 em { font-style:italic; color:#f2937c; }
+.landing-hero h1 em { font-style:italic; color:#f7b188; }
 .landing-hero p { color:#5A4F45; font-size:1rem; line-height:1.7; max-width:500px; margin:0 auto 2.5rem; position:relative; }
 .landing-cta-row { display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap; position:relative; }
 .cta-card { background:var(--card); border-radius:20px; padding:2rem 2.2rem; width:260px; text-align:left; cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; border:2px solid transparent; text-decoration:none; display:block; }
 .cta-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
 .cta-card.browse { border-color:rgba(255,255,255,0.1); }
-.cta-card.post { border-color:#f2937c; }
+.cta-card.post { border-color:#f7b188; }
 .cta-icon { font-size:2.2rem; margin-bottom:0.8rem; display:block; }
 .cta-title { font-family:"Playfair Display",serif; font-size:1.25rem; font-weight:700; color:var(--dark); margin-bottom:0.4rem; }
 .cta-desc { font-size:0.82rem; color:var(--mid); line-height:1.55; margin-bottom:1rem; }
 .cta-btn { display:inline-block; width:100%; text-align:center; padding:0.7rem 1rem; border-radius:10px; font-family:"DM Sans",sans-serif; font-size:0.86rem; font-weight:700; border:none; cursor:pointer; }
 .cta-btn.browse { background:var(--dark); color:#fff; }
-.cta-btn.post { background:#f2937c; color:#1A1A1A; }
+.cta-btn.post { background:#f7b188; color:#1A1A1A; }
 .landing-listings-preview { padding:3rem 2.5rem; max-width:1080px; margin:0 auto; width:100%; }
 .landing-listings-preview h2 { font-family:"Playfair Display",serif; font-size:1.5rem; margin-bottom:0.4rem; }
 .landing-listings-preview p { color:var(--mid); font-size:0.86rem; margin-bottom:1.8rem; }
@@ -407,19 +407,19 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 .star-sign-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.3rem; }
 .sign-option { display:flex; align-items:center; gap:0.4rem; padding:0.4rem 0.5rem; border-radius:8px; cursor:pointer; font-size:0.8rem; color:var(--mid); transition:background 0.15s; }
 .sign-option:hover { background:var(--cream); }
-.sign-option input[type=checkbox] { accent-color:#f2937c; width:14px; height:14px; cursor:pointer; }
-.sign-option.selected { background:#FEF0E8; color:#f2937c; font-weight:500; }
-.sign-badge { display:inline-flex; align-items:center; gap:0.3rem; background:#FEF0E8; border:1px solid #F5D5C0; border-radius:20px; padding:0.2rem 0.6rem; font-size:0.75rem; color:#f2937c; }
+.sign-option input[type=checkbox] { accent-color:#f7b188; width:14px; height:14px; cursor:pointer; }
+.sign-option.selected { background:#FEF0E8; color:#f7b188; font-weight:500; }
+.sign-badge { display:inline-flex; align-items:center; gap:0.3rem; background:#FEF0E8; border:1px solid #F5D5C0; border-radius:20px; padding:0.2rem 0.6rem; font-size:0.75rem; color:#f7b188; }
 
 /* STAR SIGN MULTI-SELECT */
 .star-select-wrap { position:relative; }
 .star-select-btn { width:100%; background:var(--warm-white); border:1.5px solid var(--border); border-radius:12px; padding:0.7rem 1rem; font-family:"DM Sans",sans-serif; font-size:0.86rem; color:var(--dark); cursor:pointer; text-align:left; display:flex; align-items:center; justify-content:space-between; }
-.star-select-btn:hover { border-color:#f2937c; }
+.star-select-btn:hover { border-color:#f7b188; }
 .star-dropdown { display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--card); border:1.5px solid var(--border); border-radius:14px; padding:0.6rem; z-index:50; box-shadow:var(--shadow); max-height:280px; overflow-y:auto; }
 .star-dropdown.open { display:block; }
 .star-option { display:flex; align-items:center; gap:0.7rem; padding:0.5rem 0.6rem; border-radius:9px; cursor:pointer; font-size:0.85rem; transition:background 0.15s; }
 .star-option:hover { background:var(--cream); }
-.star-option input[type=checkbox] { accent-color:#f2937c; width:15px; height:15px; cursor:pointer; }
+.star-option input[type=checkbox] { accent-color:#f7b188; width:15px; height:15px; cursor:pointer; }
 .star-option .sign-emoji { font-size:1.1rem; }
 
 /* SOCIAL LINKS ON PROFILE */
@@ -459,7 +459,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
     <a class="landing-logo" href="javascript:void(0)">House<span>folk</span></a>
     <div style="display:flex;gap:0.6rem">
       <button onclick="goToBrowse()" style="background:transparent;border:1.5px solid var(--border);border-radius:10px;padding:0.45rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;color:var(--mid)">Browse listings</button>
-      <button onclick="goToPost()" style="background:#f2937c;border:none;border-radius:10px;padding:0.45rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;color:#fff">Post a listing</button>
+      <button onclick="goToPost()" style="background:#f7b188;border:none;border-radius:10px;padding:0.45rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;color:#fff">Post a listing</button>
     </div>
   </nav>
 
@@ -1341,7 +1341,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 
   <!-- Nav -->
   <nav style="background:var(--card);border-bottom:1px solid var(--border);padding:0 2rem;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50">
-    <a onclick="goToLanding()" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--dark);text-decoration:none;cursor:pointer">home<span style="color:#f2937c">folk</span></a>
+    <a onclick="goToLanding()" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--dark);text-decoration:none;cursor:pointer">home<span style="color:#f7b188">folk</span></a>
     <div style="display:flex;gap:0.7rem;align-items:center">
       <span style="font-size:0.82rem;color:var(--mid)">Want to list your property?</span>
       <button onclick="goToPost()" style="background:#1A1510;border:none;border-radius:10px;padding:0.48rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;color:#fff">Post a listing →</button>
@@ -1368,14 +1368,14 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
         <option value="2">2 beds</option>
         <option value="3">3+ beds</option>
       </select>
-      <button onclick="pubFilterListings()" style="background:#f2937c;color:#fff;border:none;border-radius:10px;padding:0.58rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;cursor:pointer">Search →</button>
+      <button onclick="pubFilterListings()" style="background:#f7b188;color:#fff;border:none;border-radius:10px;padding:0.58rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;cursor:pointer">Search →</button>
     </div>
   </div>
 
   <!-- Sign in banner -->
-  <div style="background:#C4856A;padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
+  <div style="background:#f7b188;padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
     <div style="color:#fff;font-size:0.85rem">🔒 Sign in to message landlords directly</div>
-    <button onclick="showPubUnlockModal()" style="background:#fff;color:#f2937c;border:none;border-radius:8px;padding:0.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign in to message →</button>
+    <button onclick="showPubUnlockModal()" style="background:#fff;color:#f7b188;border:none;border-radius:8px;padding:0.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign in to message →</button>
   </div>
   <div id="pub-unlocked-banner" style="display:none;background:#E8F5EE;border-bottom:1px solid rgba(46,125,82,0.2);padding:0.65rem 2rem;font-size:0.83rem;color:#2E7D52;font-weight:600">✅ Subscribed — contact any landlord directly</div>
 
@@ -1401,7 +1401,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
   </div>
 
   <div id="browse-section-heading" style="padding:1.2rem 2rem 0;display:none">
-    <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--dark)">Find your <em style="color:#f2937c">folk.</em></div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--dark)">Find your <em style="color:#f7b188">folk.</em></div>
     <div style="font-size:0.85rem;color:var(--mid);margin-top:0.2rem">Find the household that feels like home ✨</div>
   </div>
   <div style="padding:0.5rem 2rem 0;font-size:0.8rem;color:var(--light)" id="pub-results-count"></div>
@@ -1430,14 +1430,14 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
           <div style="font-size:0.85rem;color:var(--mid);margin-top:0.2rem" id="detail-location"></div>
         </div>
         <div style="background:#FEF0E8;border:1px solid #F5D5C0;border-radius:10px;padding:0.6rem 1rem;text-align:center;flex-shrink:0">
-          <div style="font-size:0.68rem;color:#f2937c;font-weight:700;text-transform:uppercase">Debuts</div>
-          <div style="font-size:0.82rem;font-weight:600;color:#f2937c">📰 Thursday</div>
+          <div style="font-size:0.68rem;color:#f7b188;font-weight:700;text-transform:uppercase">Debuts</div>
+          <div style="font-size:0.82rem;font-weight:600;color:#f7b188">📰 Thursday</div>
         </div>
       </div>
       <!-- Meta tags -->
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.2rem" id="detail-meta"></div>
       <!-- Motto -->
-      <div style="font-size:0.85rem;color:#f2937c;font-style:italic;border-left:3px solid #f2937c;padding-left:0.8rem;margin-bottom:1.2rem;line-height:1.6" id="detail-motto"></div>
+      <div style="font-size:0.85rem;color:#f7b188;font-style:italic;border-left:3px solid #f7b188;padding-left:0.8rem;margin-bottom:1.2rem;line-height:1.6" id="detail-motto"></div>
       <!-- Description -->
       <div style="font-size:0.88rem;color:var(--mid);line-height:1.75;margin-bottom:1.4rem" id="detail-desc"></div>
       <!-- Details grid -->
@@ -1497,15 +1497,15 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
         <option value="edinburgh">Edinburgh</option>
         <option value="other">Other</option>
       </select>
-      <button onclick="filterListings()" style="background:#f2937c;color:#fff;border:none;border-radius:10px;padding:0.6rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;cursor:pointer">Search →</button>
+      <button onclick="filterListings()" style="background:#f7b188;color:#fff;border:none;border-radius:10px;padding:0.6rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;cursor:pointer">Search →</button>
       <button onclick="clearFilters()" style="background:rgba(255,255,255,0.1);color:#9A8E82;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer">Clear</button>
     </div>
   </div>
 
   <!-- Sign in banner -->
-  <div id="unlock-banner" style="background:#C4856A;padding:0.75rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
+  <div id="unlock-banner" style="background:#f7b188;padding:0.75rem 2.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem">
     <div style="color:#fff;font-size:0.85rem">🔒 Sign in to message landlords directly</div>
-    <button onclick="showUnlockModal()" style="background:#fff;color:#f2937c;border:none;border-radius:8px;padding:0.42rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign in to message →</button>
+    <button onclick="showUnlockModal()" style="background:#fff;color:#f7b188;border:none;border-radius:8px;padding:0.42rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign in to message →</button>
   </div>
   <div id="unlocked-banner" style="display:none;background:#E8F5EE;border-bottom:1px solid rgba(46,125,82,0.2);padding:0.65rem 2.5rem;font-size:0.83rem;color:#2E7D52;font-weight:600">✅ Contacts unlocked — message any landlord for 30 days</div>
 
@@ -1582,7 +1582,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
     <!-- Photo -->
     <div id="dp-photo" style="height:340px;background:linear-gradient(135deg,#F0EFED,#E8E4DF);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:8rem;margin-bottom:2rem;position:relative;overflow:hidden"><span id="dp-photo-emoji" style="font-size:8rem">🏠</span>
       <div id="dp-type-badge" style="position:absolute;top:1rem;left:1rem;background:rgba(26,21,16,0.75);color:#fff;font-size:0.78rem;font-weight:700;padding:0.3rem 0.8rem;border-radius:8px"></div>
-      <div style="position:absolute;top:1rem;right:1rem;background:#f2937c;color:#fff;font-size:0.72rem;font-weight:700;padding:0.3rem 0.8rem;border-radius:8px">📰 Thursday debut</div>
+      <div style="position:absolute;top:1rem;right:1rem;background:#f7b188;color:#fff;font-size:0.72rem;font-weight:700;padding:0.3rem 0.8rem;border-radius:8px">📰 Thursday debut</div>
     </div>
 
     <!-- Price + title -->
@@ -1593,8 +1593,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
         <div style="font-size:0.9rem;color:var(--mid);margin-top:0.3rem" id="dp-location"></div>
       </div>
       <div style="background:#FEF0E8;border:1px solid #F5D5C0;border-radius:14px;padding:0.8rem 1.2rem;text-align:center;flex-shrink:0">
-        <div style="font-size:0.7rem;color:#f2937c;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Debuts</div>
-        <div style="font-size:0.9rem;font-weight:600;color:#f2937c;margin-top:0.2rem">📰 Thursday</div>
+        <div style="font-size:0.7rem;color:#f7b188;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Debuts</div>
+        <div style="font-size:0.9rem;font-weight:600;color:#f7b188;margin-top:0.2rem">📰 Thursday</div>
       </div>
     </div>
 
@@ -1602,7 +1602,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem" id="dp-tags"></div>
 
     <!-- Motto -->
-    <div style="font-size:1rem;color:#f2937c;font-style:italic;border-left:3px solid #f2937c;padding-left:1rem;margin-bottom:1.8rem;line-height:1.7" id="dp-motto"></div>
+    <div style="font-size:1rem;color:#f7b188;font-style:italic;border-left:3px solid #f7b188;padding-left:1rem;margin-bottom:1.8rem;line-height:1.7" id="dp-motto"></div>
 
     <!-- Two column layout -->
     <div style="display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start">
@@ -2134,10 +2134,10 @@ setTimeout(() => {
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1A1510;color:var(--cream);padding:1rem 2rem;z-index:600;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;box-shadow:0 -4px 20px rgba(0,0,0,0.3)">
   <div style="font-size:0.83rem;color:#9A8E82;max-width:600px;line-height:1.6">
     🍪 We use cookies to improve your experience and remember your preferences. By continuing you agree to our 
-    <span onclick="showTerms()" style="color:#f2937c;cursor:pointer;text-decoration:underline">Privacy Policy</span>.
+    <span onclick="showTerms()" style="color:#f7b188;cursor:pointer;text-decoration:underline">Privacy Policy</span>.
   </div>
   <div style="display:flex;gap:0.7rem">
-    <button onclick="acceptCookies()" style="background:#f2937c;color:#fff;border:none;border-radius:9px;padding:0.55rem 1.3rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer">Accept</button>
+    <button onclick="acceptCookies()" style="background:#f7b188;color:#fff;border:none;border-radius:9px;padding:0.55rem 1.3rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer">Accept</button>
     <button onclick="declineCookies()" style="background:transparent;color:#7A6E62;border:1px solid #3A3530;border-radius:9px;padding:0.55rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;cursor:pointer">Decline</button>
   </div>
 </div>
