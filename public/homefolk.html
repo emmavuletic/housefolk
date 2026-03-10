@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Housefolk — Member Portal</title>
+<title>housefolk — find your place</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -366,12 +366,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 .region-btn.active { background:var(--dark);color:#fff;border-color:var(--dark);font-weight:600; }
 @media(max-width:1100px){#listing-grid{grid-template-columns:repeat(2,1fr)!important}}
 @media(max-width:700px){#listing-grid{grid-template-columns:1fr!important}#region-nav{padding:0.6rem 1rem}#listing-detail-page [style*="grid-template-columns:1fr 320px"]{grid-template-columns:1fr!important}}
-.landing-screen { min-height:100vh; display:none; flex-direction:column; background:var(--warm-white); }
+.landing-screen { min-height:100vh; display:none; flex-direction:column; background:#fff; }
 .landing-screen.active { display:flex; }
 .landing-nav { height:124px; background:var(--card); border-bottom:1px solid var(--border); padding:0 2.5rem; display:flex; align-items:center; justify-content:space-between; }
 .landing-logo { font-family:"Playfair Display",serif; font-size:3.2rem; font-weight:400; color:#000; text-decoration:none; letter-spacing:0.08em; }
 .landing-logo span { color:#000; }
-.landing-hero { background:#F0EFED; padding:5rem 2.5rem 4rem; text-align:center; position:relative; overflow:hidden; }
+.landing-hero { background:#fff; padding:5rem 2.5rem 4rem; text-align:center; position:relative; overflow:hidden; }
 .landing-hero::before { content:''; position:absolute; inset:0; background:none; pointer-events:none; }
 .landing-hero h1 { font-family:"Playfair Display",serif; font-size:clamp(1.6rem,3.5vw,2.4rem); color:var(--dark); letter-spacing:-0.5px; line-height:1.1; margin-bottom:1rem; position:relative; font-weight:400; }
 .landing-hero h1 em { font-style:italic; color:#f2937c; }
@@ -393,7 +393,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
 .preview-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; }
 .preview-blur { position:relative; }
 .preview-blur::after { content:"Sign in to see contact details"; position:absolute; bottom:0; left:0; right:0; height:60%; background:linear-gradient(to bottom, transparent, var(--warm-white)); border-radius:0 0 18px 18px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:1rem; font-size:0.78rem; color:var(--mid); font-weight:600; }
-.landing-stats { background:var(--cream); border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; justify-content:center; gap:4rem; flex-wrap:wrap; }
+.landing-stats { background:#fff; border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; justify-content:center; gap:4rem; flex-wrap:wrap; }
 .l-stat { text-align:center; }
 .l-stat .num { font-family:"Playfair Display",serif; font-size:2rem; font-weight:700; color:var(--dark); }
 .l-stat .lbl { font-size:0.78rem; color:var(--mid); margin-top:0.2rem; }
@@ -464,7 +464,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
   </nav>
 
   <div class="landing-hero">
-    <h1>Find your<br><em>place.</em></h1>
+    <h1>Find your <em>place.</em></h1>
     <p>Browse free · Sign up to message landlords directly.</p>
     <div class="landing-cta-row">
       <div class="cta-card browse" onclick="goToBrowse()">
@@ -1382,7 +1382,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
   <!-- Category tabs -->
   <div style="display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 2rem;background:var(--card);overflow-x:auto">
     <button class="listing-tab active" id="pub-lt-all" onclick="pubFilterType('all')">All listings</button>
-    <button class="listing-tab" id="pub-lt-flatshare" onclick="pubFilterType('flatshare')">🏠 Find Your Folk</button>
+    <button class="listing-tab" id="pub-lt-flatshare" onclick="pubFilterType('flatshare')">🏠 Places to hang your hat</button>
     <button class="listing-tab" id="pub-lt-sublet" onclick="pubFilterType('sublet')">🌿 Sublets</button>
     <button class="listing-tab" id="pub-lt-rental" onclick="pubFilterType('rental')">🏢 Short lets &amp; Rentals</button>
   </div>
@@ -1512,7 +1512,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
   <!-- Category tabs -->
   <div style="display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 2rem;background:var(--card);overflow-x:auto">
     <button class="listing-tab active" id="lt-all" onclick="filterType('all')">All listings</button>
-    <button class="listing-tab" id="lt-flatshare" onclick="filterType('flatshare')">🏠 Find Your Folk</button>
+    <button class="listing-tab" id="lt-flatshare" onclick="filterType('flatshare')">🏠 Places to hang your hat</button>
     <button class="listing-tab" id="lt-sublet" onclick="filterType('sublet')">🌿 Sublets</button>
     <button class="listing-tab" id="lt-rental" onclick="filterType('rental')">🏢 Short lets &amp; Rentals</button>
   </div>
