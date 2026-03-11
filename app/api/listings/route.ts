@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     type, title, location, price, beds, baths,
     bills_included, furnished, pet_friendly, description,
     motto, available_date, sublet_until, star_signs,
-    music_vibes, spotify_url, instagram, linkedin, airbnb
+    music_vibes, spotify_url, instagram, linkedin, airbnb, photos
   } = body
 
   if (!type || !title || !location) {
@@ -82,6 +82,7 @@ export async function POST(req: NextRequest) {
     instagram,
     linkedin,
     airbnb,
+    photos: photos || [],
     status: 'pending',
     goes_live_at: goesLive.toISOString(),
     expires_at: expiresAt.toISOString(),

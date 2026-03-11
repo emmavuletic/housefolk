@@ -425,6 +425,7 @@ async function publishListing(btnEl) {
 
   try {
     // 1. Upload photos
+    if (btn) btn.textContent = 'Uploading photos…'
     uploadedPhotoUrls = []
     for (const p of photos) {
       const fd = new FormData()
@@ -440,6 +441,7 @@ async function publishListing(btnEl) {
     }
 
     // 2. Create listing
+    if (btn) btn.textContent = 'Saving listing…'
     const listingData = {
       type: currentTier,
       title: document.getElementById('f-title')?.value?.trim(),
@@ -470,18 +472,6 @@ async function publishListing(btnEl) {
     }
 
     currentListingId = listingResult.listing.id
-
-    // 3. Activate listing
-    const patchResult = await api('/api/listings/' + currentListingId, {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'pending' }),
-    })
-
-    if (patchResult.error) {
-      toast('Failed to activate listing: ' + patchResult.error)
-      resetBtn()
-      return
-    }
 
     resetBtn()
     showSuccessScreen(true)
