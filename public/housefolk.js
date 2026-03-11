@@ -455,6 +455,7 @@ function buildPaySummary() {
 
 // ── PUBLISH LISTING ──
 async function publishListing(btnEl) {
+  await refreshTokenIfNeeded()
   const token = getToken()
   if (!token) { toast('Please sign in first'); return }
 
@@ -475,7 +476,7 @@ async function publishListing(btnEl) {
       try {
         photoRes = await fetch('/api/photos', {
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` },
+          headers: { 'Authorization': `Bearer ${getToken()}` },
           body: fd,
           signal: photoCtrl.signal,
         })
@@ -503,6 +504,7 @@ async function publishListing(btnEl) {
       description: document.getElementById('f-desc')?.value?.trim(),
       motto: document.getElementById('f-motto')?.value?.trim(),
       available_date: document.getElementById('f-avail')?.value,
+      sublet_until: document.getElementById('f-until')?.value || null,
       spotify_url: document.getElementById('f-spotify')?.value?.trim(),
       instagram: document.getElementById('f-instagram')?.value?.trim(),
       linkedin: document.getElementById('f-linkedin')?.value?.trim(),
