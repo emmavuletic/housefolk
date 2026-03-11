@@ -15,7 +15,13 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   const supabase = createServerClient()
   const { data, error } = await supabase
     .from('listings')
-    .select('*')
+    .select(`
+      id, type, title, location, price, beds, baths,
+      bills_included, furnished, pet_friendly, description, motto,
+      available_date, sublet_until, photos, star_signs, music_vibes,
+      spotify_url, instagram, linkedin, airbnb,
+      status, goes_live_at, expires_at, landlord_id
+    `)
     .eq('id', params.id)
     .single()
 
