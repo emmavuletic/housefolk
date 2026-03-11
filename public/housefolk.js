@@ -1114,6 +1114,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('cookie-banner')
     if (el) el.style.display = 'flex'
   }
+  // Handle Google OAuth redirect (token arrives in URL hash)
+  const hash = new URLSearchParams(window.location.hash.slice(1))
+  const oauthToken = hash.get('access_token')
+  if (oauthToken) {
+    window.history.replaceState({}, '', window.location.pathname)
+    authToken = oauthToken
+    api('/api/auth/me').then(data => {
+      if (data.user) {
+        setSession(data.user, oauthToken)
+        launchDash(data.user.first_name || data.user.email?.split('@')[0] || 'You', data.user.last_name || '')
+      } else {
+        toast('Google sign-in failed. Please try again.')
+        showScreen('landing')
+      }
+    })
+    return
+  }
+
   // Restore session if exists
   const savedToken = localStorage.getItem('hf_token')
   const savedUser = localStorage.getItem('hf_user')
