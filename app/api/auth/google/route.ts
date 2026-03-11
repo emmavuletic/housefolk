@@ -1,24 +1,11 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
 
 export async function GET() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-  )
-
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.housefolk.co'
+  const redirectTo = encodeURIComponent(`${appUrl}/homefolk.html`)
 
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${appUrl}/homefolk.html`,
-    },
-  })
+  const oauthUrl = `${supabaseUrl}/auth/v1/authorize?provider=google&redirect_to=${redirectTo}`
 
-  if (error || !data.url) {
-    return NextResponse.redirect(`${appUrl}/homefolk.html?auth_error=1`)
-  }
-
-  return NextResponse.redirect(data.url)
+  return NextResponse.redirect(oauthUrl)
 }
