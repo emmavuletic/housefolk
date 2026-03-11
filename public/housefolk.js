@@ -230,6 +230,7 @@ function showPanel(name) {
     if (dot) dot.style.display = 'none'
     if (badge) badge.style.display = 'none'
   }
+  if (name === 'mylistings') loadMyListings()
 }
 
 function switchMainTab(tab) {
@@ -475,6 +476,7 @@ async function publishListing(btnEl) {
 
     resetBtn()
     showSuccessScreen(true)
+    loadMyListings()
   } catch (err) {
     resetBtn()
     toast('Something went wrong: ' + (err.message || err))
