@@ -710,7 +710,7 @@ async function loadBrowseListings(type = '', location = '') {
   }
 
   const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
-  const hasSubscription = currentUser?.tenant_subscription_status === 'active'
+  const isLoggedIn = !!currentUser
 
   if (data.listings.length === 0) {
     grid.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--light)">No listings available right now. Check back Thursday!</div>'
@@ -738,9 +738,9 @@ async function loadBrowseListings(type = '', location = '') {
           ${l.description ? `<div class="lc-desc">${l.description}</div>` : ''}
           <div class="lc-footer">
             <span class="lc-avail">${l.available_date ? 'From ' + new Date(l.available_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Available now'}</span>
-            ${hasSubscription
-              ? `<button class="lc-contact-btn" onclick="event.stopPropagation();openEnquiryModal('${l.id}','${l.landlord_id}')">Message →</button>`
-              : `<button class="lc-locked-btn" onclick="event.stopPropagation();showUnlockModal()">Sign in to message →</button>`}
+            ${isLoggedIn
+              ? `<button class="lc-contact-btn" onclick="event.stopPropagation();openEnquiryModal('${l.id}','${l.title}')">Message →</button>`
+              : `<button class="lc-locked-btn" onclick="event.stopPropagation();showScreen('auth');switchTab('up')">Sign up to message →</button>`}
           </div>
         </div>
       </div>`
@@ -785,22 +785,36 @@ async function startTenantSubscription() {
   else toast(data.error || 'Something went wrong')
 }
 
-function openEnquiryModal(listingId, landlordId) {
-  // Simple prompt for now — full modal in next iteration
-  const message = prompt('Send a message to the landlord (your contact details will not be shared):')
-  if (!message?.trim()) return
-  sendEnquiry(listingId, message.trim())
+let _enquiryListingId = null
+
+function openEnquiryModal(listingId, listingTitle) {
+  if (!getToken()) { showScreen('auth'); switchTab('up'); return }
+  _enquiryListingId = listingId
+  const titleEl = document.getElementById('contact-listing-title')
+  if (titleEl) titleEl.textContent = listingTitle || 'Contact landlord'
+  const msgEl = document.getElementById('contact-message')
+  if (msgEl) msgEl.value = ''
+  const modal = document.getElementById('contact-modal')
+  if (modal) modal.style.display = 'flex'
 }
 
-async function sendEnquiry(listingId, message) {
+async function sendEnquiry() {
   const token = getToken()
   if (!token) { showScreen('auth'); return }
+  const message = document.getElementById('contact-message')?.value?.trim()
+  if (!message) { toast('Please write a message first'); return }
+  const btn = document.querySelector('#contact-modal .btn-primary')
+  const orig = btn?.textContent
+  if (btn) btn.textContent = 'Sending…'
   const data = await api('/api/enquiries', {
     method: 'POST',
-    body: JSON.stringify({ listing_id: listingId, message }),
+    body: JSON.stringify({ listing_id: _enquiryListingId, message }),
   })
+  if (btn) btn.textContent = orig
   if (data.error) { toast(data.error); return }
-  toast('✓ Message sent to landlord', 'green')
+  document.getElementById('contact-modal').style.display = 'none'
+  toast('✓ Message sent to landlord')
+  loadTenantMessages()
 }
 
 function searchListings() {

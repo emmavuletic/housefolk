@@ -51,16 +51,11 @@ export async function POST(req: NextRequest) {
   const { data: { user }, error: authError } = await supabase.auth.getUser(token)
   if (authError || !user) return NextResponse.json({ error: 'Invalid token.' }, { status: 401 })
 
-  // Check tenant has active subscription
   const { data: profile } = await supabase
     .from('users')
-    .select('tenant_subscription_status, first_name, last_name')
+    .select('first_name, last_name')
     .eq('id', user.id)
     .single()
-
-  if (profile?.tenant_subscription_status !== 'active') {
-    return NextResponse.json({ error: 'Active subscription required to message landlords.' }, { status: 403 })
-  }
 
   const { listing_id, message } = await req.json()
   if (!listing_id || !message?.trim()) {
