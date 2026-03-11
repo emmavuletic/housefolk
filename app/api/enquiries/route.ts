@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
   // Email landlord — no contact details shown
   const landlordData = (listing.users as unknown as { email: string; first_name: string }[] | null)?.[0] ?? null
   if (landlordData?.email) {
-    const tenantName = `${profile.first_name} ${profile.last_name}`.trim()
+    const tenantName = `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim()
     await resend.emails.send({
       from: FROM_EMAIL,
       to: landlordData.email,
