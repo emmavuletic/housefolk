@@ -1505,6 +1505,29 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 </div>
 
 <!-- CONTACT MODAL -->
+<!-- EDIT LISTING MODAL -->
+<div id="listing-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(26,21,16,0.55);z-index:300;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto;backdrop-filter:blur(4px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--card);border-radius:24px;padding:2rem;max-width:500px;width:100%;margin:2rem auto;box-shadow:var(--shadow-lg);animation:fadeUp 0.3s ease both">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700">Edit listing</div>
+      <button onclick="document.getElementById('listing-edit-modal').style.display='none'" style="background:var(--cream);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:0.9rem">✕</button>
+    </div>
+    <div class="field"><label>Listing title</label><input type="text" id="el-title" placeholder="e.g. Bright double room in Hackney"></div>
+    <div class="field-row">
+      <div class="field"><label>Location / postcode</label><input type="text" id="el-location" placeholder="e.g. Hackney, E8"></div>
+      <div class="field"><label>Monthly rent (£)</label><input type="number" id="el-price" placeholder="850"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Bedrooms</label><select id="el-beds"><option value="">Select</option><option>Studio</option><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
+      <div class="field"><label>Available from</label><input type="date" id="el-avail"></div>
+    </div>
+    <div class="field"><label>Listing motto</label><input type="text" id="el-motto" placeholder="One-line hook for your listing"></div>
+    <div class="field"><label>Description</label><textarea id="el-desc" style="min-height:100px" placeholder="Describe your space…"></textarea></div>
+    <div class="field"><label>Spotify playlist URL (optional)</label><input type="url" id="el-spotify" placeholder="https://open.spotify.com/…"></div>
+    <button class="btn btn-primary" id="el-save-btn" onclick="saveListingEdit()">Save changes →</button>
+  </div>
+</div>
+
 <div id="contact-modal" style="display:none;position:fixed;inset:0;background:rgba(26,21,16,0.55);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)" onclick="if(event.target===this)this.style.display='none'">
   <div style="background:var(--card);border-radius:24px;padding:2rem;max-width:400px;width:100%;box-shadow:var(--shadow-lg);animation:fadeUp 0.3s ease both">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem">

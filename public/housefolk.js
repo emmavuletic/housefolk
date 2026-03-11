@@ -610,7 +610,9 @@ async function loadMyListings() {
       <td>💬 —</td>
       <td style="font-size:0.82rem;color:var(--mid)">${l.goes_live_at ? new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : '—'}</td>
       <td>
-        <div style="display:flex;gap:0.4rem">
+        <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="openListing('${l.id}')">Preview</button>
+          ${l.status !== 'expired' ? `<button class="btn btn-ghost btn-sm" onclick="editListing('${l.id}')">Edit</button>` : ''}
           ${l.status !== 'expired' ? `<button class="btn btn-ghost btn-sm" onclick="markAsLet('${l.id}')">Mark let</button>` : ''}
           <button class="btn btn-ghost btn-sm" onclick="deleteListing('${l.id}')" style="color:#C0392B;border-color:#FADBD8">Delete</button>
         </div>
@@ -633,6 +635,60 @@ async function deleteListing(id) {
   const data = await api(`/api/listings/${id}`, { method: 'DELETE' })
   if (data.error) { toast(data.error); return }
   toast('Listing deleted')
+  loadMyListings()
+}
+
+let _editingListingId = null
+
+async function editListing(id) {
+  const data = await api(`/api/listings/${id}`)
+  if (data.error) { toast('Could not load listing'); return }
+  const l = data.listing
+  _editingListingId = id
+
+  document.getElementById('el-title').value = l.title || ''
+  document.getElementById('el-location').value = l.location || ''
+  document.getElementById('el-price').value = l.price ? Math.round(l.price / 100) : ''
+  document.getElementById('el-beds').value = l.beds || ''
+  document.getElementById('el-desc').value = l.description || ''
+  document.getElementById('el-motto').value = l.motto || ''
+  document.getElementById('el-avail').value = l.available_date || ''
+  document.getElementById('el-spotify').value = l.spotify_url || ''
+
+  document.getElementById('listing-edit-modal').style.display = 'flex'
+}
+
+async function saveListingEdit() {
+  if (!_editingListingId) return
+  const btn = document.getElementById('el-save-btn')
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…' }
+
+  const updates = {
+    title: document.getElementById('el-title').value.trim(),
+    location: document.getElementById('el-location').value.trim(),
+    price: document.getElementById('el-price').value ? Math.round(parseFloat(document.getElementById('el-price').value) * 100) : null,
+    beds: document.getElementById('el-beds').value,
+    description: document.getElementById('el-desc').value.trim(),
+    motto: document.getElementById('el-motto').value.trim(),
+    available_date: document.getElementById('el-avail').value || null,
+    spotify_url: document.getElementById('el-spotify').value.trim() || null,
+  }
+
+  if (!updates.title || !updates.location) {
+    toast('Title and location are required')
+    if (btn) { btn.disabled = false; btn.textContent = 'Save changes →' }
+    return
+  }
+
+  const data = await api(`/api/listings/${_editingListingId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(updates),
+  })
+  if (btn) { btn.disabled = false; btn.textContent = 'Save changes →' }
+  if (data.error) { toast(data.error); return }
+
+  document.getElementById('listing-edit-modal').style.display = 'none'
+  toast('✓ Listing updated', 'green')
   loadMyListings()
 }
 
@@ -767,8 +823,82 @@ async function loadBrowseListings(type = '', location = '') {
   }).join('')
 }
 
-function openListing(id) {
-  // TODO: open listing detail view
+async function openListing(id) {
+  const modal = document.getElementById('listing-detail-modal')
+  if (!modal) return
+  modal.style.display = 'flex'
+  document.getElementById('detail-photo').innerHTML = '<span style="font-size:4rem;opacity:0.3">⏳</span>'
+  document.getElementById('detail-title').textContent = 'Loading…'
+  document.getElementById('detail-location').textContent = ''
+  document.getElementById('detail-price').textContent = ''
+  document.getElementById('detail-meta').innerHTML = ''
+  document.getElementById('detail-motto').textContent = ''
+  document.getElementById('detail-desc').textContent = ''
+  document.getElementById('detail-grid').innerHTML = ''
+  document.getElementById('detail-contact-wrap').innerHTML = ''
+
+  const data = await api(`/api/listings/${id}`)
+  if (data.error) { closeListing(); toast('Could not load listing'); return }
+  const l = data.listing
+  const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
+
+  // Photo
+  const photoEl = document.getElementById('detail-photo')
+  if (l.photos && l.photos.length > 0) {
+    photoEl.style.backgroundImage = `url(${l.photos[0]})`
+    photoEl.style.backgroundSize = 'cover'
+    photoEl.style.backgroundPosition = 'center'
+    photoEl.innerHTML = `
+      <div style="position:absolute;top:1rem;right:1rem;display:flex;gap:0.5rem">
+        <button onclick="closeListing()" style="background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)">✕</button>
+      </div>
+      <div style="position:absolute;top:1rem;left:1rem" id="detail-type-badge"></div>`
+  } else {
+    photoEl.style.backgroundImage = ''
+    photoEl.innerHTML = `
+      <span style="font-size:5rem">${typeIcon[l.type] || '🏠'}</span>
+      <div style="position:absolute;top:1rem;right:1rem">
+        <button onclick="closeListing()" style="background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)">✕</button>
+      </div>`
+  }
+
+  // Type badge
+  const badgeEl = document.getElementById('detail-type-badge')
+  if (badgeEl) badgeEl.innerHTML = `<span class="badge badge-type">${typeIcon[l.type] || ''} ${l.type}</span>`
+
+  document.getElementById('detail-title').textContent = l.title || ''
+  document.getElementById('detail-location').textContent = l.location ? `📍 ${l.location}` : ''
+  document.getElementById('detail-price').textContent = l.price ? `£${Math.round(l.price / 100).toLocaleString()}/mo` : ''
+
+  const meta = []
+  if (l.beds) meta.push(`🛏 ${l.beds} bed${l.beds === '1' ? '' : 's'}`)
+  if (l.bills_included) meta.push('💡 Bills included')
+  if (l.available_date) meta.push(`📅 Available ${new Date(l.available_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`)
+  document.getElementById('detail-meta').innerHTML = meta.map(m => `<span class="badge badge-type" style="font-size:0.78rem">${m}</span>`).join('')
+
+  document.getElementById('detail-motto').textContent = l.motto || ''
+  document.getElementById('detail-motto').style.display = l.motto ? '' : 'none'
+  document.getElementById('detail-desc').textContent = l.description || ''
+
+  // Status info
+  const statusLabel = { pending: '📰 Scheduled for Thursday', active: '● Live', let: 'Let', expired: 'Expired' }
+  document.getElementById('detail-grid').innerHTML = `
+    <div style="font-size:0.8rem;color:var(--mid)">Status</div><div style="font-size:0.85rem;font-weight:600">${statusLabel[l.status] || l.status}</div>
+    ${l.goes_live_at ? `<div style="font-size:0.8rem;color:var(--mid)">Goes live</div><div style="font-size:0.85rem;font-weight:600">${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' })}</div>` : ''}
+    ${l.spotify_url ? `<div style="font-size:0.8rem;color:var(--mid)">Spotify</div><div style="font-size:0.85rem"><a href="${l.spotify_url}" target="_blank" style="color:var(--accent)">🎵 Playlist</a></div>` : ''}`
+
+  // Contact wrap — show enquiry button if logged in and not own listing
+  const contactWrap = document.getElementById('detail-contact-wrap')
+  if (currentUser && l.landlord_id !== currentUser.id) {
+    contactWrap.innerHTML = `<button class="btn btn-primary" style="width:100%" onclick="openEnquiryModal('${l.id}', ${JSON.stringify(l.title)})">Message landlord →</button>`
+  } else {
+    contactWrap.innerHTML = ''
+  }
+}
+
+function closeListing() {
+  const modal = document.getElementById('listing-detail-modal')
+  if (modal) modal.style.display = 'none'
 }
 
 function showUnlockModal() {
