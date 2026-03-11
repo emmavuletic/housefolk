@@ -29,10 +29,19 @@ async function api(path, opts = {}) {
   const token = getToken()
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
   if (token) headers['Authorization'] = `Bearer ${token}`
-  const res = await fetch(path, { ...opts, headers })
-  const ct = res.headers.get('content-type') || ''
-  if (!ct.includes('application/json')) return { error: `Unexpected response (${res.status})` }
-  return res.json()
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 30000)
+  try {
+    const res = await fetch(path, { ...opts, headers, signal: controller.signal })
+    clearTimeout(timer)
+    const ct = res.headers.get('content-type') || ''
+    if (!ct.includes('application/json')) return { error: `Server error (${res.status}). Please try again.` }
+    return res.json()
+  } catch (err) {
+    clearTimeout(timer)
+    if (err.name === 'AbortError') return { error: 'Request timed out. Please check your connection and try again.' }
+    return { error: err.message || 'Network error. Please try again.' }
+  }
 }
 
 // ── TOAST ──
@@ -431,12 +440,25 @@ async function publishListing(btnEl) {
     for (const p of photos) {
       const fd = new FormData()
       fd.append('file', p.file)
-      const res = await fetch('/api/photos', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: fd,
-      })
-      const data = await res.json()
+      const photoCtrl = new AbortController()
+      const photoTimer = setTimeout(() => photoCtrl.abort(), 30000)
+      let photoRes
+      try {
+        photoRes = await fetch('/api/photos', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: fd,
+          signal: photoCtrl.signal,
+        })
+        clearTimeout(photoTimer)
+      } catch (err) {
+        clearTimeout(photoTimer)
+        const msg = err.name === 'AbortError' ? 'Photo upload timed out. Try a smaller photo.' : 'Photo upload failed: ' + err.message
+        toast(msg)
+        resetBtn()
+        return
+      }
+      const data = await photoRes.json()
       if (data.error) { toast('Photo upload failed: ' + data.error); resetBtn(); return }
       if (data.url) uploadedPhotoUrls.push(data.url)
     }
