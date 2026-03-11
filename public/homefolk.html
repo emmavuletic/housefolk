@@ -634,43 +634,69 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
 
       <!-- ── OVERVIEW ── -->
       <div class="dash-panel active" id="panel-overview">
-        <div class="panel-header">
-          <h1>Good morning, <span id="greeting-name">Alex</span> 👋</h1>
-          <p>Here's your account at a glance.</p>
-        </div>
-        <div class="stat-row">
-          <div class="stat-c"><div class="slabel">Active listings</div><div class="svalue">2</div><div class="ssub trend">↑ 1 this week</div></div>
-          <div class="stat-c"><div class="slabel">Total enquiries</div><div class="svalue">11</div><div class="ssub trend">↑ 3 new today</div></div>
-          <div class="stat-c"><div class="slabel">Profile views</div><div class="svalue">284</div><div class="ssub">Last 7 days</div></div>
-          <div class="stat-c"><div class="slabel">Newsletter reach</div><div class="svalue">8.1k</div><div class="ssub">Next: Thursday</div></div>
-        </div>
 
-        <!-- Thursday countdown -->
-        <div class="embargo-banner">
-          <span class="eb-icon">📰</span>
-          <div class="eb-text">
-            <h3>New listings debut this Thursday</h3>
-            <p>Listings posted this week go live on Thursday when the newsletter sends. Subscribers get them first — in their inbox and on the site at the same time.</p>
+        <!-- LANDLORD VIEW -->
+        <div id="overview-landlord">
+          <div class="panel-header">
+            <h1>Good morning, <span id="greeting-name">Alex</span> 👋</h1>
+            <p>Here's your account at a glance.</p>
           </div>
-          <div class="eb-countdown">
-            <div class="eb-days" id="days-until-thu">—</div>
-            <div class="eb-until">days to Thursday</div>
+          <div class="stat-row">
+            <div class="stat-c"><div class="slabel">Active listings</div><div class="svalue">2</div><div class="ssub trend">↑ 1 this week</div></div>
+            <div class="stat-c"><div class="slabel">Total enquiries</div><div class="svalue">11</div><div class="ssub trend">↑ 3 new today</div></div>
+            <div class="stat-c"><div class="slabel">Newsletter reach</div><div class="svalue">8.1k</div><div class="ssub">Next: Thursday</div></div>
           </div>
-        </div>
-
-        <div style="display:flex;gap:0.8rem;margin-bottom:1.5rem;flex-wrap:wrap">
-          <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.4rem" onclick="showPanel('post')">➕ Post new listing</button>
-          <button class="btn btn-outline btn-auto" style="padding:0.65rem 1.4rem" onclick="showPanel('newsletter')">📰 Preview newsletter</button>
-        </div>
-
-        <div class="fcard">
-          <div class="fcard-title">This week's Thursday newsletter</div>
-          <div class="fcard-sub">Your active listings are queued for Thursday's edition.</div>
-          <div style="background:var(--cream);border-radius:10px;padding:1rem 1.1rem;font-size:0.83rem;color:var(--mid);line-height:1.8">
-            ✅ &nbsp;<strong>Sunny room in Hackney</strong> — queued for Thursday<br>
-            ✅ &nbsp;<strong>Modern 2-bed, Salford</strong> — queued for Thursday
+          <div class="embargo-banner">
+            <span class="eb-icon">📰</span>
+            <div class="eb-text">
+              <h3>New listings debut this Thursday</h3>
+              <p>Listings posted this week go live on Thursday when the newsletter sends. Subscribers get them first — in their inbox and on the site at the same time.</p>
+            </div>
+            <div class="eb-countdown">
+              <div class="eb-days" id="days-until-thu">—</div>
+              <div class="eb-until">days to Thursday</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.8rem;margin-bottom:1.5rem;flex-wrap:wrap">
+            <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.4rem" onclick="showPanel('post')">➕ Post new listing</button>
+          </div>
+          <div class="fcard">
+            <div class="fcard-title">This week's Thursday newsletter</div>
+            <div class="fcard-sub">Your active listings are queued for Thursday's edition.</div>
+            <div style="background:var(--cream);border-radius:10px;padding:1rem 1.1rem;font-size:0.83rem;color:var(--mid);line-height:1.8">
+              ✅ &nbsp;<strong>Sunny room in Hackney</strong> — queued for Thursday<br>
+              ✅ &nbsp;<strong>Modern 2-bed, Salford</strong> — queued for Thursday
+            </div>
           </div>
         </div>
+
+        <!-- TENANT VIEW -->
+        <div id="overview-tenant" style="display:none">
+          <div class="panel-header">
+            <h1>Good morning, <span id="greeting-name-tenant">there</span> 👋</h1>
+            <p id="tenant-overview-sub">New listings arrive every Thursday.</p>
+          </div>
+          <div id="tenant-thursday-cta" style="display:none" class="fcard" style="background:var(--green-light);border-color:rgba(46,125,82,0.2);text-align:center;padding:2rem">
+            <div style="font-size:2.5rem;margin-bottom:0.8rem">🎉</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:0.5rem">It's Thursday — listings are live!</div>
+            <p style="color:var(--mid);font-size:0.88rem;margin-bottom:1.2rem">This week's flatshares, sublets and rentals are ready to browse.</p>
+            <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.6rem" onclick="switchMainTab('browse')">Browse this week's listings →</button>
+          </div>
+          <div id="tenant-wait-cta" class="fcard" style="text-align:center;padding:2.5rem">
+            <div style="font-size:2.5rem;margin-bottom:0.8rem">📰</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:0.5rem">Sign back in on Thursday</div>
+            <p style="color:var(--mid);font-size:0.88rem;line-height:1.7;max-width:360px;margin:0 auto 1.2rem">New flatshares, sublets and rentals drop every Thursday. We'll have listings ready for you to browse and message landlords directly.</p>
+            <div id="tenant-days-wrap" style="display:inline-block;background:var(--cream);border-radius:12px;padding:0.6rem 1.4rem;font-size:0.85rem;color:var(--mid)">
+              <strong id="tenant-days-thu" style="color:var(--dark);font-size:1.1rem">—</strong> days until Thursday
+            </div>
+          </div>
+          <div class="fcard" style="margin-top:0">
+            <div class="fcard-title">💬 Your messages</div>
+            <div class="fcard-sub">Messages you've sent to landlords will appear here.</div>
+            <div id="tenant-messages-wrap" style="text-align:center;padding:1.5rem;color:var(--light);font-size:0.86rem">No messages yet — browse listings on Thursday and message landlords directly.</div>
+          </div>
+        </div>
+
       </div>
 
       <!-- ── POST A LISTING ── -->

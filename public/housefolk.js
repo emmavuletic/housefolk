@@ -168,11 +168,36 @@ function launchDash(first, last) {
   document.getElementById('u-name').textContent = first + (last ? ' ' + last[0] + '.' : '')
   document.getElementById('greeting-name').textContent = first
 
-  // Show admin badge and admin sidebar items if admin
+  const role = currentUser?.role || 'tenant'
+  const isTenant = role === 'tenant'
+
+  // Show admin badge and items if admin
   const adminBadge = document.getElementById('admin-badge')
-  if (currentUser?.role === 'admin') {
+  if (role === 'admin') {
     if (adminBadge) adminBadge.style.display = 'inline'
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = '')
+  }
+
+  // Swap overview panel based on role
+  if (isTenant) {
+    document.getElementById('overview-landlord').style.display = 'none'
+    document.getElementById('overview-tenant').style.display = 'block'
+    const nameEl = document.getElementById('greeting-name-tenant')
+    if (nameEl) nameEl.textContent = first
+
+    // Thursday check
+    const now = new Date()
+    const day = now.getDay() // 0=Sun, 4=Thu
+    const daysToThu = day === 4 ? 0 : (4 - day + 7) % 7
+
+    if (daysToThu === 0) {
+      document.getElementById('tenant-thursday-cta').style.display = 'block'
+      document.getElementById('tenant-wait-cta').style.display = 'none'
+    } else {
+      const daysEl = document.getElementById('tenant-days-thu')
+      if (daysEl) daysEl.textContent = daysToThu
+    }
+    loadTenantMessages()
   }
 
   showScreen('dash')
@@ -180,7 +205,7 @@ function launchDash(first, last) {
   showPanel('overview')
   loadMyListings()
   loadEnquiries()
-  if (currentUser?.role === 'admin') {
+  if (role === 'admin') {
     loadSubscribers()
     loadPromos()
   }
@@ -631,6 +656,30 @@ async function loadEnquiries() {
         </div>
         ${!e.read ? '<div class="i-dot"></div>' : ''}
       </div>`
+  }).join('')
+}
+
+async function loadTenantMessages() {
+  const token = getToken()
+  if (!token) return
+  const data = await api('/api/enquiries')
+  const wrap = document.getElementById('tenant-messages-wrap')
+  if (!wrap) return
+  if (data.error || !data.enquiries || data.enquiries.length === 0) {
+    wrap.innerHTML = '<div style="padding:1rem;color:var(--light);font-size:0.86rem">No messages yet — browse listings on Thursday and message landlords directly.</div>'
+    return
+  }
+  wrap.innerHTML = data.enquiries.map(e => {
+    const listing = e.listing || {}
+    const timeAgo = formatTimeAgo(e.created_at)
+    return `<div class="inbox-item" style="cursor:default">
+      <div class="i-avatar" style="background:linear-gradient(135deg,#f7b188,#c4856a)">🏠</div>
+      <div class="i-body">
+        <div class="i-head"><span class="i-name">${listing.title || 'Listing'}</span><span class="i-time">${timeAgo}</span></div>
+        <div class="i-listing">Your message to landlord</div>
+        <div class="i-preview">${e.message}</div>
+      </div>
+    </div>`
   }).join('')
 }
 
