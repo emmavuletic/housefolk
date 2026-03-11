@@ -415,70 +415,76 @@ function buildPaySummary() {
 }
 
 // ── PUBLISH LISTING ──
-async function publishListing() {
+async function publishListing(btnEl) {
   const token = getToken()
   if (!token) { toast('Please sign in first'); return }
 
-  const btn = event?.target
+  const btn = btnEl || event?.target
   if (btn) { btn.disabled = true; btn.textContent = 'Processing…' }
-
-  const resetBtn = () => { if (btn) { btn.disabled = false; btn.textContent = 'Confirm' } }
+  const resetBtn = () => { if (btn) { btn.disabled = false; btn.textContent = 'Confirm & schedule for Thursday →' } }
 
   try {
+    // 1. Upload photos
+    uploadedPhotoUrls = []
+    for (const p of photos) {
+      const fd = new FormData()
+      fd.append('file', p.file)
+      const res = await fetch('/api/photos', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: fd,
+      })
+      const data = await res.json()
+      if (data.error) { toast('Photo upload failed: ' + data.error); resetBtn(); return }
+      if (data.url) uploadedPhotoUrls.push(data.url)
+    }
 
-  // 1. Upload photos to Supabase Storage
-  uploadedPhotoUrls = []
-  for (const p of photos) {
-    const fd = new FormData()
-    fd.append('file', p.file)
-    const res = await fetch('/api/photos', {
+    // 2. Create listing
+    const listingData = {
+      type: currentTier,
+      title: document.getElementById('f-title')?.value?.trim(),
+      location: document.getElementById('f-loc')?.value?.trim(),
+      price: document.getElementById('f-price')?.value,
+      beds: document.getElementById('f-beds')?.value,
+      description: document.getElementById('f-desc')?.value?.trim(),
+      motto: document.getElementById('f-motto')?.value?.trim(),
+      available_date: document.getElementById('f-avail')?.value,
+      spotify_url: document.getElementById('f-spotify')?.value?.trim(),
+      instagram: document.getElementById('f-instagram')?.value?.trim(),
+      linkedin: document.getElementById('f-linkedin')?.value?.trim(),
+      airbnb: document.getElementById('f-airbnb')?.value?.trim(),
+      photos: uploadedPhotoUrls,
+      star_signs: getSelectedStarSigns(),
+      music_vibes: getSelectedMusicVibes(),
+    }
+
+    const listingResult = await api('/api/listings', {
       method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-      body: fd,
+      body: JSON.stringify(listingData),
     })
-    const data = await res.json()
-    if (data.url) uploadedPhotoUrls.push(data.url)
-  }
 
-  // 2. Create listing in database
-  const listingData = {
-    type: currentTier,
-    title: document.getElementById('f-title')?.value?.trim(),
-    location: document.getElementById('f-loc')?.value?.trim(),
-    price: document.getElementById('f-price')?.value,
-    beds: document.getElementById('f-beds')?.value,
-    description: document.getElementById('f-desc')?.value?.trim(),
-    motto: document.getElementById('f-motto')?.value?.trim(),
-    available_date: document.getElementById('f-avail')?.value,
-    spotify_url: document.getElementById('f-spotify')?.value?.trim(),
-    instagram: document.getElementById('f-instagram')?.value?.trim(),
-    linkedin: document.getElementById('f-linkedin')?.value?.trim(),
-    airbnb: document.getElementById('f-airbnb')?.value?.trim(),
-    photos: uploadedPhotoUrls,
-    star_signs: getSelectedStarSigns(),
-    music_vibes: getSelectedMusicVibes(),
-  }
+    if (listingResult.error || !listingResult.listing) {
+      toast(listingResult.error || 'Failed to create listing. Please try again.')
+      resetBtn()
+      return
+    }
 
-  const listingResult = await api('/api/listings', {
-    method: 'POST',
-    body: JSON.stringify(listingData),
-  })
+    currentListingId = listingResult.listing.id
 
-  if (listingResult.error || !listingResult.listing) {
-    toast(listingResult.error || 'Failed to create listing. Please try again.')
+    // 3. Activate listing
+    const patchResult = await api('/api/listings/' + currentListingId, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'pending' }),
+    })
+
+    if (patchResult.error) {
+      toast('Failed to activate listing: ' + patchResult.error)
+      resetBtn()
+      return
+    }
+
     resetBtn()
-    return
-  }
-
-  currentListingId = listingResult.listing.id
-
-  // 3. Skip payment for now — activate listing directly
-  await api('/api/listings/' + currentListingId, {
-    method: 'PATCH',
-    body: JSON.stringify({ status: 'pending' }),
-  })
-  resetBtn()
-  showSuccessScreen(true)
+    showSuccessScreen(true)
   } catch (err) {
     resetBtn()
     toast('Something went wrong: ' + (err.message || err))
