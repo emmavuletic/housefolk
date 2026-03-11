@@ -37,7 +37,10 @@ export async function POST(req: NextRequest) {
 
   const token = auth.replace('Bearer ', '')
   const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-  if (authError || !user) return NextResponse.json({ error: 'Invalid token.' }, { status: 401 })
+  if (authError || !user) {
+    console.error('[listings POST] Auth error:', authError?.message)
+    return NextResponse.json({ error: 'Invalid token.' }, { status: 401 })
+  }
 
   const body = await req.json()
   const {
@@ -88,6 +91,13 @@ export async function POST(req: NextRequest) {
     expires_at: expiresAt.toISOString(),
   }).select().single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) {
+    console.error('[listings POST] DB error:', error.message, error.code)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+  if (!data) {
+    console.error('[listings POST] No data returned from insert')
+    return NextResponse.json({ error: 'Listing was not saved. Please try again.' }, { status: 500 })
+  }
   return NextResponse.json({ listing: data }, { status: 201 })
 }
