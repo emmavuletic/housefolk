@@ -240,6 +240,7 @@ function showPanel(name) {
     if (badge) badge.style.display = 'none'
   }
   if (name === 'mylistings') loadMyListings()
+  if (name === 'post') resetPost()
 }
 
 function switchMainTab(tab) {
@@ -278,6 +279,8 @@ let promoApplied = false
 
 function selectTier(tier) {
   currentTier = tier
+  photos = []
+  uploadedPhotoUrls = []
   promoApplied = false
   const P = PLANS[tier]
   ;['flatshare', 'rental', 'sublet'].forEach(t => {
