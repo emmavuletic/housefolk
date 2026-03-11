@@ -11,21 +11,47 @@ let currentListingId = null
 function getToken() {
   return authToken || localStorage.getItem('hf_token')
 }
-function setSession(user, token) {
+function setSession(user, token, refreshToken, expiresAt) {
   currentUser = user
   authToken = token
   localStorage.setItem('hf_token', token)
   localStorage.setItem('hf_user', JSON.stringify(user))
+  if (refreshToken) localStorage.setItem('hf_refresh', refreshToken)
+  if (expiresAt) localStorage.setItem('hf_expires', String(expiresAt))
 }
 function clearSession() {
   currentUser = null
   authToken = null
   localStorage.removeItem('hf_token')
   localStorage.removeItem('hf_user')
+  localStorage.removeItem('hf_refresh')
+  localStorage.removeItem('hf_expires')
+}
+
+async function refreshTokenIfNeeded() {
+  const expiresAt = parseInt(localStorage.getItem('hf_expires') || '0', 10)
+  const now = Math.floor(Date.now() / 1000)
+  if (!expiresAt || now < expiresAt - 60) return true // still valid
+  const refreshToken = localStorage.getItem('hf_refresh')
+  if (!refreshToken) return false
+  const res = await fetch('/api/auth/refresh', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refresh_token: refreshToken }),
+  })
+  if (!res.ok) return false
+  const data = await res.json()
+  if (data.error) return false
+  authToken = data.access_token
+  localStorage.setItem('hf_token', data.access_token)
+  if (data.refresh_token) localStorage.setItem('hf_refresh', data.refresh_token)
+  if (data.expires_at) localStorage.setItem('hf_expires', String(data.expires_at))
+  return true
 }
 
 // ── API HELPER ──
 async function api(path, opts = {}) {
+  await refreshTokenIfNeeded()
   const token = getToken()
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
   if (token) headers['Authorization'] = `Bearer ${token}`
@@ -76,7 +102,7 @@ async function doSignIn() {
 
   if (data.error) { toast(data.error); return }
 
-  setSession(data.user, data.session.access_token)
+  setSession(data.user, data.session.access_token, data.session.refresh_token, data.session.expires_at)
   launchDash(data.user.first_name || email.split('@')[0], data.user.last_name || '')
   checkSuccessParam()
 }
