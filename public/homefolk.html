@@ -660,14 +660,6 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
           <div style="display:flex;gap:0.8rem;margin-bottom:1.5rem;flex-wrap:wrap">
             <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.4rem" onclick="showPanel('post')">➕ Post new listing</button>
           </div>
-          <div class="fcard">
-            <div class="fcard-title">This week's Thursday newsletter</div>
-            <div class="fcard-sub">Your active listings are queued for Thursday's edition.</div>
-            <div style="background:var(--cream);border-radius:10px;padding:1rem 1.1rem;font-size:0.83rem;color:var(--mid);line-height:1.8">
-              ✅ &nbsp;<strong>Sunny room in Hackney</strong> — queued for Thursday<br>
-              ✅ &nbsp;<strong>Modern 2-bed, Salford</strong> — queued for Thursday
-            </div>
-          </div>
         </div>
 
         <!-- TENANT VIEW -->
@@ -963,38 +955,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
         <div class="fcard" style="padding:0;overflow:hidden">
           <table class="data-table">
             <thead><tr><th style="padding-left:1.4rem">Listing</th><th>Type</th><th>Status</th><th>Enquiries</th><th>Goes live</th><th></th></tr></thead>
-            <tbody>
-              <tr>
-                <td style="padding-left:1.4rem"><div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.3rem">🏠</span><div><div style="font-weight:600;font-size:0.87rem">Sunny double room in Hackney</div><div style="font-size:0.73rem;color:var(--light)">📍 Hackney, E8</div></div></div></td>
-                <td><span class="badge badge-type">🏠 Flatshare</span></td>
-                <td><span class="badge badge-thursday">📰 Thu debut</span></td>
-                <td>💬 7</td>
-                <td style="font-size:0.82rem;color:var(--mid)">This Thursday</td>
-                <td><div style="display:flex;gap:0.3rem">
-                  <button class="btn btn-ghost btn-sm" onclick="editListing(1)">Edit</button>
-                  <button class="btn btn-ghost btn-sm" onclick="markAsLet(1)" style="color:var(--green);border-color:rgba(46,125,82,0.3)">Mark as let</button>
-                </div></td>
-              </tr>
-              <tr>
-                <td style="padding-left:1.4rem"><div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.3rem">🏢</span><div><div style="font-weight:600;font-size:0.87rem">Modern 2-bed, Salford</div><div style="font-size:0.73rem;color:var(--light)">📍 Salford, M1</div></div></div></td>
-                <td><span class="badge badge-type">🏢 Rental</span></td>
-                <td><span class="badge badge-live">● Live</span></td>
-                <td>💬 4</td>
-                <td style="font-size:0.82rem;color:var(--mid)">Expires Fri</td>
-                <td><div style="display:flex;gap:0.3rem">
-                  <button class="btn btn-ghost btn-sm" onclick="editListing(2)">Edit</button>
-                  <button class="btn btn-ghost btn-sm" onclick="markAsLet(2)" style="color:var(--green);border-color:rgba(46,125,82,0.3)">Mark as let</button>
-                </div></td>
-              </tr>
-              <tr>
-                <td style="padding-left:1.4rem"><div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.3rem">🌿</span><div><div style="font-weight:600;font-size:0.87rem">Studio sublet, Bristol</div><div style="font-size:0.73rem;color:var(--light)">📍 Stokes Croft, BS1</div></div></div></td>
-                <td><span class="badge badge-type">🌿 Sublet</span></td>
-                <td><span class="badge badge-expired">Expired</span></td>
-                <td>💬 3</td>
-                <td style="font-size:0.82rem;color:var(--light)">Ended</td>
-                <td><div style="display:flex;gap:0.3rem"><button class="btn btn-ghost btn-sm" onclick="showPanel('post')">Repost</button><button class="btn btn-ghost btn-sm" style="color:#C0392B;border-color:#FADBD8" onclick="deleteListing(3)">Delete</button></div></td>
-              </tr>
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
       </div>
@@ -1003,10 +964,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
       <div class="dash-panel" id="panel-inbox">
         <div class="panel-header"><h1>Enquiries</h1><p>Messages from renters interested in your listings.</p></div>
         <div class="fcard" style="padding:0;overflow:hidden">
-          <div class="inbox-item unread"><div class="i-avatar" style="background:linear-gradient(135deg,#4A90D9,#7B68EE)">JM</div><div class="i-body"><div class="i-head"><span class="i-name">Jamie Morris</span><span class="i-time">2h ago</span></div><div class="i-listing">Re: Sunny double room in Hackney</div><div class="i-preview">Hi! I'm really interested in the room. I'm a 28-year-old graphic designer. Would love to arrange a viewing…</div></div><div class="i-dot"></div></div>
-          <div class="inbox-item unread"><div class="i-avatar" style="background:linear-gradient(135deg,#2E7D52,#4CAF7D)">SP</div><div class="i-body"><div class="i-head"><span class="i-name">Sara Patel</span><span class="i-time">5h ago</span></div><div class="i-listing">Re: Modern 2-bed, Salford</div><div class="i-preview">Hello, my partner and I are looking for a flat from next month. Could you tell me more about parking?</div></div><div class="i-dot"></div></div>
-          <div class="inbox-item unread"><div class="i-avatar" style="background:linear-gradient(135deg,#1A1510,#4A4540)">TK</div><div class="i-body"><div class="i-head"><span class="i-name">Tom Kimura</span><span class="i-time">Yesterday</span></div><div class="i-listing">Re: Sunny double room in Hackney</div><div class="i-preview">I saw it in Thursday's newsletter — I'm very keen. Can move in immediately if it works…</div></div><div class="i-dot"></div></div>
-          <div class="inbox-item"><div class="i-avatar" style="background:#888">LR</div><div class="i-body"><div class="i-head"><span class="i-name">Lucy Richards</span><span class="i-time">2 days ago</span></div><div class="i-listing">Re: Studio sublet, Bristol</div><div class="i-preview">Thanks — the dates don't quite work for us. Good luck with the listing!</div></div></div>
+          <div style="padding:2rem;text-align:center;color:var(--light);font-size:0.86rem">No enquiries yet.</div>
         </div>
       </div>
 
@@ -1299,9 +1257,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FDF1EA; color: var(--dar
           <table class="data-table">
             <thead><tr><th style="padding-left:1.4rem">Date</th><th>Description</th><th>Amount</th><th>Status</th><th></th></tr></thead>
             <tbody>
-              <tr><td style="padding-left:1.4rem;font-size:0.81rem;color:var(--light)">28 Feb 2025</td><td><div style="font-weight:600;font-size:0.86rem">Flatshare — Sunny double room, Hackney</div><div style="font-size:0.73rem;color:var(--light)">7-day listing + newsletter debut</div></td><td style="font-weight:700;color:var(--green)">Free</td><td><span class="badge badge-live">Published</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
-              <tr><td style="padding-left:1.4rem;font-size:0.81rem;color:var(--light)">14 Feb 2025</td><td><div style="font-weight:600;font-size:0.86rem">Apartment Rental — Modern 2-bed, Salford</div><div style="font-size:0.73rem;color:var(--light)">7-day listing + newsletter debut</div></td><td style="font-weight:700;color:var(--green)">Free</td><td><span class="badge badge-live">Published</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
-              <tr><td style="padding-left:1.4rem;font-size:0.81rem;color:var(--light)">2 Jan 2025</td><td><div style="font-weight:600;font-size:0.86rem">Sublet — Studio, Bristol</div><div style="font-size:0.73rem;color:var(--light)">Free listing</div></td><td style="font-weight:700;color:var(--green)">Free</td><td><span class="badge badge-live">Published</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+              <tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--light);font-size:0.86rem">No billing history yet.</td></tr>
             </tbody>
           </table>
         </div>
