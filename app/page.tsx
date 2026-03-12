@@ -1,8 +1,12 @@
-import { redirect } from 'next/navigation'
+'use client'
+import { useEffect } from 'react'
 
-// Redirect root to the app
-// The full HTML app is served from /homefolk.html in public/
-// API routes live at /api/* on the same Vercel domain
+// Client-side redirect so the URL hash (e.g. #access_token=... from Google OAuth)
+// is preserved when forwarding to /homefolk.html.
+// Server-side redirects strip the hash fragment.
 export default function Home() {
-  redirect('/homefolk.html')
+  useEffect(() => {
+    window.location.replace('/homefolk.html' + window.location.search + window.location.hash)
+  }, [])
+  return null
 }
