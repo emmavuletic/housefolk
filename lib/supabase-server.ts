@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 // Server-side client with secret key — never exposed to browser
 export function createServerClient() {
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    'https://agfgtajovhhxswfdcqen.supabase.co',
     process.env.SUPABASE_SECRET_KEY!,
     { auth: { autoRefreshToken: false, persistSession: false } }
   )
