@@ -358,11 +358,20 @@ function goStep(s) {
 }
 
 // ── PHOTOS ──
+const MAX_PHOTO_MB = 5
 function handleFiles(files) {
   const max = currentTier ? PLANS[currentTier].maxPhotos : 20
+  const oversized = []
   Array.from(files).forEach(f => {
-    if (photos.length < max) photos.push({ file: f, url: URL.createObjectURL(f) })
+    if (f.size > MAX_PHOTO_MB * 1024 * 1024) {
+      oversized.push(f.name)
+    } else if (photos.length < max) {
+      photos.push({ file: f, url: URL.createObjectURL(f) })
+    }
   })
+  if (oversized.length) {
+    toast(`${oversized.length} photo${oversized.length > 1 ? 's' : ''} skipped — each photo must be under ${MAX_PHOTO_MB}MB. Try compressing them first.`)
+  }
   renderPhotos()
 }
 function renderPhotos() {
