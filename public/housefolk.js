@@ -465,25 +465,35 @@ async function publishListing(btnEl) {
 
   try {
     // 1. Upload photos
-    if (btn) btn.textContent = 'Uploading photos…'
     uploadedPhotoUrls = []
-    for (const p of photos) {
+    for (let pi = 0; pi < photos.length; pi++) {
+      const p = photos[pi]
+      if (btn) btn.textContent = `Uploading photo ${pi + 1} of ${photos.length}…`
       const fd = new FormData()
       fd.append('file', p.file)
-      const photoCtrl = new AbortController()
-      const photoTimer = setTimeout(() => photoCtrl.abort(), 30000)
       let photoRes
-      try {
-        photoRes = await fetch('/api/photos', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${getToken()}` },
-          body: fd,
-          signal: photoCtrl.signal,
-        })
-        clearTimeout(photoTimer)
-      } catch (err) {
-        clearTimeout(photoTimer)
-        const msg = err.name === 'AbortError' ? 'Photo upload timed out. Try a smaller photo.' : 'Photo upload failed: ' + err.message
+      let lastErr
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        const photoCtrl = new AbortController()
+        const photoTimer = setTimeout(() => photoCtrl.abort(), 90000)
+        try {
+          photoRes = await fetch('/api/photos', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${getToken()}` },
+            body: fd,
+            signal: photoCtrl.signal,
+          })
+          clearTimeout(photoTimer)
+          lastErr = null
+          break
+        } catch (err) {
+          clearTimeout(photoTimer)
+          lastErr = err
+          if (attempt < 3) await new Promise(r => setTimeout(r, 2000))
+        }
+      }
+      if (lastErr) {
+        const msg = lastErr.name === 'AbortError' ? `Photo ${pi + 1} timed out. Check your connection and try again.` : 'Photo upload failed: ' + lastErr.message
         toast(msg)
         resetBtn()
         return
