@@ -56,7 +56,7 @@ async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
   if (token) headers['Authorization'] = `Bearer ${token}`
   const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), 30000)
+  const timer = setTimeout(() => controller.abort(), 60000)
   try {
     const res = await fetch(path, { ...opts, headers, signal: controller.signal })
     clearTimeout(timer)
@@ -159,8 +159,8 @@ function signOut() {
 function goToBrowse() {
   const token = getToken()
   if (token) {
-    showScreen('dash')
-    switchMainTab('browse')
+    showScreen('browse')
+    loadBrowseListings()
   } else {
     showScreen('auth')
     switchTab('up')
@@ -273,8 +273,12 @@ function switchMainTab(tab) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'))
   const el = document.getElementById('navt-' + tab)
   if (el) el.classList.add('active')
-  if (tab === 'browse') goToBrowse()
-  else showPanel('overview')
+  if (tab === 'browse') {
+    showScreen('browse')
+    loadBrowseListings()
+  } else {
+    showPanel('overview')
+  }
 }
 
 // ── THURSDAY COUNTDOWN ──
