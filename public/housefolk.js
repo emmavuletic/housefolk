@@ -1299,11 +1299,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const hash = new URLSearchParams(window.location.hash.slice(1))
   const oauthToken = hash.get('access_token')
   if (oauthToken) {
+    const oauthRefresh = hash.get('refresh_token')
+    const oauthExpiresRaw = hash.get('expires_at')
+    const oauthExpires = oauthExpiresRaw ? parseInt(oauthExpiresRaw, 10) : null
     window.history.replaceState({}, '', window.location.pathname)
     authToken = oauthToken
     api('/api/auth/me').then(data => {
       if (data.user) {
-        setSession(data.user, oauthToken)
+        setSession(data.user, oauthToken, oauthRefresh, oauthExpires)
         launchDash(data.user.first_name || data.user.email?.split('@')[0] || 'You', data.user.last_name || '')
       } else {
         toast('Google sign-in failed. Please try again.')
@@ -1316,10 +1319,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Restore session if exists
   const savedToken = localStorage.getItem('hf_token')
   const savedUser = localStorage.getItem('hf_user')
+  const savedRefresh = localStorage.getItem('hf_refresh')
+  const savedExpires = localStorage.getItem('hf_expires')
   if (savedToken && savedUser) {
     try {
       const user = JSON.parse(savedUser)
-      setSession(user, savedToken)
+      setSession(user, savedToken, savedRefresh, savedExpires ? parseInt(savedExpires, 10) : null)
       launchDash(user.first_name || user.email?.split('@')[0] || 'You', user.last_name || '')
     } catch {}
   }
