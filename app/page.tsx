@@ -1,12 +1,12 @@
-'use client'
-import { useEffect } from 'react'
-
-// Client-side redirect so the URL hash (e.g. #access_token=... from Google OAuth)
-// is preserved when forwarding to /homefolk.html.
-// Server-side redirects strip the hash fragment.
+// Redirect root → /homefolk.html, preserving hash (needed for Google OAuth callback)
+// Uses an inline script so it runs before React hydration — no webpack bundle required.
 export default function Home() {
-  useEffect(() => {
-    window.location.replace('/homefolk.html' + window.location.search + window.location.hash)
-  }, [])
-  return null
+  return (
+    <script
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{
+        __html: `window.location.replace('/homefolk.html'+location.search+location.hash)`,
+      }}
+    />
+  )
 }
