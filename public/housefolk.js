@@ -1155,6 +1155,28 @@ async function loadWeekListings() {
   }).join('')
 }
 
+// Newsletter listing copy overrides — stored in memory only, not saved to DB
+let nlOverrides = {}
+
+function nlEditListing(id) {
+  const row = document.getElementById('nl-row-' + id)
+  const editor = document.getElementById('nl-edit-' + id)
+  if (!editor) return
+  editor.style.display = editor.style.display === 'none' ? '' : 'none'
+}
+
+function nlSaveOverride(id) {
+  const title = document.getElementById('nl-ov-title-' + id)?.value?.trim()
+  const desc = document.getElementById('nl-ov-desc-' + id)?.value?.trim()
+  const price = document.getElementById('nl-ov-price-' + id)?.value?.trim()
+  nlOverrides[id] = { title, desc, price }
+  document.getElementById('nl-edit-' + id).style.display = 'none'
+  // Update the display row
+  if (title) document.querySelector(`#nl-row-${id} .nl-ov-title`).textContent = title
+  if (price) document.querySelector(`#nl-row-${id} .nl-ov-price`).textContent = price
+  toast('✓ Copy updated for newsletter', 'green')
+}
+
 async function loadNLListings() {
   const queue = document.getElementById('nl-listings-queue')
   if (!queue) return
@@ -1168,13 +1190,22 @@ async function loadNLListings() {
     const price = l.price ? `£${Math.round(l.price / 100)}/mo` : 'Free'
     const icon = typeIcon[l.type] || '🏠'
     const type = l.type ? l.type.charAt(0).toUpperCase() + l.type.slice(1) : ''
-    return `<div class="nl-queue-row">
-      <div style="display:flex;align-items:center;gap:0.7rem;flex:1">
+    const ov = nlOverrides[l.id] || {}
+    return `<div class="nl-queue-row" id="nl-row-${l.id}" style="flex-direction:column;align-items:stretch;gap:0.6rem">
+      <div style="display:flex;align-items:center;gap:0.7rem">
         <span style="font-size:1.2rem">${icon}</span>
-        <div>
-          <div style="font-weight:600;font-size:0.86rem">${l.title}</div>
-          <div style="font-size:0.73rem;color:var(--light)">${type} · ${price} · ${l.location}</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:0.86rem" class="nl-ov-title">${ov.title || l.title}</div>
+          <div style="font-size:0.73rem;color:var(--light)">${type} · <span class="nl-ov-price">${ov.price || price}</span> · ${l.location}</div>
         </div>
+        <button class="btn btn-ghost btn-sm" onclick="nlEditListing('${l.id}')">✏️ Edit copy</button>
+      </div>
+      <div id="nl-edit-${l.id}" style="display:none;background:var(--cream);border-radius:10px;padding:0.8rem;display:none">
+        <div class="field" style="margin-bottom:0.5rem"><label style="font-size:0.78rem">Title for newsletter</label><input type="text" id="nl-ov-title-${l.id}" value="${ov.title || l.title}" style="font-size:0.84rem"></div>
+        <div class="field" style="margin-bottom:0.5rem"><label style="font-size:0.78rem">Price display</label><input type="text" id="nl-ov-price-${l.id}" value="${ov.price || price}" style="font-size:0.84rem"></div>
+        <div class="field" style="margin-bottom:0.6rem"><label style="font-size:0.78rem">Description for newsletter</label><textarea id="nl-ov-desc-${l.id}" style="min-height:70px;font-size:0.84rem">${ov.desc || l.description || ''}</textarea></div>
+        <button class="btn btn-primary btn-sm" onclick="nlSaveOverride('${l.id}')">Save</button>
+        <button class="btn btn-ghost btn-sm" onclick="nlEditListing('${l.id}')" style="margin-left:0.4rem">Cancel</button>
       </div>
     </div>`
   }).join('')
@@ -1190,7 +1221,7 @@ async function scheduleNL() {
 
   const data = await api('/api/newsletter/send', {
     method: 'POST',
-    body: JSON.stringify({ subject, intro }),
+    body: JSON.stringify({ subject, intro, overrides: nlOverrides }),
   })
 
   if (btn) { btn.disabled = false; btn.textContent = '📅 Schedule for Thursday →' }
