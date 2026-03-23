@@ -220,18 +220,9 @@ function launchDash(first, last) {
     const nameEl = document.getElementById('greeting-name-tenant')
     if (nameEl) nameEl.textContent = first
 
-    // Thursday check
-    const now = new Date()
-    const day = now.getDay() // 0=Sun, 4=Thu
-    const daysToThu = day === 4 ? 0 : (4 - day + 7) % 7
-
-    if (daysToThu === 0) {
-      document.getElementById('tenant-thursday-cta').style.display = 'block'
-      document.getElementById('tenant-wait-cta').style.display = 'none'
-    } else {
-      const daysEl = document.getElementById('tenant-days-thu')
-      if (daysEl) daysEl.textContent = daysToThu
-    }
+    // Listings are always live
+    document.getElementById('tenant-thursday-cta').style.display = 'block'
+    document.getElementById('tenant-wait-cta').style.display = 'none'
     loadTenantMessages()
   }
 
@@ -430,6 +421,13 @@ function buildPaySummary() {
   if (!P) return
   const title = document.getElementById('f-title')?.value || '(untitled)'
   const loc = document.getElementById('f-loc')?.value || '—'
+  const price = document.getElementById('f-price')?.value
+  const beds = document.getElementById('f-beds')?.value
+  const baths = document.getElementById('f-baths')?.value
+  const avail = document.getElementById('f-avail')?.value
+  const bills = document.getElementById('f-bills')?.value
+  const furn = document.getElementById('f-furn')?.value
+  const desc = document.getElementById('f-desc')?.value
   const isFree = promoApplied
   const now = new Date()
   const dtu = (4 - now.getDay() + 7) % 7 || 7
@@ -457,6 +455,13 @@ function buildPaySummary() {
       <div class="pay-row"><span class="pl">Listing type</span><span class="pv">${P.icon} ${P.name}</span></div>
       <div class="pay-row"><span class="pl">Title</span><span class="pv" style="max-width:230px;text-align:right;font-size:0.82rem">${title}</span></div>
       <div class="pay-row"><span class="pl">Location</span><span class="pv">${loc}</span></div>
+      ${price ? `<div class="pay-row"><span class="pl">Monthly rent</span><span class="pv">£${price}/mo</span></div>` : ''}
+      ${beds ? `<div class="pay-row"><span class="pl">Bedrooms</span><span class="pv">${beds}</span></div>` : ''}
+      ${baths ? `<div class="pay-row"><span class="pl">Bathrooms</span><span class="pv">${baths}</span></div>` : ''}
+      ${avail ? `<div class="pay-row"><span class="pl">Available from</span><span class="pv">${new Date(avail).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</span></div>` : ''}
+      ${bills ? `<div class="pay-row"><span class="pl">Bills</span><span class="pv">${bills}</span></div>` : ''}
+      ${furn ? `<div class="pay-row"><span class="pl">Furnishing</span><span class="pv">${furn}</span></div>` : ''}
+      ${desc ? `<div class="pay-row" style="align-items:flex-start"><span class="pl">Description</span><span class="pv" style="max-width:230px;text-align:right;font-size:0.82rem">${desc}</span></div>` : ''}
       <div class="pay-row"><span class="pl">Photos</span><span class="pv">${photos.length} uploaded</span></div>
       <div class="pay-row"><span class="pl">Duration</span><span class="pv">7 days</span></div>
       <div class="pay-row"><span class="pl">Goes live</span><span class="pv">${thuStr}</span></div>
@@ -518,12 +523,19 @@ async function publishListing(btnEl) {
 
     // 2. Create listing
     if (btn) btn.textContent = 'Saving listing…'
+    const billsVal = document.getElementById('f-bills')?.value
+    const furnVal = document.getElementById('f-furn')?.value
+    const petVal = document.getElementById('f-pet')?.value
     const listingData = {
       type: currentTier,
       title: document.getElementById('f-title')?.value?.trim(),
       location: document.getElementById('f-loc')?.value?.trim(),
       price: document.getElementById('f-price')?.value,
       beds: document.getElementById('f-beds')?.value,
+      baths: document.getElementById('f-baths')?.value || null,
+      bills_included: billsVal === 'Included',
+      furnished: furnVal ? furnVal !== 'Unfurnished' : null,
+      pet_friendly: petVal === 'Yes' ? true : petVal === 'No' ? false : null,
       description: document.getElementById('f-desc')?.value?.trim(),
       motto: document.getElementById('f-motto')?.value?.trim(),
       available_date: document.getElementById('f-avail')?.value,
@@ -851,7 +863,7 @@ async function loadBrowseListings(type = '', location = '') {
     const priceStr = l.price ? `£${Math.round(l.price / 100).toLocaleString()}<span>/mo</span>` : 'Free sublet'
     const photo = l.photos?.[0]
     return `
-      <div class="listing-card" onclick="openListing('${l.id}')">
+      <div class="listing-card" onclick="window.location.href='/listings/${l.id}'" style="cursor:pointer">
         <div class="lc-photo">
           ${photo ? `<img src="${photo}" alt="${l.title}">` : `<div class="lc-photo-placeholder">${typeIcon[l.type] || '🏠'}</div>`}
           <span class="lc-type-badge">${typeIcon[l.type]} ${l.type}</span>
