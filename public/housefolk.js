@@ -259,6 +259,7 @@ function showPanel(name) {
   if (name === 'mylistings') loadMyListings()
   if (name === 'post') resetPost()
   if (name === 'newsletter') loadNLListings()
+  if (name === 'weeklistings') loadWeekListings()
 }
 
 function switchMainTab(tab) {
@@ -1124,6 +1125,35 @@ function previewNL() {
 }
 
 function saveNLDraft() { toast('✓ Draft saved', 'green') }
+
+async function loadWeekListings() {
+  const grid = document.getElementById('weeklistings-grid')
+  if (!grid) return
+  grid.innerHTML = '<div style="color:var(--light);font-size:0.85rem;padding:0.5rem 0">Loading…</div>'
+  const data = await api('/api/listings')
+  if (!data.listings || data.listings.length === 0) {
+    grid.innerHTML = '<div style="color:var(--light);font-size:0.85rem;padding:0.5rem 0">No active listings this week.</div>'
+    return
+  }
+  const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
+  grid.innerHTML = data.listings.map(l => {
+    const price = l.price ? `£${Math.round(l.price / 100)}/mo` : 'Free'
+    const icon = typeIcon[l.type] || '🏠'
+    const type = l.type ? l.type.charAt(0).toUpperCase() + l.type.slice(1) : ''
+    const avail = l.available_date ? new Date(l.available_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
+    return `<div class="fcard" style="padding:1rem 1.2rem">
+      <div style="display:flex;align-items:center;gap:0.8rem">
+        <span style="font-size:1.4rem">${icon}</span>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:0.9rem">${l.title}</div>
+          <div style="font-size:0.78rem;color:var(--mid);margin-top:0.2rem">${type} · ${price} · ${l.location} · Available ${avail}</div>
+        </div>
+        <span style="font-size:0.75rem;padding:0.2rem 0.6rem;border-radius:6px;background:var(--green-light,#e6f4ec);color:var(--green);font-weight:600">Active</span>
+      </div>
+      ${l.description ? `<div style="font-size:0.82rem;color:var(--mid);margin-top:0.6rem;line-height:1.5">${l.description}</div>` : ''}
+    </div>`
+  }).join('')
+}
 
 async function loadNLListings() {
   const queue = document.getElementById('nl-listings-queue')
