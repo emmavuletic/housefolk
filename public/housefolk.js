@@ -258,6 +258,7 @@ function showPanel(name) {
   }
   if (name === 'mylistings') loadMyListings()
   if (name === 'post') resetPost()
+  if (name === 'newsletter') loadNLListings()
 }
 
 function switchMainTab(tab) {
@@ -1123,6 +1124,31 @@ function previewNL() {
 }
 
 function saveNLDraft() { toast('✓ Draft saved', 'green') }
+
+async function loadNLListings() {
+  const queue = document.getElementById('nl-listings-queue')
+  if (!queue) return
+  const data = await api('/api/listings')
+  if (!data.listings || data.listings.length === 0) {
+    queue.innerHTML = '<div style="color:var(--light);font-size:0.85rem;padding:0.5rem 0">No active listings this week.</div>'
+    return
+  }
+  const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
+  queue.innerHTML = data.listings.map(l => {
+    const price = l.price ? `£${Math.round(l.price / 100)}/mo` : 'Free'
+    const icon = typeIcon[l.type] || '🏠'
+    const type = l.type ? l.type.charAt(0).toUpperCase() + l.type.slice(1) : ''
+    return `<div class="nl-queue-row">
+      <div style="display:flex;align-items:center;gap:0.7rem;flex:1">
+        <span style="font-size:1.2rem">${icon}</span>
+        <div>
+          <div style="font-weight:600;font-size:0.86rem">${l.title}</div>
+          <div style="font-size:0.73rem;color:var(--light)">${type} · ${price} · ${l.location}</div>
+        </div>
+      </div>
+    </div>`
+  }).join('')
+}
 
 async function scheduleNL() {
   const subject = document.getElementById('nl-subject')?.value?.trim()
