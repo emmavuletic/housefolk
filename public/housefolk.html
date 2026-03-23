@@ -1048,7 +1048,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <div style="display:flex;gap:0.8rem;flex-wrap:wrap">
             <button class="btn btn-primary btn-auto" style="padding:0.7rem 1.6rem" onclick="previewNL()">👁 Preview newsletter →</button>
             <button class="btn btn-outline btn-auto" style="padding:0.7rem 1.6rem" onclick="saveNLDraft()">💾 Save draft</button>
-            <button class="btn btn-gold btn-auto" style="padding:0.7rem 1.6rem" onclick="scheduleNL()">📅 Schedule for Thursday →</button>
+            <button class="btn btn-gold btn-auto" id="nl-send-btn" style="padding:0.7rem 1.6rem" onclick="confirmSendNL(this)">📨 Send newsletter now</button>
           </div>
 
           <!-- PREVIEW -->

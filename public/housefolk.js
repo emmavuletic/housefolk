@@ -1211,6 +1211,26 @@ async function loadNLListings() {
   }).join('')
 }
 
+function confirmSendNL(btn) {
+  if (btn.dataset.confirm === 'true') {
+    btn.dataset.confirm = ''
+    btn.textContent = '📨 Send newsletter now'
+    btn.style.background = ''
+    scheduleNL()
+  } else {
+    btn.dataset.confirm = 'true'
+    btn.textContent = '⚠️ Are you sure? Click again to send'
+    btn.style.background = '#e07b00'
+    setTimeout(() => {
+      if (btn.dataset.confirm === 'true') {
+        btn.dataset.confirm = ''
+        btn.textContent = '📨 Send newsletter now'
+        btn.style.background = ''
+      }
+    }, 5000)
+  }
+}
+
 async function scheduleNL() {
   const subject = document.getElementById('nl-subject')?.value?.trim()
   const intro = document.getElementById('nl-intro')?.value?.trim()
