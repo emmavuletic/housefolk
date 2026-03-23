@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const { data, error } = await supabase.auth.admin.generateLink({
     type: 'recovery',
     email: email.toLowerCase().trim(),
-    options: { redirectTo: `${appUrl}/homefolk.html` },
+    options: { redirectTo: `${appUrl}/housefolk.html` },
   })
 
   if (!error && data?.properties?.action_link) {

@@ -8,18 +8,19 @@
     "start": "next start"
   },
   "dependencies": {
+    "@react-email/components": "^0.0.22",
+    "@stripe/stripe-js": "^4.1.0",
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.45.0",
     "next": "14.2.30",
     "react": "^18",
     "react-dom": "^18",
-    "@supabase/supabase-js": "^2.45.0",
-    "@supabase/ssr": "^0.5.1",
-    "stripe": "^16.2.0",
-    "@stripe/stripe-js": "^4.1.0",
-    "resend": "^3.4.0",
     "react-email": "^2.1.5",
-    "@react-email/components": "^0.0.22"
+    "resend": "^3.4.0",
+    "stripe": "^16.2.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

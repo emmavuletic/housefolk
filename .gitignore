@@ -6,3 +6,11 @@ out/
 *.log
 .DS_Store
 .env.local.save
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+.env.test

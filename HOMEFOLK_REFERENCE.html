@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Homefolk / Housefolk – Admin Reference</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 800px; margin: 40px auto; padding: 0 24px; color: #222; }
+    h1 { font-size: 1.6rem; border-bottom: 2px solid #222; padding-bottom: 8px; }
+    h2 { font-size: 1.1rem; margin-top: 2rem; background: #f4f0eb; padding: 8px 12px; border-left: 4px solid #c8a97e; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+    td, th { text-align: left; padding: 8px 12px; border: 1px solid #ddd; font-size: 0.9rem; }
+    th { background: #faf7f3; font-weight: bold; }
+    .note { font-size: 0.8rem; color: #666; margin-top: 0.3rem; }
+    .placeholder { color: #aaa; font-style: italic; }
+    @media print { body { margin: 20px; } }
+  </style>
+</head>
+<body>
+
+  <h1>Homefolk – Admin Reference Sheet</h1>
+  <p class="note">Last updated: March 2026. Print or save as PDF via Cmd+P.</p>
+
+  <h2>URLs</h2>
+  <table>
+    <tr><th>What</th><th>URL</th></tr>
+    <tr><td>Live app (browse, post, admin)</td><td>https://app.housefolk.co/housefolk.html</td></tr>
+    <tr><td>Marketing site</td><td>https://www.housefolk.co</td></tr>
+    <tr><td>Supabase dashboard</td><td>https://supabase.com/dashboard/project/agfgtajovhhxswfdcqen</td></tr>
+    <tr><td>Vercel dashboard</td><td>https://vercel.com (check your account)</td></tr>
+  </table>
+
+  <h2>Admin Login</h2>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Email</td><td><span class="placeholder">[ your admin email ]</span></td></tr>
+    <tr><td>Password</td><td><span class="placeholder">[ your admin password ]</span></td></tr>
+    <tr><td>Role in DB</td><td>admin (set in public.users table)</td></tr>
+  </table>
+  <p class="note">After logging in, the Newsletter and Promo Codes sections appear in the left sidebar.</p>
+
+  <h2>Supabase</h2>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Project ref</td><td>agfgtajovhhxswfdcqen</td></tr>
+    <tr><td>Admin users query</td><td>SELECT email, role FROM public.users WHERE role = 'admin';</td></tr>
+    <tr><td>Set admin role</td><td>UPDATE public.users SET role = 'admin' WHERE email = '...';</td></tr>
+  </table>
+
+  <h2>Key Features</h2>
+  <table>
+    <tr><th>Feature</th><th>Where</th><th>Notes</th></tr>
+    <tr><td>Weekly newsletter</td><td>Sidebar → Newsletter</td><td>Sent every Thursday. Shows all active listings.</td></tr>
+    <tr><td>newsletter_included</td><td>listings table (DB)</td><td>If true, listing appears in the newsletter. Default: true.</td></tr>
+    <tr><td>Promo codes</td><td>Sidebar → Promo codes</td><td>Admin only.</td></tr>
+    <tr><td>Listings go live</td><td>Automatic</td><td>Set by goes_live_at timestamp. Expire after 7 days.</td></tr>
+  </table>
+
+  <h2>Email</h2>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>From address</td><td>hello@homefolk.co.uk (via Resend)</td></tr>
+    <tr><td>Newsletter send API</td><td>POST /api/newsletter/send</td></tr>
+  </table>
+
+  <h2>Notes / Passwords</h2>
+  <table>
+    <tr><th>Service</th><th>Login / Notes</th></tr>
+    <tr><td>Resend (email)</td><td><span class="placeholder">[ add here ]</span></td></tr>
+    <tr><td>Vercel</td><td><span class="placeholder">[ add here ]</span></td></tr>
+    <tr><td>Supabase</td><td><span class="placeholder">[ add here ]</span></td></tr>
+    <tr><td>Other</td><td><span class="placeholder">[ add here ]</span></td></tr>
+  </table>
+
+</body>
+</html>

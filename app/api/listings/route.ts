@@ -54,15 +54,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Type, title and location are required.' }, { status: 400 })
   }
 
-  // Calculate next Thursday for debut
   const now = new Date()
-  const daysUntil = (4 - now.getDay() + 7) % 7 || 7
-  const goesLive = new Date(now)
-  goesLive.setDate(now.getDate() + daysUntil)
-  goesLive.setHours(8, 0, 0, 0)
+  const goesLive = now
 
-  const expiresAt = new Date(goesLive)
-  expiresAt.setDate(goesLive.getDate() + 7)
+  const expiresAt = new Date(now)
+  expiresAt.setDate(now.getDate() + 7)
 
   const { data, error } = await supabase.from('listings').insert({
     landlord_id: user.id,
@@ -86,7 +82,7 @@ export async function POST(req: NextRequest) {
     linkedin,
     airbnb,
     photos: photos || [],
-    status: 'pending',
+    status: 'active',
     goes_live_at: goesLive.toISOString(),
     expires_at: expiresAt.toISOString(),
   }).select().single()
