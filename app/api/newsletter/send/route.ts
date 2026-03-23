@@ -48,20 +48,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No active subscribers.' }, { status: 400 })
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://homefolk.vercel.app'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.housefolk.co'
   const typeIcon: Record<string, string> = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
 
   const listingsHtml = listings?.map(l => {
     const priceStr = l.price ? `£${Math.round(l.price / 100).toLocaleString()}/mo` : 'Free sublet'
     return `
-      <div style="background:#fff;border:1px solid #E2D9CE;border-radius:12px;padding:0.9rem;margin-bottom:0.7rem;display:flex;gap:1rem;align-items:center">
-        <span style="font-size:1.8rem;flex-shrink:0">${typeIcon[l.type] || '🏠'}</span>
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:0.87rem;margin-bottom:0.15rem">${l.title}</div>
-          <div style="font-size:0.75rem;color:#5A4F45">📍 ${l.location} · ${l.beds || '?'} bed · ${l.bills_included ? 'Bills incl.' : 'Bills excl.'}</div>
+      <a href="${appUrl}/listings/${l.id}" style="text-decoration:none;display:block;margin-bottom:0.7rem">
+        <div style="background:#fff;border:1px solid #E2D9CE;border-radius:12px;padding:0.9rem;display:flex;gap:1rem;align-items:center">
+          <span style="font-size:1.8rem;flex-shrink:0">${typeIcon[l.type] || '🏠'}</span>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:0.87rem;margin-bottom:0.15rem;color:#1A1510">${l.title}</div>
+            <div style="font-size:0.75rem;color:#5A4F45">📍 ${l.location} · ${l.beds || '?'} bed · ${l.bills_included ? 'Bills incl.' : 'Bills excl.'}</div>
+          </div>
+          <span style="font-family:Georgia,serif;font-size:1.05rem;font-weight:700;color:#C8622A;flex-shrink:0">${priceStr}</span>
         </div>
-        <span style="font-family:Georgia,serif;font-size:1.05rem;font-weight:700;color:#C8622A;flex-shrink:0">${priceStr}</span>
-      </div>`
+      </a>`
   }).join('') || '<p style="color:#8A7E74">No listings this week.</p>'
 
   // Send in batches of 50 (Resend free tier limit)
@@ -79,9 +81,9 @@ export async function POST(req: NextRequest) {
         subject,
         html: `
           <div style="font-family:'DM Sans',sans-serif;max-width:600px;margin:0 auto;background:#FDF9F7">
-            <div style="background:#1A1510;padding:1.5rem 2rem">
-              <div style="font-family:Georgia,serif;font-size:1.4rem;font-weight:700;color:#FAF7F5">home<span style="color:#C8622A">folk</span></div>
-              <p style="font-size:0.78rem;color:#7A6E62;margin-top:0.2rem">Weekly listings newsletter</p>
+            <div style="background:#1A1510;padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between">
+              <div style="font-family:Georgia,serif;font-size:1.2rem;font-weight:700;color:#FAF7F5">house<span style="color:#C8622A">folk</span></div>
+              <span style="font-size:0.72rem;color:#7A6E62">Weekly listings</span>
             </div>
             <div style="padding:1.5rem 2rem;background:#FDF9F7">
               <div style="background:#fff;border:1px solid #E2D9CE;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.85rem;color:#5A4F45;line-height:1.65;font-style:italic">
@@ -94,7 +96,7 @@ export async function POST(req: NextRequest) {
               </div>
             </div>
             <div style="background:#1A1510;padding:1rem 2rem;font-size:0.72rem;color:#5A5048;text-align:center">
-              <p>Homefolk · You're receiving this because you subscribed</p>
+              <p>Housefolk · You're receiving this because you subscribed</p>
               <p style="margin-top:0.4rem"><a href="${unsubUrl}" style="color:#8896A5">Unsubscribe</a></p>
             </div>
           </div>
