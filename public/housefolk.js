@@ -531,7 +531,7 @@ async function publishListing(btnEl) {
     const listingData = {
       type: currentTier,
       title: document.getElementById('f-title')?.value?.trim(),
-      location: document.getElementById('f-loc')?.value?.trim(),
+      location: [document.getElementById('f-city')?.value, document.getElementById('f-loc')?.value?.trim()].filter(Boolean).join(', '),
       price: document.getElementById('f-price')?.value,
       beds: document.getElementById('f-beds')?.value,
       baths: document.getElementById('f-baths')?.value || null,

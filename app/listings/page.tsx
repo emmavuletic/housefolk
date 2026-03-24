@@ -148,6 +148,7 @@ export default function ListingsPage() {
   const [location, setLocation] = useState('')
   const [type, setType] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
+  const [city, setCity] = useState('London')
 
   useEffect(() => {
     const token = localStorage.getItem('hf_token')
@@ -159,6 +160,7 @@ export default function ListingsPage() {
     const params = new URLSearchParams()
     if (type) params.set('type', type)
     if (location) params.set('location', location)
+    else if (city) params.set('location', city)
 
     fetch(`/api/listings?${params}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -169,7 +171,7 @@ export default function ListingsPage() {
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [type, location])
+  }, [type, location, city])
 
   const filtered = maxPrice
     ? listings.filter(l => l.price == null || l.price <= parseInt(maxPrice) * 100)
@@ -188,6 +190,28 @@ export default function ListingsPage() {
 
         <main style={styles.main}>
           <h1 style={styles.heading}>Browse listings</h1>
+
+          {/* City tabs */}
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.2rem' }}>
+            {['London', 'Melbourne', 'Brooklyn'].map(c => (
+              <button
+                key={c}
+                onClick={() => { setCity(c); setLocation('') }}
+                style={{
+                  padding: '0.5rem 1.2rem',
+                  borderRadius: '50px',
+                  border: '1.5px solid',
+                  borderColor: city === c ? '#1A1510' : '#E2D9CE',
+                  background: city === c ? '#1A1510' : '#fff',
+                  color: city === c ? '#fff' : '#5A4F45',
+                  fontWeight: 600,
+                  fontSize: '0.88rem',
+                  cursor: 'pointer',
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              >{c}</button>
+            ))}
+          </div>
 
           {/* Filters */}
           <div style={styles.filters}>
