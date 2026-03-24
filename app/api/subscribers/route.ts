@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
 
-const ADMIN_EMAILS = ['admin@homefolk.com', 'emma@homefolk.com']
+const ADMIN_EMAILS = ['admin@housefolk.co', 'emma@housefolk.co']
 
 // GET /api/subscribers — admin only
 export async function GET(req: NextRequest) {

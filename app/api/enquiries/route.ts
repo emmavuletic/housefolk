@@ -90,13 +90,13 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: FROM_EMAIL,
       to: landlordData.email,
-      subject: `New enquiry on your Homefolk listing: ${listing.title}`,
+      subject: `New enquiry on your Housefolk listing: ${listing.title}`,
       html: `
         <p>Hi ${landlordData.first_name},</p>
         <p>You have a new enquiry from <strong>${tenantName}</strong> about your listing <strong>${listing.title}</strong>.</p>
         <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${message.trim()}</blockquote>
-        <p>Reply to them via your <a href="${process.env.NEXT_PUBLIC_APP_URL}">Homefolk dashboard</a>. Contact details are never shared directly.</p>
-        <p>— The Homefolk team</p>
+        <p>Reply to them via your <a href="${process.env.NEXT_PUBLIC_APP_URL}">Housefolk dashboard</a>. Contact details are never shared directly.</p>
+        <p>— The Housefolk team</p>
       `,
     })
   }

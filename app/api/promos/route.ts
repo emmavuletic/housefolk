@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
 
-const ADMIN_EMAILS = ['admin@homefolk.com', 'emma@homefolk.com']
+const ADMIN_EMAILS = ['admin@housefolk.co', 'emma@housefolk.co']
 
 async function isAdmin(supabase: ReturnType<typeof createServerClient>, token: string) {
   const { data: { user } } = await supabase.auth.getUser(token)

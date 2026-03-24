@@ -67,12 +67,12 @@ export async function POST(req: NextRequest) {
             await resend.emails.send({
               from: FROM_EMAIL,
               to: landlordData.email,
-              subject: `Your Homefolk listing is confirmed — goes live ${goesLive}`,
+              subject: `Your Housefolk listing is confirmed — goes live ${goesLive}`,
               html: `
                 <p>Hi ${landlordData.first_name},</p>
                 <p>Your listing <strong>${listing.title}</strong> has been confirmed and will go live on <strong>${goesLive}</strong> when the Thursday newsletter sends.</p>
                 <p>You'll start receiving enquiries from that date.</p>
-                <p>— The Homefolk team</p>
+                <p>— The Housefolk team</p>
               `,
             })
           }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Homefolk — Member Portal</title>
+<title>Housefolk — Member Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1059,7 +1059,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
               <button class="nl-fmt-btn" onclick="insertSnippet('tip')">💡 Tip</button>
             </div>
             <div class="field" style="margin-bottom:0.8rem">
-              <textarea id="nl-intro" style="min-height:130px" placeholder="Hi everyone,&#10;&#10;Welcome to this week's Homefolk listings — we have some brilliant new homes for you. These debut exclusively to subscribers before going public. &#10;&#10;Happy house hunting! 🏡&#10;&#10;The Homefolk team"></textarea>
+              <textarea id="nl-intro" style="min-height:130px" placeholder="Hi everyone,&#10;&#10;Welcome to this week's Housefolk listings — we have some brilliant new homes for you. These debut exclusively to subscribers before going public. &#10;&#10;Happy house hunting! 🏡&#10;&#10;The Housefolk team"></textarea>
             </div>
             <div style="font-size:0.75rem;color:var(--light);text-align:right" id="nl-char-count">0 characters</div>
           </div>
@@ -1075,17 +1075,17 @@ body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color:
               </div>
               <div class="field">
                 <label>💼 LinkedIn URL</label>
-                <input type="url" id="soc-linkedin" placeholder="https://linkedin.com/company/homefolk">
+                <input type="url" id="soc-linkedin" placeholder="https://linkedin.com/company/housefolk">
               </div>
             </div>
             <div class="field-row">
               <div class="field">
                 <label>𝕏 X / Twitter URL</label>
-                <input type="url" id="soc-twitter" placeholder="https://x.com/homefolk">
+                <input type="url" id="soc-twitter" placeholder="https://x.com/housefolk">
               </div>
               <div class="field">
                 <label>📘 Facebook URL</label>
-                <input type="url" id="soc-facebook" placeholder="https://facebook.com/homefolk">
+                <input type="url" id="soc-facebook" placeholder="https://facebook.com/housefolk">
               </div>
             </div>
           </div>
@@ -1420,8 +1420,8 @@ function switchTab(tab) {
 }
 // ══ ADMIN CREDENTIALS ══
 const ADMINS = {
-  'admin@homefolk.com':  { password: 'Homefolk2025!', name: 'Admin', role: 'admin' },
-  'emma@homefolk.com':   { password: 'Homefolk2025!', name: 'Emma',  role: 'admin' },
+  'admin@housefolk.co':  { password: 'Housefolk2025!', name: 'Admin', role: 'admin' },
+  'emma@housefolk.co':   { password: 'Housefolk2025!', name: 'Emma',  role: 'admin' },
 };
 
 function doSignIn() {
@@ -1667,10 +1667,10 @@ document.addEventListener('DOMContentLoaded', () => {
 function insertSnippet(type) {
   const ta = document.getElementById('nl-intro');
   const snippets = {
-    greeting: "Hi everyone,\n\nWelcome to this week's Homefolk newsletter! We're so glad you're here.\n\nHappy house hunting! 🏡\n\nThe Homefolk team",
+    greeting: "Hi everyone,\n\nWelcome to this week's Housefolk newsletter! We're so glad you're here.\n\nHappy house hunting! 🏡\n\nThe Housefolk team",
     cta: "\n\n👉 Know someone looking for a home? Share this newsletter with them — it really helps.\n\nSee you next Thursday!",
-    seasonal: "\n\n🌸 Spring is the perfect time to move. Whether you're looking for a flatshare, a rental or subletting your place, now is the moment to act.\n\nThe Homefolk team",
-    tip: "\n\n💡 Tip of the week: Listings with 10+ photos get 3x more enquiries. Make sure your photos show natural light and every room!\n\nThe Homefolk team",
+    seasonal: "\n\n🌸 Spring is the perfect time to move. Whether you're looking for a flatshare, a rental or subletting your place, now is the moment to act.\n\nThe Housefolk team",
+    tip: "\n\n💡 Tip of the week: Listings with 10+ photos get 3x more enquiries. Make sure your photos show natural light and every room!\n\nThe Housefolk team",
   };
   if (snippets[type]) {
     ta.value += (ta.value ? "\n" : "") + snippets[type];
@@ -1679,7 +1679,7 @@ function insertSnippet(type) {
 }
 
 function previewNL() {
-  var intro = document.getElementById('nl-intro').value || "Hi everyone,\n\nWelcome to this week's Homefolk listings.\n\nHappy house hunting!";
+  var intro = document.getElementById('nl-intro').value || "Hi everyone,\n\nWelcome to this week's Housefolk listings.\n\nHappy house hunting!";
   var subject = document.getElementById('nl-subject').value || 'New listings this Thursday';
   var now=new Date(), dtu=(4-now.getDay()+7)%7||7, thu=new Date(now);
   thu.setDate(now.getDate()+dtu);
@@ -1708,7 +1708,7 @@ function previewNL() {
       '<div class="nl-listing-row"><span class="nl-listing-icon">🏢</span><div class="nl-listing-info"><div class="nl-listing-title">Modern 2-bed apartment, city views</div><div class="nl-listing-meta">Salford, Manchester · 2 beds · Parking</div></div><span class="nl-listing-price">£1,100/mo</span></div>' +
       '<div style="text-align:center;margin-top:1.2rem"><a href="#" style="display:inline-block;background:var(--accent);color:#fff;padding:0.7rem 2rem;border-radius:50px;text-decoration:none;font-weight:600;font-size:0.9rem">View all listings</a></div>' +
     '</div>' +
-    '<div class="nl-footer">' + socHtml + '<div style="margin-top:0.8rem">Homefolk Ltd · You are receiving this because you subscribed · <span style="color:var(--accent-light);cursor:pointer">Unsubscribe</span></div></div>';
+    '<div class="nl-footer">' + socHtml + '<div style="margin-top:0.8rem">Housefolk Ltd · You are receiving this because you subscribed · <span style="color:var(--accent-light);cursor:pointer">Unsubscribe</span></div></div>';
   document.getElementById('nl-preview-wrap').style.display='';
   document.getElementById('nl-preview-wrap').scrollIntoView({behavior:'smooth'});
 }
@@ -2693,7 +2693,7 @@ if (document.readyState === 'loading') {
   <div style="background:var(--card);border-radius:24px;padding:2.5rem;max-width:400px;width:100%;box-shadow:var(--shadow-lg);animation:fadeUp 0.3s ease both">
     <div style="font-size:2.5rem;margin-bottom:0.8rem">🔑</div>
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:0.5rem">Unlock all contacts</div>
-    <p style="font-size:0.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.2rem">Pay once and message any landlord on Homefolk for 30 days. No subscription.</p>
+    <p style="font-size:0.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.2rem">Pay once and message any landlord on Housefolk for 30 days. No subscription.</p>
     <div style="background:var(--cream);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.83rem;color:var(--mid);line-height:2">
       ✅ Message any landlord directly<br>✅ All contacts unlocked for 30 days<br>✅ Flatshares, sublets &amp; rentals<br>✅ Secure payment via Stripe
     </div>
@@ -2721,7 +2721,7 @@ if (document.readyState === 'loading') {
 ══════════════════════════════════════ -->
 
 <!-- Chat bubble trigger -->
-<div id="chat-bubble" onclick="toggleChat()" title="Chat with Homefolk">
+<div id="chat-bubble" onclick="toggleChat()" title="Chat with Housefolk">
   <span id="bubble-icon">💬</span>
   <div id="chat-unread" style="display:none">1</div>
 </div>
@@ -2734,7 +2734,7 @@ if (document.readyState === 'loading') {
     <div style="display:flex;align-items:center;gap:0.7rem">
       <div id="chat-avatar">N</div>
       <div>
-        <div id="chat-name">Homefolk Assistant</div>
+        <div id="chat-name">Housefolk Assistant</div>
         <div id="chat-status"><span id="status-dot"></span><span id="status-text">Online · AI powered</span></div>
       </div>
     </div>
@@ -2746,7 +2746,7 @@ if (document.readyState === 'loading') {
 
   <!-- Admin mode banner -->
   <div id="admin-banner" style="display:none">
-    <span>🎛️ Admin mode — you are replying as Homefolk</span>
+    <span>🎛️ Admin mode — you are replying as Housefolk</span>
     <button onclick="toggleAdminMode()">Exit</button>
   </div>
 
@@ -2758,7 +2758,7 @@ if (document.readyState === 'loading') {
   <!-- Typing indicator -->
   <div id="typing-indicator" style="display:none">
     <div class="typing-bubble"><span></span><span></span><span></span></div>
-    <div style="font-size:0.73rem;color:var(--light);margin-left:0.4rem">Homefolk is typing…</div>
+    <div style="font-size:0.73rem;color:var(--light);margin-left:0.4rem">Housefolk is typing…</div>
   </div>
 
   <!-- Quick replies -->
@@ -2957,8 +2957,8 @@ let chatOpen = false;
 let adminMode = false;
 let chatHistory = []; // stores {role, content} for Claude API
 
-// Homefolk system prompt — tells Claude exactly what it knows
-const SYSTEM_PROMPT = `You are the friendly, helpful assistant for Homefolk, a UK-based rental and letting platform. Your name is the Homefolk Assistant.
+// Housefolk system prompt — tells Claude exactly what it knows
+const SYSTEM_PROMPT = `You are the friendly, helpful assistant for Housefolk, a UK-based rental and letting platform. Your name is the Housefolk Assistant.
 
 You help two types of users:
 1. LANDLORDS & HOSTS — people posting flatshares, apartment rentals, or sublets
@@ -2977,11 +2977,11 @@ KEY FACTS ABOUT NESTIO:
 - The newsletter is sent every Thursday at 8am. Landlords can write a custom intro message.
 - Social links (Instagram, LinkedIn, X, Facebook) appear in the newsletter footer.
 - Stripe is used for secure card payments.
-- Homefolk is hosted separately and linked from a Squarespace website.
+- Housefolk is hosted separately and linked from a Squarespace website.
 
 TONE: Warm, friendly, concise. British English. Use "£" not "$". Keep answers short and helpful — 2-4 sentences max unless more detail is needed. Use emojis occasionally but not excessively.
 
-If asked something you don't know about Homefolk specifically, say you'll pass the question to the team and they'll follow up. Never make up information.`;
+If asked something you don't know about Housefolk specifically, say you'll pass the question to the team and they'll follow up. Never make up information.`;
 
 const QUICK_REPLY_SETS = {
   welcome: ["How much does it cost?", "How does Thursday debut work?", "What is the newsletter?", "How do I post a listing?"],
@@ -3013,7 +3013,7 @@ function toggleChat() {
 
 function initChat() {
   // Welcome message from bot
-  addBotMessage("👋 Hi! I am the Homefolk Assistant. I can help with listing prices, how Thursday debuts work, the newsletter, and anything else about Homefolk.\n\nWhat can I help you with?");
+  addBotMessage("👋 Hi! I am the Housefolk Assistant. I can help with listing prices, how Thursday debuts work, the newsletter, and anything else about Housefolk.\n\nWhat can I help you with?");
   showQuickReplies(QUICK_REPLY_SETS.welcome);
   // Show unread dot after 3 seconds if chat hasn't been opened
   setTimeout(() => {
@@ -3116,11 +3116,11 @@ async function getAIResponse() {
   } else if (q.includes('rental') || q.includes('apartment')) {
     reply = 'Apartment Rental listings are £15 one-off. Full property listing with 20 photos, 7 days featured, enquiry inbox and newsletter. 🏢';
   } else if (q.includes('contact') || q.includes('help') || q.includes('support') || q.includes('human')) {
-    reply = 'For extra help you can reach the Homefolk team directly. We will get back to you within 24 hours! 🙏';
+    reply = 'For extra help you can reach the Housefolk team directly. We will get back to you within 24 hours! 🙏';
   } else if (q.includes('stripe') || q.includes('pay') || q.includes('card')) {
     reply = 'Payments are handled securely by Stripe — the same system used by millions of businesses. Your card details are never stored by us. 🔒';
   } else {
-    reply = 'Great question! The Homefolk team will follow up on that. In the meantime I can help with pricing, listings, the newsletter, or how to get started. What would you like to know? 😊';
+    reply = 'Great question! The Housefolk team will follow up on that. In the meantime I can help with pricing, listings, the newsletter, or how to get started. What would you like to know? 😊';
   }
 
   await new Promise(r => setTimeout(r, 900 + Math.random() * 600));
@@ -3148,14 +3148,14 @@ function toggleAdminMode() {
 
   if (adminMode) {
     banner.style.display = 'flex';
-    statusText.textContent = 'Admin mode — replying as Homefolk';
+    statusText.textContent = 'Admin mode — replying as Housefolk';
     statusDot.style.background = 'var(--gold)';
-    chatName.textContent = 'Homefolk (Admin)';
+    chatName.textContent = 'Housefolk (Admin)';
   } else {
     banner.style.display = 'none';
     statusText.textContent = 'Online · AI powered';
     statusDot.style.background = 'var(--green)';
-    chatName.textContent = 'Homefolk Assistant';
+    chatName.textContent = 'Housefolk Assistant';
   }
 }
 
@@ -3209,12 +3209,12 @@ setTimeout(() => {
       <button onclick="document.getElementById('terms-modal').style.display='none'" style="background:var(--cream);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:0.9rem">✕</button>
     </div>
     <div style="padding:1.8rem;font-size:0.86rem;color:var(--mid);line-height:1.8" id="terms-body">
-      <h3 style="font-family:'Playfair Display',serif;color:var(--dark);margin-bottom:0.5rem">Homefolk Terms of Service</h3>
+      <h3 style="font-family:'Playfair Display',serif;color:var(--dark);margin-bottom:0.5rem">Housefolk Terms of Service</h3>
       <p>Last updated: March 2026</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">1. Listing fees</strong><br>Flatshare listings are £10, apartment rentals £15, and sublets £5 — all one-off payments per listing. Listings run for 7 days from their Thursday debut date.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">2. Tenant subscription</strong><br>Tenants pay £15/month to access landlord contact details. Subscriptions auto-renew monthly and can be cancelled at any time.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">3. Thursday debut</strong><br>All listings debut exclusively on Thursday when the newsletter sends to subscribers. Listings posted any day of the week will go live that Thursday.</p>
-      <p style="margin-top:1rem"><strong style="color:var(--dark)">4. Accuracy of listings</strong><br>Landlords are responsible for the accuracy of their listings. Homefolk does not verify properties and accepts no liability for inaccurate information.</p>
+      <p style="margin-top:1rem"><strong style="color:var(--dark)">4. Accuracy of listings</strong><br>Landlords are responsible for the accuracy of their listings. Housefolk does not verify properties and accepts no liability for inaccurate information.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">5. Refunds</strong><br>Listing fees are non-refundable once a listing has been published. Tenant subscriptions can be cancelled before the next billing date.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">6. Prohibited content</strong><br>Listings must be genuine UK properties. Fraudulent, misleading or illegal listings will be removed without refund.</p>
       <h3 style="font-family:'Playfair Display',serif;color:var(--dark);margin:1.5rem 0 0.5rem">Privacy Policy</h3>

@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
   return new NextResponse(
     `<html><body style="font-family:sans-serif;text-align:center;padding:3rem">
       <h2>You've been unsubscribed</h2>
-      <p>You won't receive any more newsletters from Homefolk.</p>
-      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}">Return to Homefolk</a></p>
+      <p>You won't receive any more newsletters from Housefolk.</p>
+      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}">Return to Housefolk</a></p>
     </body></html>`,
     { headers: { 'Content-Type': 'text/html' } }
   )

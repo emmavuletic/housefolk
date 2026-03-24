@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   const { data: { user }, error: authError } = await supabase.auth.getUser(token)
   if (authError || !user) return NextResponse.json({ error: 'Invalid token.' }, { status: 401 })
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://homefolk.vercel.app'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.housefolk.co'
 
   const { data: profile } = await supabase
     .from('users')

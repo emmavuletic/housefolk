@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Homefolk — UK Rental Listings',
+  title: 'Housefolk — UK Rental Listings',
   description: 'Find your perfect home. Flatshares, rentals and sublets across the UK, delivered every Thursday.',
 }
 

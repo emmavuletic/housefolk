@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'listing_id and type required.' }, { status: 400 })
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://homefolk.vercel.app'
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.housefolk.co'
 
   // Validate promo code if provided
   if (promo_code) {
