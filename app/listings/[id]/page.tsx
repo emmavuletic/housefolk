@@ -58,6 +58,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const [notFound, setNotFound] = useState(false)
   const [enquirySent, setEnquirySent] = useState(false)
   const [enquiryLoading, setEnquiryLoading] = useState(false)
+  const [enquiryMessage, setEnquiryMessage] = useState('')
 
   useEffect(() => {
     fetch(`/api/listings/${params.id}`)
@@ -89,7 +90,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ listing_id: params.id }),
+        body: JSON.stringify({ listing_id: params.id, message: enquiryMessage.trim() }),
       })
       setEnquirySent(true)
     } finally {
@@ -269,13 +270,21 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                   ✓ Message sent! The landlord will be in touch.
                 </div>
               ) : (
-                <button
-                  style={styles.ctaBtn}
-                  onClick={handleEnquiry}
-                  disabled={enquiryLoading}
-                >
-                  {enquiryLoading ? 'Sending…' : 'Message landlord →'}
-                </button>
+                <>
+                  <textarea
+                    value={enquiryMessage}
+                    onChange={e => setEnquiryMessage(e.target.value)}
+                    placeholder="Hi, I'm interested in your listing. Could you tell me more about…"
+                    style={{ width: '100%', minHeight: '100px', padding: '0.8rem 1rem', borderRadius: '12px', border: '1.5px solid #E2D9CE', fontFamily: 'DM Sans, sans-serif', fontSize: '0.9rem', marginBottom: '0.8rem', resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
+                  />
+                  <button
+                    style={styles.ctaBtn}
+                    onClick={handleEnquiry}
+                    disabled={enquiryLoading || !enquiryMessage.trim()}
+                  >
+                    {enquiryLoading ? 'Sending…' : 'Send message →'}
+                  </button>
+                </>
               )}
             </div>
           </div>
