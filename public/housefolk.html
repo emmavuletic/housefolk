@@ -583,8 +583,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <div id="form-forgot" style="display:none">
         <div class="auth-title">Reset password</div>
         <p class="auth-sub">We'll send a reset link to your email right away.</p>
-        <div class="field"><label>Email address</label><input type="email" placeholder="you@example.com"></div>
-        <button class="btn btn-primary" onclick="switchTab('in')">Send reset link →</button>
+        <div class="field"><label>Email address</label><input type="email" id="forgot-email" placeholder="you@example.com"></div>
+        <button class="btn btn-primary" onclick="doForgotPassword()">Send reset link →</button>
         <p class="auth-foot"><a onclick="switchTab('in')">← Back to sign in</a></p>
       </div>
     </div>
