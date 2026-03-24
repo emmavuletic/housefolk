@@ -1472,11 +1472,59 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
     </div>
     <div class="field-row">
       <div class="field"><label>Bedrooms</label><select id="el-beds"><option value="">Select</option><option>Studio</option><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
+      <div class="field"><label>Bathrooms</label><select id="el-baths"><option value="">Select</option><option>1</option><option>2</option><option>3+</option></select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Bills</label><select id="el-bills"><option value="">Select</option><option>Included</option><option>Not included</option></select></div>
+      <div class="field"><label>Furnishing</label><select id="el-furn"><option value="">Select</option><option>Furnished</option><option>Unfurnished</option><option>Part furnished</option></select></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Pet friendly</label><select id="el-pet"><option value="">Select</option><option>Yes</option><option>No</option><option>Ask me</option></select></div>
       <div class="field"><label>Available from</label><input type="date" id="el-avail"></div>
     </div>
     <div class="field"><label>Listing motto</label><input type="text" id="el-motto" placeholder="One-line hook for your listing"></div>
     <div class="field"><label>Description</label><textarea id="el-desc" style="min-height:100px" placeholder="Describe your space…"></textarea></div>
     <div class="field"><label>Spotify playlist URL (optional)</label><input type="url" id="el-spotify" placeholder="https://open.spotify.com/…"></div>
+    <div class="field">
+      <label>Star signs in the household ✨ <span style="font-weight:400;color:var(--light)">(optional)</span></label>
+      <div class="star-select-wrap">
+        <button type="button" class="star-select-btn" onclick="toggleStarDropdown('el-stars')">
+          <span id="el-stars-label">Select star signs…</span><span>▾</span>
+        </button>
+        <div class="star-dropdown" id="el-stars">
+          <div class="star-option"><input type="checkbox" value="aries" onchange="updateElStarLabel()"><span class="sign-emoji">♈</span> Aries</div>
+          <div class="star-option"><input type="checkbox" value="taurus" onchange="updateElStarLabel()"><span class="sign-emoji">♉</span> Taurus</div>
+          <div class="star-option"><input type="checkbox" value="gemini" onchange="updateElStarLabel()"><span class="sign-emoji">♊</span> Gemini</div>
+          <div class="star-option"><input type="checkbox" value="cancer" onchange="updateElStarLabel()"><span class="sign-emoji">♋</span> Cancer</div>
+          <div class="star-option"><input type="checkbox" value="leo" onchange="updateElStarLabel()"><span class="sign-emoji">♌</span> Leo</div>
+          <div class="star-option"><input type="checkbox" value="virgo" onchange="updateElStarLabel()"><span class="sign-emoji">♍</span> Virgo</div>
+          <div class="star-option"><input type="checkbox" value="libra" onchange="updateElStarLabel()"><span class="sign-emoji">♎</span> Libra</div>
+          <div class="star-option"><input type="checkbox" value="scorpio" onchange="updateElStarLabel()"><span class="sign-emoji">♏</span> Scorpio</div>
+          <div class="star-option"><input type="checkbox" value="sagittarius" onchange="updateElStarLabel()"><span class="sign-emoji">♐</span> Sagittarius</div>
+          <div class="star-option"><input type="checkbox" value="capricorn" onchange="updateElStarLabel()"><span class="sign-emoji">♑</span> Capricorn</div>
+          <div class="star-option"><input type="checkbox" value="aquarius" onchange="updateElStarLabel()"><span class="sign-emoji">♒</span> Aquarius</div>
+          <div class="star-option"><input type="checkbox" value="pisces" onchange="updateElStarLabel()"><span class="sign-emoji">♓</span> Pisces</div>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Music vibe 🎵 <span style="font-weight:400;color:var(--light)">(optional)</span></label>
+      <div class="star-select-wrap">
+        <button type="button" class="star-select-btn" onclick="toggleStarDropdown('el-music')">
+          <span id="el-music-label">Select music vibes…</span><span>▾</span>
+        </button>
+        <div class="star-dropdown" id="el-music">
+          <div class="star-option"><input type="checkbox" value="classical" onchange="updateElMusicLabel()"><span class="sign-emoji">🎼</span> Classical</div>
+          <div class="star-option"><input type="checkbox" value="jazz" onchange="updateElMusicLabel()"><span class="sign-emoji">🎷</span> Jazz</div>
+          <div class="star-option"><input type="checkbox" value="indie" onchange="updateElMusicLabel()"><span class="sign-emoji">🎤</span> Indie / alternative</div>
+          <div class="star-option"><input type="checkbox" value="hiphop" onchange="updateElMusicLabel()"><span class="sign-emoji">🎧</span> Hip hop / R&B</div>
+          <div class="star-option"><input type="checkbox" value="electronic" onchange="updateElMusicLabel()"><span class="sign-emoji">🎛️</span> Electronic / ambient</div>
+          <div class="star-option"><input type="checkbox" value="folk" onchange="updateElMusicLabel()"><span class="sign-emoji">🪕</span> Folk / acoustic</div>
+          <div class="star-option"><input type="checkbox" value="pop" onchange="updateElMusicLabel()"><span class="sign-emoji">🎶</span> Pop</div>
+          <div class="star-option"><input type="checkbox" value="whatever" onchange="updateElMusicLabel()"><span class="sign-emoji">🎲</span> Whatever's on</div>
+        </div>
+      </div>
+    </div>
     <button class="btn btn-primary" id="el-save-btn" onclick="saveListingEdit()">Save changes →</button>
   </div>
 </div>

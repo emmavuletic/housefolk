@@ -708,6 +708,18 @@ async function deleteListing(id) {
 
 let _editingListingId = null
 
+function updateElStarLabel() {
+  const checks = document.querySelectorAll('#el-stars input:checked')
+  const label = document.getElementById('el-stars-label')
+  if (label) label.textContent = checks.length ? Array.from(checks).map(c => c.value).join(', ') : 'Select star signs…'
+}
+
+function updateElMusicLabel() {
+  const checks = document.querySelectorAll('#el-music input:checked')
+  const label = document.getElementById('el-music-label')
+  if (label) label.textContent = checks.length ? Array.from(checks).map(c => c.value).join(', ') : 'Select music vibes…'
+}
+
 async function editListing(id) {
   const data = await api(`/api/listings/${id}`)
   if (data.error) { toast('Could not load listing'); return }
@@ -718,10 +730,26 @@ async function editListing(id) {
   document.getElementById('el-location').value = l.location || ''
   document.getElementById('el-price').value = l.price ? Math.round(l.price / 100) : ''
   document.getElementById('el-beds').value = l.beds || ''
+  document.getElementById('el-baths').value = l.baths || ''
+  document.getElementById('el-bills').value = l.bills_included ? 'Included' : 'Not included'
+  document.getElementById('el-furn').value = l.furnished === true ? 'Furnished' : l.furnished === false ? 'Unfurnished' : ''
+  document.getElementById('el-pet').value = l.pet_friendly === true ? 'Yes' : l.pet_friendly === false ? 'No' : ''
   document.getElementById('el-desc').value = l.description || ''
   document.getElementById('el-motto').value = l.motto || ''
   document.getElementById('el-avail').value = l.available_date || ''
   document.getElementById('el-spotify').value = l.spotify_url || ''
+
+  // Star signs
+  document.querySelectorAll('#el-stars input[type=checkbox]').forEach(cb => {
+    cb.checked = (l.star_signs || []).includes(cb.value)
+  })
+  updateElStarLabel()
+
+  // Music vibes
+  document.querySelectorAll('#el-music input[type=checkbox]').forEach(cb => {
+    cb.checked = (l.music_vibes || []).includes(cb.value)
+  })
+  updateElMusicLabel()
 
   document.getElementById('listing-edit-modal').style.display = 'flex'
 }
@@ -731,15 +759,24 @@ async function saveListingEdit() {
   const btn = document.getElementById('el-save-btn')
   if (btn) { btn.disabled = true; btn.textContent = 'Saving…' }
 
+  const billsVal = document.getElementById('el-bills').value
+  const furnVal = document.getElementById('el-furn').value
+  const petVal = document.getElementById('el-pet').value
   const updates = {
     title: document.getElementById('el-title').value.trim(),
     location: document.getElementById('el-location').value.trim(),
     price: document.getElementById('el-price').value ? Math.round(parseFloat(document.getElementById('el-price').value) * 100) : null,
     beds: document.getElementById('el-beds').value,
+    baths: document.getElementById('el-baths').value || null,
+    bills_included: billsVal === 'Included' ? true : billsVal === 'Not included' ? false : null,
+    furnished: furnVal === 'Furnished' ? true : furnVal === 'Unfurnished' ? false : furnVal === 'Part furnished' ? true : null,
+    pet_friendly: petVal === 'Yes' ? true : petVal === 'No' ? false : null,
     description: document.getElementById('el-desc').value.trim(),
     motto: document.getElementById('el-motto').value.trim(),
     available_date: document.getElementById('el-avail').value || null,
     spotify_url: document.getElementById('el-spotify').value.trim() || null,
+    star_signs: Array.from(document.querySelectorAll('#el-stars input:checked')).map(c => c.value),
+    music_vibes: Array.from(document.querySelectorAll('#el-music input:checked')).map(c => c.value),
   }
 
   if (!updates.title || !updates.location) {
