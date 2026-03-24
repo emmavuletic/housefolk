@@ -620,7 +620,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <div class="sb-label admin-only" style="display:none">Newsletter</div>
       <button class="sb-item admin-only" id="si-nl" onclick="showPanel('newsletter')" style="display:none"><span class="sb-icon">📰</span> Newsletter <span class="sb-badge green">Thu</span></button>
       <div class="sb-label admin-only" style="display:none">Admin</div>
-      <button class="sb-item admin-only" id="si-weeklistings" onclick="showPanel('weeklistings')" style="display:none"><span class="sb-icon">📋</span> This week's listings</button>
+      <button class="sb-item admin-only" id="si-weeklistings" onclick="window.location.href='/listings'" style="display:none"><span class="sb-icon">📋</span> This week's listings</button>
       <button class="sb-item admin-only" id="si-promos" onclick="showPanel('promos')" style="display:none"><span class="sb-icon">🏷️</span> Promo codes</button>
       <div class="sb-label">Account</div>
       <button class="sb-item" id="si-tenant" onclick="showPanel('tenant')"><span class="sb-icon">🔍</span> Renter account</button>
@@ -673,7 +673,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div style="font-size:2.5rem;margin-bottom:0.8rem">🎉</div>
             <div style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:0.5rem">It's Thursday — listings are live!</div>
             <p style="color:var(--mid);font-size:0.88rem;margin-bottom:1.2rem">This week's flatshares, sublets and rentals are ready to browse.</p>
-            <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.6rem" onclick="switchMainTab('browse')">Browse this week's listings →</button>
+            <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.6rem" onclick="window.location.href='/listings'">Browse this week's listings →</button>
           </div>
           <div id="tenant-wait-cta" class="fcard" style="text-align:center;padding:2.5rem">
             <div style="font-size:2.5rem;margin-bottom:0.8rem">📰</div>
