@@ -144,7 +144,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
         <nav style={styles.nav}>
           <a href="/housefolk.html" style={styles.navLogo}>Housefolk</a>
           <a href="/listings" style={styles.navBack}>← All listings</a>
-          <a href="/housefolk.html" style={{...styles.navBack, marginLeft: 'auto'}}>My account →</a>
+          <a href="/housefolk.html" style={{ marginLeft: 'auto', background: '#1A1510', color: '#fff', padding: '0.6rem 1.2rem', borderRadius: '10px', fontWeight: 600, fontSize: '0.88rem', textDecoration: 'none' }}>My account →</a>
         </nav>
 
         <main style={styles.main}>
