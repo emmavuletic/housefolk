@@ -182,6 +182,7 @@ export default function ListingsPage() {
         {/* Nav */}
         <nav style={styles.nav}>
           <a href="/housefolk.html" style={styles.navLogo}>Housefolk</a>
+          <a href="/housefolk.html" style={styles.navBack}>← My account</a>
           <a href="/housefolk.html#post" style={styles.navCta}>Post a listing</a>
         </nav>
 
@@ -281,6 +282,12 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 400,
     color: '#1A1A1A',
     letterSpacing: '0.05em',
+  },
+  navBack: {
+    fontSize: '0.85rem',
+    color: '#5A4F45',
+    fontWeight: 500,
+    textDecoration: 'none',
   },
   navCta: {
     background: '#1A1A1A',
