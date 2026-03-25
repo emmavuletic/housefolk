@@ -917,7 +917,7 @@ function switchMsgTab(tab) {
   document.getElementById('msgtab-sent').classList.toggle('active', tab === 'sent')
   document.getElementById('msgtab-received').classList.toggle('active', tab === 'received')
   const header = document.getElementById('chat-list-header')
-  if (header) header.textContent = tab === 'sent' ? 'Messages to landlords' : 'About my listing'
+  if (header) header.textContent = tab === 'sent' ? 'Messages to landlords' : 'Messages from tenants'
   // Reset thread
   const noSel = document.getElementById('chat-no-select')
   const inner = document.getElementById('chat-thread-inner')
@@ -932,7 +932,7 @@ function renderConvList() {
   if (!list) return
 
   const enquiries = currentTabEnquiries()
-  const headerText = _activeMsgTab === 'sent' ? 'Messages to landlords' : 'About my listing'
+  const headerText = _activeMsgTab === 'sent' ? 'Messages to landlords' : 'Messages from tenants'
   const emptyText = _activeMsgTab === 'sent' ? 'No messages sent yet.' : 'No enquiries about your listings yet.'
 
   if (enquiries.length === 0) {
@@ -991,7 +991,10 @@ async function openChatThread(enquiryId) {
   // Book viewing button — show if landlord has a viewing URL
   const bookBtn = document.getElementById('chat-book-btn')
   if (bookBtn) {
-    const viewingUrl = enquiry.landlord?.viewing_url || ''
+    // Sent tab: use landlord's link so tenant can book. Received tab: use own link (landlord sharing with tenant).
+    const viewingUrl = _activeMsgTab === 'received'
+      ? (currentUser?.viewing_url || '')
+      : (enquiry.landlord?.viewing_url || '')
     if (viewingUrl) {
       bookBtn.href = viewingUrl
       bookBtn.style.display = ''

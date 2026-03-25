@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
   let { data: profile } = await supabase
     .from('users')
-    .select('id, first_name, last_name, role, stripe_customer_id')
+    .select('id, first_name, last_name, role, stripe_customer_id, viewing_url')
     .eq('id', user.id)
     .single()
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       first_name: firstName,
       last_name: lastName,
       role: 'tenant',
-    }).select('id, first_name, last_name, role, stripe_customer_id').single()
+    }).select('id, first_name, last_name, role, stripe_customer_id, viewing_url').single()
     profile = newProfile
   }
 
