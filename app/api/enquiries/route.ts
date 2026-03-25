@@ -13,27 +13,26 @@ export async function GET(req: NextRequest) {
   const { data: { user }, error: authError } = await supabase.auth.getUser(token)
   if (authError || !user) return NextResponse.json({ error: 'Invalid token.' }, { status: 401 })
 
-  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  const select = `
+    id, message, read, created_at, tenant_id, landlord_id,
+    listing:listings(id, title, type, location),
+    tenant:users!enquiries_tenant_id_fkey(id, first_name, last_name),
+    landlord:users!enquiries_landlord_id_fkey(id, first_name, last_name)
+  `
 
-  let query = supabase
-    .from('enquiries')
-    .select(`
-      id, message, read, created_at,
-      listing:listings(id, title, type, location),
-      tenant:users!enquiries_tenant_id_fkey(id, first_name, last_name),
-      landlord:users!enquiries_landlord_id_fkey(id, first_name, last_name)
-    `)
-    .order('created_at', { ascending: false })
+  // Fetch both sides in parallel — enquiries sent by user (as tenant) and received (as landlord)
+  const [sentRes, receivedRes] = await Promise.all([
+    supabase.from('enquiries').select(select).eq('tenant_id', user.id).order('created_at', { ascending: false }),
+    supabase.from('enquiries').select(select).eq('landlord_id', user.id).order('created_at', { ascending: false }),
+  ])
 
-  if (profile?.role === 'landlord') {
-    query = query.eq('landlord_id', user.id)
-  } else {
-    query = query.eq('tenant_id', user.id)
-  }
+  if (sentRes.error) return NextResponse.json({ error: sentRes.error.message }, { status: 500 })
+  if (receivedRes.error) return NextResponse.json({ error: receivedRes.error.message }, { status: 500 })
 
-  const { data, error } = await query
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json({ enquiries: data })
+  return NextResponse.json({
+    sent: sentRes.data ?? [],
+    received: receivedRes.data ?? [],
+  })
 }
 
 // POST /api/enquiries — tenant sends a message to landlord

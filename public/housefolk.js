@@ -159,8 +159,7 @@ function signOut() {
 function goToBrowse() {
   const token = getToken()
   if (token) {
-    showScreen('browse')
-    loadBrowseListings()
+    window.location.href = '/listings'
   } else {
     showScreen('auth')
     switchTab('up')
@@ -255,6 +254,10 @@ function showPanel(name) {
     const badge = document.getElementById('inbox-badge')
     if (dot) dot.style.display = 'none'
     if (badge) badge.style.display = 'none'
+    // Default to 'sent' tab for tenants, 'received' for landlords
+    const defaultTab = (currentUser?.role === 'landlord' || currentUser?.role === 'admin') ? 'received' : 'sent'
+    if (_activeMsgTab !== defaultTab) switchMsgTab(defaultTab)
+    loadEnquiries()
   }
   if (name === 'mylistings') loadMyListings()
   if (name === 'post') resetPost()
@@ -797,47 +800,33 @@ async function saveListingEdit() {
   loadMyListings()
 }
 
-// ── ENQUIRIES ──
+// ── CHAT / MESSAGES ──
+let _sentEnquiries = []      // enquiries this user sent as a tenant
+let _receivedEnquiries = []  // enquiries this user received as a landlord
+let _activeMsgTab = 'sent'
+let _activeEnquiryId = null
+
+function currentTabEnquiries() {
+  return _activeMsgTab === 'sent' ? _sentEnquiries : _receivedEnquiries
+}
+
 async function loadEnquiries() {
   const token = getToken()
   if (!token) return
   const data = await api('/api/enquiries')
-  if (data.error || !data.enquiries) return
+  if (data.error) return
 
-  const container = document.querySelector('#panel-inbox .fcard')
-  if (!container) return
+  _sentEnquiries = data.sent || []
+  _receivedEnquiries = data.received || []
 
-  const unread = data.enquiries.filter(e => !e.read).length
+  // Badge: unread received enquiries
+  const unread = _receivedEnquiries.filter(e => !e.read).length
   const badge = document.getElementById('inbox-badge')
-  if (badge) {
-    badge.textContent = unread
-    badge.style.display = unread > 0 ? '' : 'none'
-  }
+  if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? '' : 'none' }
   const dot = document.getElementById('notif-dot')
   if (dot) dot.style.display = unread > 0 ? '' : 'none'
 
-  if (data.enquiries.length === 0) {
-    container.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--light)">No enquiries yet.</div>'
-    return
-  }
-
-  container.innerHTML = data.enquiries.map(e => {
-    const tenant = e.tenant || {}
-    const name = `${tenant.first_name || ''} ${tenant.last_name || ''}`.trim() || 'Anonymous'
-    const initials = (name[0] || '?').toUpperCase()
-    const listing = e.listing || {}
-    const timeAgo = formatTimeAgo(e.created_at)
-    return `
-      <div class="inbox-item ${!e.read ? 'unread' : ''}">
-        <div class="i-avatar" style="background:linear-gradient(135deg,#4A90D9,#7B68EE)">${initials}</div>
-        <div class="i-body">
-          <div class="i-head"><span class="i-name">${name}</span><span class="i-time">${timeAgo}</span></div>
-          <div class="i-listing">Re: ${listing.title || 'Listing'}</div>
-          <div class="i-preview">${e.message}</div>
-        </div>
-        ${!e.read ? '<div class="i-dot"></div>' : ''}
-      </div>`
-  }).join('')
+  renderConvList()
 }
 
 async function loadTenantMessages() {
@@ -845,23 +834,223 @@ async function loadTenantMessages() {
   if (!token) return
   const data = await api('/api/enquiries')
   const wrap = document.getElementById('tenant-messages-wrap')
+  const openBtn = document.getElementById('tenant-messages-open-btn')
   if (!wrap) return
-  if (data.error || !data.enquiries || data.enquiries.length === 0) {
-    wrap.innerHTML = '<div style="padding:1rem;color:var(--light);font-size:0.86rem">No messages yet — browse listings on Thursday and message landlords directly.</div>'
+
+  _sentEnquiries = data.sent || []
+  _receivedEnquiries = data.received || []
+
+  if (openBtn) openBtn.style.display = 'none'
+
+  if (_sentEnquiries.length === 0) {
+    wrap.innerHTML = '<div style="padding:1rem;color:var(--light);font-size:0.86rem">No messages yet — browse listings and message landlords directly.</div>'
     return
   }
-  wrap.innerHTML = data.enquiries.map(e => {
+
+  wrap.innerHTML = _sentEnquiries.map(e => {
     const listing = e.listing || {}
-    const timeAgo = formatTimeAgo(e.created_at)
-    return `<div class="inbox-item" style="cursor:default">
-      <div class="i-avatar" style="background:linear-gradient(135deg,#f7b188,#c4856a)">🏠</div>
-      <div class="i-body">
-        <div class="i-head"><span class="i-name">${listing.title || 'Listing'}</span><span class="i-time">${timeAgo}</span></div>
-        <div class="i-listing">Your message to landlord</div>
-        <div class="i-preview">${e.message}</div>
-      </div>
-    </div>`
+    const landlord = e.landlord || {}
+    const landlordName = `${landlord.first_name || ''} ${landlord.last_name || ''}`.trim() || 'Landlord'
+    const timeStr = formatTimeAgo(e.created_at)
+    return `
+      <div class="inbox-item" onclick="openOverviewThread('${e.id}')" style="cursor:pointer">
+        <div class="i-avatar" style="background:linear-gradient(135deg,#f7b188,#c4856a);flex-shrink:0">🏠</div>
+        <div class="i-body">
+          <div class="i-head"><span class="i-name">${escapeHtml(listing.title || 'Listing')}</span><span class="i-time">${timeStr}</span></div>
+          <div class="i-listing">Landlord: ${escapeHtml(landlordName)}</div>
+          <div class="i-preview">${escapeHtml(e.message || '')}</div>
+        </div>
+        <div style="color:var(--accent);font-size:0.78rem;flex-shrink:0;align-self:center">Open →</div>
+      </div>`
   }).join('')
+}
+
+function openOverviewThread(enquiryId) {
+  // Switch to inbox panel directly (avoid async race from showPanel)
+  _activeMsgTab = 'sent'
+  document.querySelectorAll('.dash-panel').forEach(p => { p.classList.remove('active'); p.style.display = '' })
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'))
+  const panel = document.getElementById('panel-inbox')
+  if (panel) { panel.classList.add('active'); panel.style.display = 'block' }
+  const sideBtn = document.getElementById('si-inbox')
+  if (sideBtn) sideBtn.classList.add('active')
+  // Ensure tab UI is correct
+  const st = document.getElementById('msgtab-sent')
+  const rt = document.getElementById('msgtab-received')
+  if (st) st.classList.add('active')
+  if (rt) rt.classList.remove('active')
+  // Data already in _sentEnquiries — open thread immediately
+  openChatThread(enquiryId)
+}
+
+function switchMsgTab(tab) {
+  _activeMsgTab = tab
+  _activeEnquiryId = null
+  document.getElementById('msgtab-sent').classList.toggle('active', tab === 'sent')
+  document.getElementById('msgtab-received').classList.toggle('active', tab === 'received')
+  const header = document.getElementById('chat-list-header')
+  if (header) header.textContent = tab === 'sent' ? 'Messages to landlords' : 'About my listing'
+  // Reset thread
+  const noSel = document.getElementById('chat-no-select')
+  const inner = document.getElementById('chat-thread-inner')
+  if (noSel) noSel.style.display = ''
+  if (inner) inner.style.display = 'none'
+  document.getElementById('chat-conv-list').classList.remove('thread-open')
+  renderConvList()
+}
+
+function renderConvList() {
+  const list = document.getElementById('chat-conv-list')
+  if (!list) return
+
+  const enquiries = currentTabEnquiries()
+  const headerText = _activeMsgTab === 'sent' ? 'Messages to landlords' : 'About my listing'
+  const emptyText = _activeMsgTab === 'sent' ? 'No messages sent yet.' : 'No enquiries about your listings yet.'
+
+  if (enquiries.length === 0) {
+    list.innerHTML = `<div class="chat-list-header">${headerText}</div><div style="padding:2rem;text-align:center;color:var(--light);font-size:0.86rem">${emptyText}</div>`
+    return
+  }
+
+  // In sent tab, show landlord name. In received tab, show tenant name.
+  const showLandlord = _activeMsgTab === 'sent'
+
+  list.innerHTML = `<div class="chat-list-header">${headerText}</div>` + enquiries.map(e => {
+    const other = showLandlord ? (e.landlord || {}) : (e.tenant || {})
+    const name = `${other.first_name || ''} ${other.last_name || ''}`.trim() || 'Housefolk user'
+    const initials = (name[0] || '?').toUpperCase()
+    const listing = e.listing || {}
+    const preview = e.message || ''
+    const timeStr = formatTimeAgo(e.created_at)
+    const isActive = e.id === _activeEnquiryId
+    const isUnread = !e.read
+    return `
+      <div class="chat-conv-item ${isActive ? 'active' : ''} ${isUnread ? 'unread' : ''}" onclick="openChatThread('${e.id}')">
+        <div class="i-avatar" style="background:linear-gradient(135deg,#4A90D9,#7B68EE);width:34px;height:34px;font-size:0.75rem;flex-shrink:0">${initials}</div>
+        <div class="chat-conv-meta">
+          <div class="chat-conv-name">${name}</div>
+          <div class="chat-conv-listing">Re: ${listing.title || 'Listing'}</div>
+          <div class="chat-conv-preview">${escapeHtml(preview)}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.3rem">
+          <div class="chat-conv-time">${timeStr}</div>
+          ${isUnread ? '<div class="chat-unread-dot"></div>' : ''}
+        </div>
+      </div>`
+  }).join('')
+}
+
+async function openChatThread(enquiryId) {
+  _activeEnquiryId = enquiryId
+  renderConvList()
+
+  const enquiry = currentTabEnquiries().find(e => e.id === enquiryId)
+  if (!enquiry) return
+
+  const role = currentUser?.role || 'tenant'
+  const isLandlord = role === 'landlord' || role === 'admin'
+  const other = isLandlord ? (enquiry.tenant || {}) : (enquiry.landlord || {})
+  const otherName = `${other.first_name || ''} ${other.last_name || ''}`.trim() || 'Housefolk user'
+  const listing = enquiry.listing || {}
+
+  document.getElementById('chat-no-select').style.display = 'none'
+  const inner = document.getElementById('chat-thread-inner')
+  inner.style.display = 'flex'
+  document.getElementById('chat-thread-name').textContent = otherName
+  const listingLink = listing.id ? `<a href="/listings/${listing.id}">${listing.title || 'Listing'} →</a>` : (listing.title || 'Listing')
+  document.getElementById('chat-thread-sub').innerHTML = listingLink
+
+  // Mobile: hide conv list, show thread
+  document.getElementById('chat-conv-list').classList.add('thread-open')
+
+  const msgList = document.getElementById('chat-messages-list')
+  msgList.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--light);font-size:0.82rem">Loading…</div>'
+
+  const data = await api(`/api/enquiries/${enquiryId}/messages`)
+
+  // Always show at least the original enquiry message as the first bubble
+  const tenantId = enquiry.tenant_id || enquiry.tenant?.id
+  const seedBubble = renderMessageBubble({
+    id: 'seed',
+    body: enquiry.message,
+    created_at: enquiry.created_at,
+    sender_id: tenantId,
+  })
+
+  const allMessages = data.messages || []
+  if (allMessages.length === 0) {
+    msgList.innerHTML = seedBubble
+  } else {
+    msgList.innerHTML = seedBubble + allMessages.map(m => renderMessageBubble(m)).join('')
+  }
+
+  msgList.scrollTop = msgList.scrollHeight
+  document.getElementById('chat-reply-input').focus()
+}
+
+function renderMessageBubble(m) {
+  const isSent = m.sender_id === currentUser?.id
+  const timeStr = formatTimeAgo(m.created_at)
+  return `<div class="chat-bubble-wrap ${isSent ? 'sent' : 'received'}">
+    <div class="chat-bubble">${escapeHtml(m.body)}</div>
+    <div class="chat-bubble-time">${timeStr}</div>
+  </div>`
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+async function sendChatMessage() {
+  if (!_activeEnquiryId) return
+  const input = document.getElementById('chat-reply-input')
+  const body = input?.value?.trim()
+  if (!body) return
+
+  const btn = document.querySelector('.chat-send-btn')
+  if (btn) btn.disabled = true
+  const data = await api(`/api/enquiries/${_activeEnquiryId}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({ body }),
+  })
+  if (btn) btn.disabled = false
+
+  if (data.error) { toast(data.error); return }
+
+  input.value = ''
+  input.style.height = ''
+  // Append bubble optimistically
+  const msgList = document.getElementById('chat-messages-list')
+  if (msgList) {
+    msgList.insertAdjacentHTML('beforeend', renderMessageBubble({
+      id: data.message?.id || Date.now(),
+      body,
+      created_at: new Date().toISOString(),
+      sender_id: currentUser?.id,
+    }))
+    msgList.scrollTop = msgList.scrollHeight
+  }
+  // Update preview in conversation list
+  const eq = currentTabEnquiries().find(e => e.id === _activeEnquiryId)
+  if (eq) eq.last_message = { body, created_at: new Date().toISOString(), sender_id: currentUser?.id }
+  renderConvList()
+}
+
+function closeChatThread() {
+  _activeEnquiryId = null
+  document.getElementById('chat-conv-list').classList.remove('thread-open')
+  document.getElementById('chat-no-select').style.display = ''
+  document.getElementById('chat-thread-inner').style.display = 'none'
+  renderConvList()
+}
+
+function chatInputKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage() }
+}
+
+function autoResizeChatInput(el) {
+  el.style.height = 'auto'
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px'
 }
 
 function formatTimeAgo(dateStr) {
@@ -941,6 +1130,8 @@ async function openListing(id) {
   document.getElementById('detail-desc').textContent = ''
   document.getElementById('detail-grid').innerHTML = ''
   document.getElementById('detail-contact-wrap').innerHTML = ''
+  const ds = document.getElementById('detail-stars'); if (ds) { ds.innerHTML = ''; ds.style.display = 'none' }
+  const dm = document.getElementById('detail-music'); if (dm) { dm.innerHTML = ''; dm.style.display = 'none' }
 
   const data = await api(`/api/listings/${id}`)
   if (data.error) { closeListing(); toast('Could not load listing'); return }
@@ -977,9 +1168,28 @@ async function openListing(id) {
 
   const meta = []
   if (l.beds) meta.push(`🛏 ${l.beds} bed${l.beds === '1' ? '' : 's'}`)
+  if (l.baths) meta.push(`🚿 ${l.baths} bath${l.baths === '1' ? '' : 's'}`)
+  if (l.furnished === true) meta.push('🛋️ Furnished')
+  if (l.furnished === false) meta.push('🛋️ Unfurnished')
+  if (l.pet_friendly === true) meta.push('🐾 Pets welcome')
+  if (l.pet_friendly === false) meta.push('🚫 No pets')
   if (l.bills_included) meta.push('💡 Bills included')
   if (l.available_date) meta.push(`📅 Available ${new Date(l.available_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`)
   document.getElementById('detail-meta').innerHTML = meta.map(m => `<span class="badge badge-type" style="font-size:0.78rem">${m}</span>`).join('')
+
+  // Star signs
+  const starsEl = document.getElementById('detail-stars')
+  if (starsEl) {
+    starsEl.style.display = l.star_signs?.length ? '' : 'none'
+    starsEl.innerHTML = l.star_signs?.length ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.4rem;font-weight:600">Looking for</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem">${l.star_signs.map(s => `<span class="badge badge-type" style="font-size:0.78rem">✨ ${s}</span>`).join('')}</div>` : ''
+  }
+
+  // Music vibes
+  const musicEl = document.getElementById('detail-music')
+  if (musicEl) {
+    musicEl.style.display = l.music_vibes?.length ? '' : 'none'
+    musicEl.innerHTML = l.music_vibes?.length ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.4rem;font-weight:600">Music vibe</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem">${l.music_vibes.map(v => `<span class="badge badge-type" style="font-size:0.78rem">🎵 ${v}</span>`).join('')}</div>` : ''
+  }
 
   document.getElementById('detail-motto').textContent = l.motto || ''
   document.getElementById('detail-motto').style.display = l.motto ? '' : 'none'

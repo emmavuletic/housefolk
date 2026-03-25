@@ -206,3 +206,13 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+
+-- Messages table for two-way chat (run manually in Supabase SQL Editor)
+-- CREATE TABLE public.messages (
+--   id uuid default uuid_generate_v4() primary key,
+--   enquiry_id uuid references public.enquiries(id) on delete cascade not null,
+--   sender_id uuid references public.users(id) on delete cascade not null,
+--   body text not null,
+--   created_at timestamptz default now()
+-- );
