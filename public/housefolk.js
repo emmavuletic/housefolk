@@ -147,6 +147,33 @@ async function doForgotPassword() {
   setTimeout(() => switchTab('in'), 2000)
 }
 
+// ── PROFILE ──
+async function loadProfile() {
+  const data = await api('/api/users/me')
+  if (data.error || !data.user) return
+  const u = data.user
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || '' }
+  set('p-instagram', u.instagram)
+  set('p-linkedin', u.linkedin)
+  set('p-airbnb', u.airbnb)
+  set('p-viewing-url', u.viewing_url)
+}
+
+async function saveProfile() {
+  const get = id => document.getElementById(id)?.value?.trim() || null
+  const data = await api('/api/users/me', {
+    method: 'PATCH',
+    body: JSON.stringify({
+      instagram: get('p-instagram'),
+      linkedin: get('p-linkedin'),
+      airbnb: get('p-airbnb'),
+      viewing_url: get('p-viewing-url'),
+    }),
+  })
+  if (data.error) { toast(data.error); return }
+  toast('✓ Profile saved', 'green')
+}
+
 function signOut() {
   clearSession()
   document.getElementById('dash-screen').classList.remove('active')
@@ -263,6 +290,7 @@ function showPanel(name) {
   if (name === 'post') resetPost()
   if (name === 'newsletter') loadNLListings()
   if (name === 'weeklistings') loadWeekListings()
+  if (name === 'profile') loadProfile()
 }
 
 function switchMainTab(tab) {
@@ -959,6 +987,18 @@ async function openChatThread(enquiryId) {
   document.getElementById('chat-thread-name').textContent = otherName
   const listingLink = listing.id ? `<a href="/listings/${listing.id}">${listing.title || 'Listing'} →</a>` : (listing.title || 'Listing')
   document.getElementById('chat-thread-sub').innerHTML = listingLink
+
+  // Book viewing button — show if landlord has a viewing URL
+  const bookBtn = document.getElementById('chat-book-btn')
+  if (bookBtn) {
+    const viewingUrl = enquiry.landlord?.viewing_url || ''
+    if (viewingUrl) {
+      bookBtn.href = viewingUrl
+      bookBtn.style.display = ''
+    } else {
+      bookBtn.style.display = 'none'
+    }
+  }
 
   // Mobile: hide conv list, show thread
   document.getElementById('chat-conv-list').classList.add('thread-open')

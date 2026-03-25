@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     id, message, read, created_at, tenant_id, landlord_id,
     listing:listings(id, title, type, location),
     tenant:users!enquiries_tenant_id_fkey(id, first_name, last_name),
-    landlord:users!enquiries_landlord_id_fkey(id, first_name, last_name)
+    landlord:users!enquiries_landlord_id_fkey(id, first_name, last_name, viewing_url)
   `
 
   // Fetch both sides in parallel — enquiries sent by user (as tenant) and received (as landlord)

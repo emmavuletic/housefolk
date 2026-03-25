@@ -1035,6 +1035,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
                   <div class="chat-thread-name" id="chat-thread-name"></div>
                   <div class="chat-thread-sub" id="chat-thread-sub"></div>
                 </div>
+                <a id="chat-book-btn" href="#" target="_blank" rel="noopener" style="display:none;flex-shrink:0;background:var(--accent);color:#fff;border-radius:10px;padding:0.4rem 0.85rem;font-size:0.78rem;font-weight:600;text-decoration:none;white-space:nowrap">📅 Book viewing</a>
               </div>
               <div class="chat-messages" id="chat-messages-list"></div>
               <div class="chat-input-row">
@@ -1265,14 +1266,15 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">📸</span><input type="text" id="p-instagram" placeholder="Instagram profile URL" style="flex:1;background:var(--warm-white);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none"></div>
             <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">💼</span><input type="text" id="p-linkedin" placeholder="LinkedIn profile URL" style="flex:1;background:var(--warm-white);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none"></div>
             <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">🏡</span><input type="text" id="p-airbnb" placeholder="Airbnb profile URL (shows your reviews)" style="flex:1;background:var(--warm-white);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none"></div>
+            <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">📅</span><input type="text" id="p-viewing-url" placeholder="Viewing booking link (Calendly, Cal.com, etc.)" style="flex:1;background:var(--warm-white);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none"></div>
           </div>
-          <div style="font-size:0.75rem;color:var(--light);margin-bottom:1.2rem">💡 Airbnb URL: log in → Profile → Share → copy the link</div>
+          <div style="font-size:0.75rem;color:var(--light);margin-bottom:1.2rem">💡 Airbnb URL: log in → Profile → Share → copy the link &nbsp;·&nbsp; 📅 Calendly: calendly.com/your-name</div>
           <div class="fcard-title" style="margin-bottom:0.7rem">Your star sign ✨ <span style="font-weight:400;color:var(--light);font-size:0.8rem">— shown on your enquiries to landlords</span></div>
           <div class="star-sign-wrap" style="max-width:300px">
             <button type="button" class="star-sign-trigger" onclick="toggleStarDrop('seeker-sign')"><span id="seeker-sign-label">Select your star sign…</span><span>▾</span></button>
             <div class="star-sign-dropdown" id="seeker-sign-drop"><div class="star-sign-grid" id="seeker-sign-grid"></div></div>
           </div>
-          <button class="btn btn-primary btn-auto" style="margin-top:1.2rem" onclick="toast('Profile saved ✅','green')">Save profile</button>
+          <button class="btn btn-primary btn-auto" style="margin-top:1.2rem" onclick="saveProfile()">Save profile</button>
         </div>
       </div>
 

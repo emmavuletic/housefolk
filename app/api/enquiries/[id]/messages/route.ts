@@ -49,7 +49,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     .from('enquiries')
     .select(`
       id, tenant_id, landlord_id,
-      listing:listings(id, title),
+      listing:listings!enquiries_listing_id_fkey(id, title),
       tenant:users!enquiries_tenant_id_fkey(id, first_name, last_name, email),
       landlord:users!enquiries_landlord_id_fkey(id, first_name, last_name, email)
     `)
