@@ -90,7 +90,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         <p>Hi ${recipient.first_name},</p>
         <p><strong>${senderName}</strong> sent you a message about <strong>${listingTitle}</strong>.</p>
         <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${body.trim()}</blockquote>
-        <p>Reply via your <a href="${process.env.NEXT_PUBLIC_APP_URL}">Housefolk dashboard</a>.</p>
+        <p>Reply via your <a href="https://app.housefolk.co">Housefolk dashboard</a>.</p>
         <p>— The Housefolk team</p>
       `,
     })
