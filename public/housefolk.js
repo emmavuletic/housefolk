@@ -991,10 +991,8 @@ async function openChatThread(enquiryId) {
   // Book viewing button — show if landlord has a viewing URL
   const bookBtn = document.getElementById('chat-book-btn')
   if (bookBtn) {
-    // Sent tab: use landlord's link so tenant can book. Received tab: use own link (landlord sharing with tenant).
-    const viewingUrl = _activeMsgTab === 'received'
-      ? (currentUser?.viewing_url || '')
-      : (enquiry.landlord?.viewing_url || '')
+    // Only show Book viewing button in sent tab (tenant booking landlord's link)
+    const viewingUrl = _activeMsgTab === 'sent' ? (enquiry.landlord?.viewing_url || '') : ''
     if (viewingUrl) {
       bookBtn.href = viewingUrl
       bookBtn.style.display = ''
@@ -1002,6 +1000,13 @@ async function openChatThread(enquiryId) {
       bookBtn.style.display = 'none'
     }
   }
+
+  // Show "Suggest time" button only for landlords in received tab
+  const suggestBtn = document.getElementById('chat-suggest-btn')
+  const suggestRow = document.getElementById('chat-suggest-row')
+  const isLandlordThread = _activeMsgTab === 'received'
+  if (suggestBtn) suggestBtn.style.display = isLandlordThread ? '' : 'none'
+  if (suggestRow) suggestRow.style.display = 'none' // always collapsed on open
 
   // Mobile: hide conv list, show thread
   document.getElementById('chat-conv-list').classList.add('thread-open')
@@ -1085,6 +1090,58 @@ function closeChatThread() {
   document.getElementById('chat-no-select').style.display = ''
   document.getElementById('chat-thread-inner').style.display = 'none'
   renderConvList()
+}
+
+function toggleSuggestRow() {
+  const row = document.getElementById('chat-suggest-row')
+  if (!row) return
+  const visible = row.style.display === 'flex'
+  row.style.display = visible ? 'none' : 'flex'
+  if (!visible) {
+    // Default date to tomorrow
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1)
+    const iso = tomorrow.toISOString().split('T')[0]
+    const dateEl = document.getElementById('chat-suggest-date')
+    if (dateEl && !dateEl.value) dateEl.value = iso
+  }
+}
+
+async function sendViewingSuggestion() {
+  const dateEl = document.getElementById('chat-suggest-date')
+  const timeEl = document.getElementById('chat-suggest-time')
+  const date = dateEl?.value
+  const time = timeEl?.value
+  if (!date) { toast('Please pick a date'); return }
+
+  const formatted = new Date(`${date}T${time || '10:00'}`).toLocaleString('en-GB', {
+    weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'
+  })
+  const body = `📅 Viewing suggestion: ${formatted}`
+
+  const btn = document.querySelector('#chat-suggest-row .chat-send-btn')
+  if (btn) btn.disabled = true
+  const data = await api(`/api/enquiries/${_activeEnquiryId}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({ body }),
+  })
+  if (btn) btn.disabled = false
+  if (data.error) { toast(data.error); return }
+
+  // Hide the suggester row
+  document.getElementById('chat-suggest-row').style.display = 'none'
+  dateEl.value = ''
+
+  // Append bubble
+  const msgList = document.getElementById('chat-messages-list')
+  if (msgList) {
+    msgList.insertAdjacentHTML('beforeend', renderMessageBubble({
+      id: data.message?.id || Date.now(),
+      body,
+      created_at: new Date().toISOString(),
+      sender_id: currentUser?.id,
+    }))
+    msgList.scrollTop = msgList.scrollHeight
+  }
 }
 
 function chatInputKey(e) {
