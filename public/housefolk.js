@@ -161,23 +161,17 @@ async function loadProfile() {
   set('p-airbnb', u.airbnb)
   set('p-viewing-url', u.viewing_url)
   // Star sign
+  buildSeekerSignGrid(u.star_sign || null)
   if (u.star_sign) {
+    const sign = STAR_SIGNS.find(s => s.v === u.star_sign)
     const label = document.getElementById('seeker-sign-label')
-    if (label) label.textContent = u.star_sign.charAt(0).toUpperCase() + u.star_sign.slice(1)
-    const grid = document.getElementById('seeker-sign-grid')
-    if (grid) {
-      grid.querySelectorAll('input[type=checkbox]').forEach(cb => {
-        cb.checked = cb.value === u.star_sign
-      })
-    }
+    if (label && sign) label.textContent = `${sign.e} ${sign.l}`
   }
 }
 
 async function saveProfile() {
   const get = id => document.getElementById(id)?.value?.trim() || null
-  // Get selected star sign from grid
-  const grid = document.getElementById('seeker-sign-grid')
-  const starSign = grid ? (grid.querySelector('input[type=checkbox]:checked')?.value || null) : null
+  const starSign = document.querySelector('input[name="seeker-sign-radio"]:checked')?.value || null
   const data = await api('/api/users/me', {
     method: 'PATCH',
     body: JSON.stringify({
@@ -324,7 +318,7 @@ function showPanel(name) {
   if (name === 'post') resetPost()
   if (name === 'newsletter') loadNLListings()
   if (name === 'weeklistings') loadWeekListings()
-  if (name === 'profile') loadProfile()
+  if (name === 'profile') { buildSeekerSignGrid(null); loadProfile() }
 }
 
 function switchMainTab(tab) {
@@ -675,6 +669,42 @@ function futureDate(days) {
   const d = new Date(); d.setDate(d.getDate() + days)
   return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 }
+
+// ── SEEKER STAR SIGN (profile — single select) ──
+const STAR_SIGNS = [
+  { v: 'aries', e: '♈', l: 'Aries' }, { v: 'taurus', e: '♉', l: 'Taurus' },
+  { v: 'gemini', e: '♊', l: 'Gemini' }, { v: 'cancer', e: '♋', l: 'Cancer' },
+  { v: 'leo', e: '♌', l: 'Leo' }, { v: 'virgo', e: '♍', l: 'Virgo' },
+  { v: 'libra', e: '♎', l: 'Libra' }, { v: 'scorpio', e: '♏', l: 'Scorpio' },
+  { v: 'sagittarius', e: '♐', l: 'Sagittarius' }, { v: 'capricorn', e: '♑', l: 'Capricorn' },
+  { v: 'aquarius', e: '♒', l: 'Aquarius' }, { v: 'pisces', e: '♓', l: 'Pisces' },
+]
+function buildSeekerSignGrid(selected) {
+  const grid = document.getElementById('seeker-sign-grid')
+  if (!grid) return
+  grid.innerHTML = STAR_SIGNS.map(s => `
+    <label style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.6rem;border-radius:9px;cursor:pointer;font-size:0.85rem;transition:background 0.15s;${selected===s.v?'background:var(--cream);font-weight:600':''}">
+      <input type="radio" name="seeker-sign-radio" value="${s.v}" ${selected===s.v?'checked':''} onchange="onSeekerSignChange(this)" style="accent-color:#f7b188;width:15px;height:15px;cursor:pointer">
+      <span>${s.e} ${s.l}</span>
+    </label>`).join('')
+}
+function onSeekerSignChange(radio) {
+  const label = document.getElementById('seeker-sign-label')
+  if (label) {
+    const sign = STAR_SIGNS.find(s => s.v === radio.value)
+    label.textContent = sign ? `${sign.e} ${sign.l}` : radio.value
+  }
+}
+function toggleStarDrop(id) {
+  const drop = document.getElementById(id + '-drop')
+  if (drop) drop.classList.toggle('open')
+}
+// Close star drop when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('.star-sign-wrap')) {
+    document.querySelectorAll('.star-sign-dropdown.open').forEach(d => d.classList.remove('open'))
+  }
+})
 
 // ── STAR SIGNS & MUSIC ──
 function getSelectedStarSigns() {
