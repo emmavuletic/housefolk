@@ -317,6 +317,7 @@ function showPanel(name) {
   if (name === 'newsletter') loadNLListings()
   if (name === 'weeklistings') loadWeekListings()
   if (name === 'profile') { buildSeekerSignGrid(null); loadProfile() }
+  if (name === 'tenant') loadSavedListings()
 }
 
 function switchMainTab(tab) {
@@ -1286,6 +1287,11 @@ async function openListing(id) {
   const data = await api(`/api/listings/${id}`)
   if (data.error) { closeListing(); toast('Could not load listing'); return }
   const l = data.listing
+  // Load saved state (non-blocking)
+  loadSavedIds().then(() => {
+    const btn = document.getElementById('detail-save-btn')
+    if (btn) btn.textContent = _savedIds.has(l.id) ? '❤️' : '🤍'
+  })
   const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
 
   // Photo
@@ -1296,6 +1302,7 @@ async function openListing(id) {
     photoEl.style.backgroundPosition = 'center'
     photoEl.innerHTML = `
       <div style="position:absolute;top:1rem;right:1rem;display:flex;gap:0.5rem">
+        <button id="detail-save-btn" onclick="toggleSaveListing('${l.id}', event)" style="background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)">🤍</button>
         <button onclick="closeListing()" style="background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)">✕</button>
       </div>
       <div style="position:absolute;top:1rem;left:1rem" id="detail-type-badge"></div>`
@@ -1303,7 +1310,8 @@ async function openListing(id) {
     photoEl.style.backgroundImage = ''
     photoEl.innerHTML = `
       <span style="font-size:5rem">${typeIcon[l.type] || '🏠'}</span>
-      <div style="position:absolute;top:1rem;right:1rem">
+      <div style="position:absolute;top:1rem;right:1rem;display:flex;gap:0.5rem">
+        <button id="detail-save-btn" onclick="toggleSaveListing('${l.id}', event)" style="background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)">🤍</button>
         <button onclick="closeListing()" style="background:rgba(255,255,255,0.9);border:none;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.15)">✕</button>
       </div>`
   }
@@ -1364,6 +1372,58 @@ async function openListing(id) {
 function closeListing() {
   const modal = document.getElementById('listing-detail-modal')
   if (modal) modal.style.display = 'none'
+}
+
+// ── SAVE / UNSAVE LISTINGS ──
+let _savedIds = new Set()
+
+async function loadSavedIds() {
+  const token = getToken()
+  if (!token) return
+  const data = await api('/api/listings/saved')
+  _savedIds = new Set((data.listings || []).map(l => l.id))
+}
+
+async function toggleSaveListing(id, e) {
+  if (e) e.stopPropagation()
+  const token = getToken()
+  if (!token) { toast('Sign in to save listings'); return }
+  const isSaved = _savedIds.has(id)
+  const btn = document.getElementById('detail-save-btn')
+  if (isSaved) {
+    await api(`/api/listings/${id}/save`, { method: 'DELETE' })
+    _savedIds.delete(id)
+    if (btn) btn.textContent = '🤍'
+    toast('Removed from saved')
+  } else {
+    await api(`/api/listings/${id}/save`, { method: 'POST' })
+    _savedIds.add(id)
+    if (btn) btn.textContent = '❤️'
+    toast('Saved! Find it in Renter account → Saved listings', 'green')
+  }
+}
+
+async function loadSavedListings() {
+  const wrap = document.getElementById('saved-listings-wrap')
+  if (!wrap) return
+  const token = getToken()
+  if (!token) return
+  const data = await api('/api/listings/saved')
+  const listings = data.listings || []
+  if (listings.length === 0) {
+    wrap.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--light);font-size:0.86rem">No saved listings yet — browse listings and tap 🤍 to save them here.</div>'
+    return
+  }
+  const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
+  wrap.innerHTML = listings.map(l => `
+    <div style="display:flex;align-items:center;gap:0.9rem;padding:0.85rem 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="openListing('${l.id}')">
+      <span style="font-size:1.5rem;flex-shrink:0">${typeIcon[l.type] || '🏠'}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:0.88rem">${l.title}</div>
+        <div style="font-size:0.75rem;color:var(--light)">📍 ${l.location}</div>
+      </div>
+      ${l.price ? `<div style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;flex-shrink:0">£${Math.round(l.price/100).toLocaleString()}/mo</div>` : ''}
+    </div>`).join('')
 }
 
 function showUnlockModal() {
