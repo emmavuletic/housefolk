@@ -159,7 +159,6 @@ async function loadProfile() {
   set('p-instagram', u.instagram)
   set('p-linkedin', u.linkedin)
   set('p-airbnb', u.airbnb)
-  set('p-viewing-url', u.viewing_url)
   // Star sign
   buildSeekerSignGrid(u.star_sign || null)
   if (u.star_sign) {
@@ -181,7 +180,6 @@ async function saveProfile() {
       instagram: get('p-instagram'),
       linkedin: get('p-linkedin'),
       airbnb: get('p-airbnb'),
-      viewing_url: get('p-viewing-url'),
       star_sign: starSign,
     }),
   })
@@ -695,7 +693,8 @@ function onSeekerSignChange(radio) {
     label.textContent = sign ? `${sign.e} ${sign.l}` : radio.value
   }
 }
-function toggleStarDrop(id) {
+function toggleStarDrop(id, e) {
+  if (e) e.stopPropagation()
   const drop = document.getElementById(id + '-drop')
   if (drop) drop.classList.toggle('open')
 }
@@ -1051,18 +1050,6 @@ async function openChatThread(enquiryId) {
   const listingLink = listing.id ? `<a href="/listings/${listing.id}">${listing.title || 'Listing'} →</a>` : (listing.title || 'Listing')
   document.getElementById('chat-thread-sub').innerHTML = listingLink
 
-  // Book viewing button — show if landlord has a viewing URL
-  const bookBtn = document.getElementById('chat-book-btn')
-  if (bookBtn) {
-    // Only show Book viewing button in sent tab (tenant booking landlord's link)
-    const viewingUrl = _activeMsgTab === 'sent' ? (enquiry.landlord?.viewing_url || '') : ''
-    if (viewingUrl) {
-      bookBtn.href = viewingUrl
-      bookBtn.style.display = ''
-    } else {
-      bookBtn.style.display = 'none'
-    }
-  }
 
   // Show "Suggest time" button only for landlords in received tab
   const suggestBtn = document.getElementById('chat-suggest-btn')
