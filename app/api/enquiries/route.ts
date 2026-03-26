@@ -89,13 +89,13 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from: FROM_EMAIL,
       to: landlordData.email,
-      reply_to: user.email,
+      reply_to: `reply+${enquiry.id}@inbound.housefolk.co`,
       subject: `New enquiry on your Housefolk listing: ${listing.title}`,
       html: `
         <p>Hi ${landlordData.first_name},</p>
         <p>You have a new enquiry from <strong>${tenantName}</strong> about your listing <strong>${listing.title}</strong>.</p>
         <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${message.trim()}</blockquote>
-        <p>You can reply directly to this email, or message them via your <a href="https://app.housefolk.co">Housefolk dashboard</a>.</p>
+        <p>Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
         <p>— The Housefolk team</p>
       `,
     })

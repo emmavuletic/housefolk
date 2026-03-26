@@ -730,7 +730,6 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <div class="sb-label" style="font-weight:700;color:var(--dark)">Tenant / Sharer zone</div>
       <button class="sb-item" id="si-tenant" onclick="showPanel('tenant')"><span class="sb-icon">🔍</span> Renter account</button>
       <button class="sb-item" id="si-profile" onclick="showPanel('profile')"><span class="sb-icon">👤</span> Profile</button>
-      <button class="sb-item" id="si-billing" onclick="showPanel('billing')"><span class="sb-icon">💳</span> Billing</button>
       <div class="sb-label admin-only" style="display:none">Admin</div>
       <button class="sb-item admin-only" id="si-weeklistings" onclick="window.location.href='/listings'" style="display:none"><span class="sb-icon">📋</span> This week's listings</button>
       <button class="sb-item admin-only" id="si-promos" onclick="showPanel('promos')" style="display:none"><span class="sb-icon">🏷️</span> Promo codes</button>
@@ -990,12 +989,12 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div class="field" id="seeker-starsign-field" style="display:none">
               <label>Your star sign ✨ <span style="font-weight:400;color:var(--light)">(optional)</span></label>
               <div class="star-sign-wrap">
-                <button type="button" class="star-sign-trigger" onclick="toggleStarDrop('seeker-sign')">
-                  <span id="seeker-sign-label">Select your star sign…</span>
+                <button type="button" class="star-sign-trigger" onclick="toggleStarDrop('post-seeker-sign', event)">
+                  <span id="post-seeker-sign-label">Select your star sign…</span>
                   <span>▾</span>
                 </button>
-                <div class="star-sign-dropdown" id="seeker-sign-drop">
-                  <div class="star-sign-grid" id="seeker-sign-grid"></div>
+                <div class="star-sign-dropdown" id="post-seeker-sign-drop">
+                  <div class="star-sign-grid" id="post-seeker-sign-grid"></div>
                 </div>
               </div>
             </div>

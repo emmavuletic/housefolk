@@ -653,6 +653,7 @@ function showSuccessScreen(isFree) {
 
 function resetPost() {
   currentTier = null; photos = []; uploadedPhotoUrls = []; promoApplied = false
+  buildSeekerSignGrid(null, 'post-seeker-sign-grid', 'post-seeker-sign-radio', 'post-seeker-sign-label')
   ;['flatshare', 'rental', 'sublet'].forEach(t => {
     const el = document.getElementById('tc-' + t)
     if (el) el.classList.remove('sel', 'sel-g')
@@ -678,17 +679,20 @@ const STAR_SIGNS = [
   { v: 'sagittarius', e: '♐', l: 'Sagittarius' }, { v: 'capricorn', e: '♑', l: 'Capricorn' },
   { v: 'aquarius', e: '♒', l: 'Aquarius' }, { v: 'pisces', e: '♓', l: 'Pisces' },
 ]
-function buildSeekerSignGrid(selected) {
-  const grid = document.getElementById('seeker-sign-grid')
+function buildSeekerSignGrid(selected, gridId, radioName, labelId) {
+  const gId = gridId || 'seeker-sign-grid'
+  const rName = radioName || 'seeker-sign-radio'
+  const lId = labelId || 'seeker-sign-label'
+  const grid = document.getElementById(gId)
   if (!grid) return
   grid.innerHTML = STAR_SIGNS.map(s => `
     <label style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem 0.6rem;border-radius:9px;cursor:pointer;font-size:0.85rem;transition:background 0.15s;${selected===s.v?'background:var(--cream);font-weight:600':''}">
-      <input type="radio" name="seeker-sign-radio" value="${s.v}" ${selected===s.v?'checked':''} onchange="onSeekerSignChange(this)" style="accent-color:#f7b188;width:15px;height:15px;cursor:pointer">
+      <input type="radio" name="${rName}" value="${s.v}" ${selected===s.v?'checked':''} onchange="onSeekerSignChange(this,'${lId}')" style="accent-color:#f7b188;width:15px;height:15px;cursor:pointer">
       <span>${s.e} ${s.l}</span>
     </label>`).join('')
 }
-function onSeekerSignChange(radio) {
-  const label = document.getElementById('seeker-sign-label')
+function onSeekerSignChange(radio, labelId) {
+  const label = document.getElementById(labelId || 'seeker-sign-label')
   if (label) {
     const sign = STAR_SIGNS.find(s => s.v === radio.value)
     label.textContent = sign ? `${sign.e} ${sign.l}` : radio.value
