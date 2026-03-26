@@ -681,8 +681,8 @@ async function loadMyListings() {
   const data = await api('/api/listings/mine')
   if (data.error || !data.listings) return
 
-  const tbody = document.querySelector('#panel-mylistings table tbody')
-  if (!tbody) return
+  const container = document.getElementById('my-listings-list')
+  if (!container) return
 
   const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
   const statusBadge = {
@@ -693,34 +693,31 @@ async function loadMyListings() {
   }
 
   if (data.listings.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--light)">No listings yet — <a onclick="showPanel(\'post\')" style="color:var(--accent);cursor:pointer">post your first listing →</a></td></tr>'
+    container.innerHTML = '<div class="fcard" style="text-align:center;padding:2rem;color:var(--light)">No listings yet — <a onclick="showPanel(\'post\')" style="color:var(--accent);cursor:pointer">post your first listing →</a></div>'
     return
   }
 
-  tbody.innerHTML = data.listings.map(l => `
-    <tr>
-      <td style="padding-left:1.4rem">
-        <div style="display:flex;align-items:center;gap:0.7rem">
-          <span style="font-size:1.3rem">${typeIcon[l.type] || '🏠'}</span>
-          <div>
-            <div style="font-weight:600;font-size:0.87rem">${l.title}</div>
-            <div style="font-size:0.73rem;color:var(--light)">📍 ${l.location}</div>
+  container.innerHTML = data.listings.map(l => `
+    <div class="fcard" style="margin-bottom:0.8rem;padding:1.2rem">
+      <div style="display:flex;align-items:flex-start;gap:0.8rem;margin-bottom:0.9rem">
+        <span style="font-size:1.6rem;flex-shrink:0">${typeIcon[l.type] || '🏠'}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:0.93rem;margin-bottom:0.15rem">${l.title}</div>
+          <div style="font-size:0.75rem;color:var(--light);margin-bottom:0.4rem">📍 ${l.location}</div>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center">
+            ${statusBadge[l.status] || ''}
+            <span class="badge badge-type">${typeIcon[l.type]} ${l.type}</span>
+            ${l.goes_live_at ? `<span style="font-size:0.72rem;color:var(--mid)">Goes live ${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span>` : ''}
           </div>
         </div>
-      </td>
-      <td><span class="badge badge-type">${typeIcon[l.type]} ${l.type}</span></td>
-      <td>${statusBadge[l.status] || ''}</td>
-      <td>💬 —</td>
-      <td style="font-size:0.82rem;color:var(--mid)">${l.goes_live_at ? new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) : '—'}</td>
-      <td>
-        <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
-          <button class="btn btn-ghost btn-sm" onclick="openListing('${l.id}')">Preview</button>
-          ${l.status !== 'expired' ? `<button class="btn btn-ghost btn-sm" onclick="editListing('${l.id}')">Edit</button>` : ''}
-          ${l.status !== 'expired' ? `<button class="btn btn-ghost btn-sm" onclick="markAsLet('${l.id}')">Mark let</button>` : ''}
-          <button class="btn btn-ghost btn-sm" onclick="deleteListing('${l.id}')" style="color:#C0392B;border-color:#FADBD8">Delete</button>
-        </div>
-      </td>
-    </tr>`).join('')
+      </div>
+      <div style="display:flex;gap:0.4rem;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="openListing('${l.id}')">Preview</button>
+        ${l.status !== 'expired' ? `<button class="btn btn-ghost btn-sm" onclick="editListing('${l.id}')">Edit</button>` : ''}
+        ${l.status !== 'expired' ? `<button class="btn btn-ghost btn-sm" onclick="markAsLet('${l.id}')">Mark let</button>` : ''}
+        <button class="btn btn-ghost btn-sm" onclick="deleteListing('${l.id}')" style="color:#C0392B;border-color:#FADBD8">Delete</button>
+      </div>
+    </div>`).join('')
 }
 
 async function markAsLet(id) {
