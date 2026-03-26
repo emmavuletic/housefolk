@@ -488,6 +488,40 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 .fade-in { animation: fadeUp 0.3s ease both; }
 .slide-in { animation: slideIn 0.25s ease both; }
 
+/* MOBILE BOTTOM NAV */
+.mobile-bottom-nav { display: none; }
+@media (max-width: 900px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    padding: 0.4rem 0 calc(0.4rem + env(safe-area-inset-bottom));
+  }
+  .mob-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    background: none;
+    border: none;
+    padding: 0.35rem 0.2rem;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem;
+    color: var(--mid);
+    position: relative;
+    transition: color 0.15s;
+  }
+  .mob-nav-btn.active { color: var(--dark); font-weight: 600; }
+  .mob-nav-btn .mob-icon { font-size: 1.25rem; line-height: 1; }
+  .mob-nav-dot { position: absolute; top: 0.3rem; right: calc(50% - 1.1rem); width: 7px; height: 7px; background: #f7b188; border-radius: 50%; display: none; }
+  .dash-main { padding-bottom: 70px; }
+}
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
   #auth-screen { flex-direction: column; }
@@ -1413,6 +1447,27 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 
     </main>
   </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+    <button class="mob-nav-btn active" id="mob-overview" onclick="showPanel('overview')">
+      <span class="mob-icon">🏠</span>Home
+    </button>
+    <button class="mob-nav-btn" id="mob-post" onclick="showPanel('post')">
+      <span class="mob-icon">➕</span>Post
+    </button>
+    <button class="mob-nav-btn" id="mob-listings" onclick="showPanel('mylistings')">
+      <span class="mob-icon">📋</span>Listings
+    </button>
+    <button class="mob-nav-btn" id="mob-inbox" onclick="showPanel('inbox')">
+      <span class="mob-icon">💬</span>Messages
+      <span class="mob-nav-dot" id="mob-notif-dot"></span>
+    </button>
+    <button class="mob-nav-btn" id="mob-profile" onclick="showPanel('profile')">
+      <span class="mob-icon">👤</span>Profile
+    </button>
+  </nav>
+
 </div>
 
 

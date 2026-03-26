@@ -269,13 +269,17 @@ const PANEL_MAP = {
   inbox: 'si-inbox', newsletter: 'si-nl', promos: 'si-promos',
   profile: 'si-profile', billing: 'si-billing', tenant: 'si-tenant',
 }
+const MOB_NAV_MAP = { overview: 'mob-overview', post: 'mob-post', mylistings: 'mob-listings', inbox: 'mob-inbox', profile: 'mob-profile' }
 function showPanel(name) {
   document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'))
   document.querySelectorAll('.sb-item').forEach(b => b.classList.remove('active'))
+  document.querySelectorAll('.mob-nav-btn').forEach(b => b.classList.remove('active'))
   const p = document.getElementById('panel-' + name)
   if (p) p.classList.add('active')
   const s = PANEL_MAP[name]
   if (s && document.getElementById(s)) document.getElementById(s).classList.add('active')
+  const m = MOB_NAV_MAP[name]
+  if (m && document.getElementById(m)) document.getElementById(m).classList.add('active')
   if (name === 'inbox') {
     const dot = document.getElementById('notif-dot')
     const badge = document.getElementById('inbox-badge')
@@ -853,6 +857,8 @@ async function loadEnquiries() {
   if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? '' : 'none' }
   const dot = document.getElementById('notif-dot')
   if (dot) dot.style.display = unread > 0 ? '' : 'none'
+  const mobDot = document.getElementById('mob-notif-dot')
+  if (mobDot) mobDot.style.display = unread > 0 ? '' : 'none'
 
   renderConvList()
 }
