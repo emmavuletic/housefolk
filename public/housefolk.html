@@ -1261,86 +1261,32 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 
       <!-- ── PROFILE ── -->
       <div class="dash-panel" id="panel-profile">
-        <div class="panel-header"><h1>My profile</h1><p>Your contact details and notification preferences.</p></div>
+        <div class="panel-header"><h1>My profile</h1><p>Your details and social links.</p></div>
         <div class="fcard">
-          <div class="fcard-title">Personal details</div>
-          <div class="fcard-sub">Shown to tenants when they enquire about your listing.</div>
+          <div class="fcard-title" style="margin-bottom:1rem">Personal details</div>
           <div class="field-row">
-            <div class="field"><label>First name</label><input type="text" id="p-first" value="Alex"></div>
-            <div class="field"><label>Last name</label><input type="text" value="Johnson"></div>
+            <div class="field"><label>First name</label><input type="text" id="p-first" placeholder="Alex"></div>
+            <div class="field"><label>Last name</label><input type="text" id="p-last" placeholder="Smith"></div>
           </div>
-          <div class="field"><label>Email address</label><input type="email" value="alex@example.com"></div>
-          <div class="field"><label>Phone</label><input type="tel" placeholder="+44 7700 900000"></div>
-          <div class="field"><label>About you</label><textarea placeholder="A short bio tenants will see when you reply to enquiries…"></textarea></div>
-
-          <!-- Star signs -->
+          <div class="field"><label>About you <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-bio" placeholder="A short bio tenants will see when you reply to enquiries…"></textarea></div>
           <div class="field">
-            <label>Star signs in your household ✨ <span style="font-weight:400;color:var(--light)">(optional — help renters find their folk)</span></label>
-            <div class="star-select-wrap">
-              <button type="button" class="star-select-btn" onclick="toggleStarDropdown('profile-stars')">
-                <span id="profile-stars-label">Select star signs…</span>
-                <span>▾</span>
-              </button>
-              <div class="star-dropdown" id="profile-stars">
-                <div class="star-option"><input type="checkbox" value="aries" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♈</span> Aries</div>
-                <div class="star-option"><input type="checkbox" value="taurus" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♉</span> Taurus</div>
-                <div class="star-option"><input type="checkbox" value="gemini" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♊</span> Gemini</div>
-                <div class="star-option"><input type="checkbox" value="cancer" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♋</span> Cancer</div>
-                <div class="star-option"><input type="checkbox" value="leo" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♌</span> Leo</div>
-                <div class="star-option"><input type="checkbox" value="virgo" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♍</span> Virgo</div>
-                <div class="star-option"><input type="checkbox" value="libra" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♎</span> Libra</div>
-                <div class="star-option"><input type="checkbox" value="scorpio" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♏</span> Scorpio</div>
-                <div class="star-option"><input type="checkbox" value="sagittarius" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♐</span> Sagittarius</div>
-                <div class="star-option"><input type="checkbox" value="capricorn" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♑</span> Capricorn</div>
-                <div class="star-option"><input type="checkbox" value="aquarius" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♒</span> Aquarius</div>
-                <div class="star-option"><input type="checkbox" value="pisces" onchange="updateStarLabel('profile-stars')"><span class="sign-emoji">♓</span> Pisces</div>
-              </div>
+            <label>Social links <span style="font-weight:400;color:var(--light)">(optional)</span></label>
+            <div style="display:flex;flex-direction:column;gap:0.55rem">
+              <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">📸</span><input type="text" id="p-instagram" placeholder="Instagram profile URL" style="flex:1;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--dark);outline:none;width:100%"></div>
+              <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">💼</span><input type="text" id="p-linkedin" placeholder="LinkedIn profile URL" style="flex:1;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--dark);outline:none;width:100%"></div>
+              <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">🏡</span><input type="text" id="p-airbnb" placeholder="Airbnb profile URL (shows your reviews)" style="flex:1;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--dark);outline:none;width:100%"></div>
+              <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">📅</span><input type="text" id="p-viewing-url" placeholder="Viewing booking link (Calendly, Cal.com…)" style="flex:1;background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:0.75rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--dark);outline:none;width:100%"></div>
             </div>
+            <div style="font-size:0.75rem;color:var(--light);margin-top:0.5rem">💡 Airbnb: log in → Profile → Share → copy link &nbsp;·&nbsp; 📅 Calendly: calendly.com/your-name</div>
           </div>
-
-          <!-- Social links -->
           <div class="field">
-            <label>Your social links <span style="font-weight:400;color:var(--light)">(optional — help renters know you're real)</span></label>
-            <div class="social-link-row">
-              <div class="social-icon" style="background:#E1306C;color:#fff">📸</div>
-              <input type="text" id="p-instagram" placeholder="Instagram profile URL">
-            </div>
-            <div class="social-link-row">
-              <div class="social-icon" style="background:#0077B5;color:#fff">💼</div>
-              <input type="text" id="p-linkedin" placeholder="LinkedIn profile URL">
-            </div>
-            <div class="social-link-row">
-              <div class="social-icon" style="background:#FF5A5F;color:#fff">🏡</div>
-              <input type="text" id="p-airbnb" placeholder="Airbnb profile URL (from your Airbnb account → Profile)">
+            <label>Your star sign ✨ <span style="font-weight:400;color:var(--light)">(optional)</span></label>
+            <div class="star-sign-wrap">
+              <button type="button" class="star-sign-trigger" onclick="toggleStarDrop('seeker-sign')"><span id="seeker-sign-label">Select your star sign…</span><span>▾</span></button>
+              <div class="star-sign-dropdown" id="seeker-sign-drop"><div class="star-sign-grid" id="seeker-sign-grid"></div></div>
             </div>
           </div>
-          <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.5rem">Save changes</button>
-        </div>
-        <div class="fcard">
-          <div class="fcard-title">Newsletter & notifications</div>
-          <div style="display:flex;flex-direction:column;gap:0.8rem;font-size:0.86rem;color:var(--mid)">
-            <label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--accent)"> Thursday newsletter — new listings every week</label>
-            <label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer"><input type="checkbox" checked style="accent-color:var(--accent)"> Enquiry notifications by email</label>
-            <label style="display:flex;align-items:center;gap:0.7rem;cursor:pointer"><input type="checkbox" style="accent-color:var(--accent)"> Marketing updates & tips</label>
-          </div>
-        </div>
-
-        <!-- Social links & star sign -->
-        <div class="fcard">
-          <div class="fcard-title" style="margin-bottom:0.8rem">Your social links <span style="font-weight:400;color:var(--light);font-size:0.8rem">— help landlords & housemates see you're real</span></div>
-          <div style="display:flex;flex-direction:column;gap:0.55rem;margin-bottom:1rem">
-            <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">📸</span><input type="text" id="p-instagram" placeholder="Instagram profile URL" style="flex:1;background:var(--warm-white);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none"></div>
-            <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">💼</span><input type="text" id="p-linkedin" placeholder="LinkedIn profile URL" style="flex:1;background:var(--warm-white);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none"></div>
-            <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">🏡</span><input type="text" id="p-airbnb" placeholder="Airbnb profile URL (shows your reviews)" style="flex:1;background:var(--warm-white);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none"></div>
-            <div style="display:flex;align-items:center;gap:0.7rem"><span style="font-size:1.1rem;width:24px">📅</span><input type="text" id="p-viewing-url" placeholder="Viewing booking link (Calendly, Cal.com, etc.)" style="flex:1;background:var(--warm-white);border:1.5px solid var(--border);border-radius:10px;padding:0.6rem 0.9rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;outline:none"></div>
-          </div>
-          <div style="font-size:0.75rem;color:var(--light);margin-bottom:1.2rem">💡 Airbnb URL: log in → Profile → Share → copy the link &nbsp;·&nbsp; 📅 Calendly: calendly.com/your-name</div>
-          <div class="fcard-title" style="margin-bottom:0.7rem">Your star sign ✨ <span style="font-weight:400;color:var(--light);font-size:0.8rem">— shown on your enquiries to landlords</span></div>
-          <div class="star-sign-wrap" style="max-width:300px">
-            <button type="button" class="star-sign-trigger" onclick="toggleStarDrop('seeker-sign')"><span id="seeker-sign-label">Select your star sign…</span><span>▾</span></button>
-            <div class="star-sign-dropdown" id="seeker-sign-drop"><div class="star-sign-grid" id="seeker-sign-grid"></div></div>
-          </div>
-          <button class="btn btn-primary btn-auto" style="margin-top:1.2rem" onclick="saveProfile()">Save profile</button>
+          <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.5rem" onclick="saveProfile()">Save profile</button>
         </div>
       </div>
 

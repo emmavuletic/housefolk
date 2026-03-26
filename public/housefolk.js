@@ -153,24 +153,54 @@ async function loadProfile() {
   if (data.error || !data.user) return
   const u = data.user
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || '' }
+  set('p-first', u.first_name)
+  set('p-last', u.last_name)
+  set('p-bio', u.bio)
   set('p-instagram', u.instagram)
   set('p-linkedin', u.linkedin)
   set('p-airbnb', u.airbnb)
   set('p-viewing-url', u.viewing_url)
+  // Star sign
+  if (u.star_sign) {
+    const label = document.getElementById('seeker-sign-label')
+    if (label) label.textContent = u.star_sign.charAt(0).toUpperCase() + u.star_sign.slice(1)
+    const grid = document.getElementById('seeker-sign-grid')
+    if (grid) {
+      grid.querySelectorAll('input[type=checkbox]').forEach(cb => {
+        cb.checked = cb.value === u.star_sign
+      })
+    }
+  }
 }
 
 async function saveProfile() {
   const get = id => document.getElementById(id)?.value?.trim() || null
+  // Get selected star sign from grid
+  const grid = document.getElementById('seeker-sign-grid')
+  const starSign = grid ? (grid.querySelector('input[type=checkbox]:checked')?.value || null) : null
   const data = await api('/api/users/me', {
     method: 'PATCH',
     body: JSON.stringify({
+      first_name: get('p-first'),
+      last_name: get('p-last'),
+      bio: get('p-bio'),
       instagram: get('p-instagram'),
       linkedin: get('p-linkedin'),
       airbnb: get('p-airbnb'),
       viewing_url: get('p-viewing-url'),
+      star_sign: starSign,
     }),
   })
   if (data.error) { toast(data.error); return }
+  // Update the displayed name in nav if changed
+  if (data.user) {
+    const first = data.user.first_name || ''
+    const last = data.user.last_name || ''
+    const nameEl = document.getElementById('u-name')
+    if (nameEl) nameEl.textContent = first + (last ? ' ' + last[0] + '.' : '')
+    const initEl = document.getElementById('u-initials')
+    if (initEl) initEl.textContent = ((first[0] || '') + (last[0] || first[1] || '')).toUpperCase()
+  }
   toast('✓ Profile saved', 'green')
 }
 
