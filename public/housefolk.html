@@ -500,22 +500,23 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
   /* Panel padding */
   .dash-panel { padding: 1.2rem; }
 
-  /* Chat: full-screen minus top nav (56px) + bottom nav (70px) */
-  .chat-layout { height: calc(100vh - 56px - 70px); border-radius: 0; border-left: none; border-right: none; }
+  /* Chat: full-screen minus top nav (56px) + raised bottom nav (140px) */
+  .chat-layout { height: calc(100vh - 56px - 140px); border-radius: 0; border-left: none; border-right: none; }
 
   /* Embargo banner — stack vertically on mobile */
   .embargo-banner { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
   .eb-countdown { margin-left: 0; }
 
-  /* Bottom nav */
+  /* Bottom nav — raised above chat widget (typically 60-70px from bottom) */
   .mobile-bottom-nav {
     display: flex;
     position: fixed;
-    bottom: 0; left: 0; right: 0;
+    bottom: 70px; left: 0; right: 0;
     background: var(--card);
     border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
     z-index: 100;
-    padding: 0.4rem 0 calc(0.4rem + env(safe-area-inset-bottom));
+    padding: 0.4rem 0;
   }
   .mob-nav-btn {
     flex: 1;
@@ -536,7 +537,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
   .mob-nav-btn.active { color: var(--dark); font-weight: 600; }
   .mob-nav-btn .mob-icon { font-size: 1.25rem; line-height: 1; }
   .mob-nav-dot { position: absolute; top: 0.3rem; right: calc(50% - 1.1rem); width: 7px; height: 7px; background: #f7b188; border-radius: 50%; display: none; }
-  .dash-main { padding-bottom: 70px; }
+  .dash-main { padding-bottom: 140px; }
 }
 
 /* RESPONSIVE */
