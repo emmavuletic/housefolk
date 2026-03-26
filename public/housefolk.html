@@ -326,10 +326,10 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 .chat-send-btn:hover { opacity: 0.85; }
 .chat-no-select { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem; color: var(--light); font-size: 0.86rem; }
 @media (max-width: 640px) {
-  .chat-layout { height: calc(100vh - 120px); flex-direction: column; }
-  .chat-list { width: 100%; flex: 1; border-right: none; border-bottom: 1px solid var(--border); }
+  .chat-layout { flex-direction: column; }
+  .chat-list { width: 100%; flex: none; max-height: 100%; overflow-y: auto; border-right: none; border-bottom: 1px solid var(--border); }
   .chat-list.thread-open { display: none; }
-  .chat-thread { flex: 1; }
+  .chat-thread { flex: 1; min-height: 0; }
   .chat-thread-header-back { display: block; }
 }
 
@@ -491,6 +491,23 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 /* MOBILE BOTTOM NAV */
 .mobile-bottom-nav { display: none; }
 @media (max-width: 900px) {
+  /* Compress the top nav */
+  .dash-nav { height: 56px; padding: 0 1rem; }
+  .dash-logo { font-size: 1.7rem; }
+  .nav-tabs { display: none; }
+  .u-name { display: none; }
+
+  /* Panel padding */
+  .dash-panel { padding: 1.2rem; }
+
+  /* Chat: full-screen minus top nav (56px) + bottom nav (70px) */
+  .chat-layout { height: calc(100vh - 56px - 70px); border-radius: 0; border-left: none; border-right: none; }
+
+  /* Embargo banner — stack vertically on mobile */
+  .embargo-banner { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+  .eb-countdown { margin-left: 0; }
+
+  /* Bottom nav */
   .mobile-bottom-nav {
     display: flex;
     position: fixed;
@@ -535,7 +552,9 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 @media (max-width: 600px) {
   .field-row { grid-template-columns: 1fr; }
   .stat-row { grid-template-columns: 1fr; }
-  .dash-panel { padding: 1.2rem; }
+  .fcard { padding: 1.2rem; }
+  .panel-header { margin-bottom: 1.2rem; }
+  .panel-header h1 { font-size: 1.35rem; }
 }
 </style>
 </head>
