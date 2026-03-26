@@ -722,19 +722,18 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
   <div class="dash-layout">
     <aside class="sidebar">
       <button class="sb-item active" id="si-overview" onclick="showPanel('overview')"><span class="sb-icon">📊</span> Overview</button>
-      <div class="sb-label">Landlord zone</div>
+      <button class="sb-item admin-only" id="si-nl" onclick="showPanel('newsletter')" style="display:none"><span class="sb-icon">📰</span> Newsletter <span class="sb-badge green">Thu</span></button>
+      <div class="sb-label" style="font-weight:700;color:var(--dark)">Landlord zone</div>
       <button class="sb-item" id="si-post" onclick="showPanel('post')"><span class="sb-icon">➕</span> Post a listing</button>
       <button class="sb-item" id="si-listings" onclick="showPanel('mylistings')"><span class="sb-icon">🏠</span> My listings</button>
       <button class="sb-item" id="si-inbox" onclick="showPanel('inbox')"><span class="sb-icon">💬</span> Messages <span class="sb-badge" id="inbox-badge">3</span></button>
-      <div class="sb-label admin-only" style="display:none">Newsletter</div>
-      <button class="sb-item admin-only" id="si-nl" onclick="showPanel('newsletter')" style="display:none"><span class="sb-icon">📰</span> Newsletter <span class="sb-badge green">Thu</span></button>
-      <div class="sb-label admin-only" style="display:none">Admin</div>
-      <button class="sb-item admin-only" id="si-weeklistings" onclick="window.location.href='/listings'" style="display:none"><span class="sb-icon">📋</span> This week's listings</button>
-      <button class="sb-item admin-only" id="si-promos" onclick="showPanel('promos')" style="display:none"><span class="sb-icon">🏷️</span> Promo codes</button>
-      <div class="sb-label">Tenant / Sharer zone</div>
+      <div class="sb-label" style="font-weight:700;color:var(--dark)">Tenant / Sharer zone</div>
       <button class="sb-item" id="si-tenant" onclick="showPanel('tenant')"><span class="sb-icon">🔍</span> Renter account</button>
       <button class="sb-item" id="si-profile" onclick="showPanel('profile')"><span class="sb-icon">👤</span> Profile</button>
       <button class="sb-item" id="si-billing" onclick="showPanel('billing')"><span class="sb-icon">💳</span> Billing</button>
+      <div class="sb-label admin-only" style="display:none">Admin</div>
+      <button class="sb-item admin-only" id="si-weeklistings" onclick="window.location.href='/listings'" style="display:none"><span class="sb-icon">📋</span> This week's listings</button>
+      <button class="sb-item admin-only" id="si-promos" onclick="showPanel('promos')" style="display:none"><span class="sb-icon">🏷️</span> Promo codes</button>
       <div class="sb-foot">
         <button class="sb-item" onclick="signOut()"><span class="sb-icon">🚪</span> Sign out</button>
       </div>
