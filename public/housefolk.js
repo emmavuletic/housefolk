@@ -1832,7 +1832,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show cookie banner if not yet accepted
   if (!localStorage.getItem('hf_cookies')) {
     const el = document.getElementById('cookie-banner')
-    if (el) el.style.display = 'flex'
+    if (el) { el.style.display = 'flex' }
   }
   // Handle Google OAuth redirect (token arrives in URL hash)
   const hash = new URLSearchParams(window.location.hash.slice(1))

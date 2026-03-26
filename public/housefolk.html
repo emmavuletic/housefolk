@@ -106,8 +106,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 /* ══ DASHBOARD ══ */
 #dash-screen { flex-direction: column; }
 .dash-nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 2.5rem; height: 124px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
-.dash-logo { font-family: 'Playfair Display', serif; font-size: 2.6rem; font-weight: 700; color: var(--dark); text-decoration: none; }
-.dash-logo span { color: var(--accent); }
+.dash-logo { font-family: 'Playfair Display', serif; font-size: 2.6rem; font-weight: 400; color: #000; text-decoration: none; letter-spacing: 0.08em; }
+.dash-logo span { color: #000; }
 .nav-right { display: flex; align-items: center; gap: 0.8rem; }
 .notif-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--cream); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1rem; position: relative; }
 .notif-dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--card); }
@@ -2224,14 +2224,14 @@ setTimeout(() => {
 
 
 <!-- ══ COOKIE CONSENT ══ -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1A1510;color:var(--cream);padding:1rem 2rem;z-index:600;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;box-shadow:0 -4px 20px rgba(0,0,0,0.3)">
-  <div style="font-size:0.83rem;color:#9A8E82;max-width:600px;line-height:1.6">
-    🍪 We use cookies to improve your experience and remember your preferences. By continuing you agree to our 
-    <span onclick="showTerms()" style="color:#f7b188;cursor:pointer;text-decoration:underline">Privacy Policy</span>.
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#F5F1EE;color:var(--mid);border-top:1px solid var(--border);padding:0.9rem 2rem;z-index:600;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+  <div style="font-size:0.82rem;max-width:600px;line-height:1.6">
+    🍪 We use cookies to keep you signed in and remember your preferences.
+    <span onclick="showTerms()" style="color:var(--accent);cursor:pointer;text-decoration:underline">Privacy Policy</span>.
   </div>
   <div style="display:flex;gap:0.7rem">
-    <button onclick="acceptCookies()" style="background:#f7b188;color:#fff;border:none;border-radius:9px;padding:0.55rem 1.3rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer">Accept</button>
-    <button onclick="declineCookies()" style="background:transparent;color:#7A6E62;border:1px solid #3A3530;border-radius:9px;padding:0.55rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;cursor:pointer">Decline</button>
+    <button onclick="acceptCookies()" style="background:var(--dark);color:#fff;border:none;border-radius:9px;padding:0.5rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer">Accept</button>
+    <button onclick="declineCookies()" style="background:transparent;color:var(--light);border:1px solid var(--border);border-radius:9px;padding:0.5rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer">Decline</button>
   </div>
 </div>
 
