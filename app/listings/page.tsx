@@ -161,7 +161,11 @@ export default function ListingsPage() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    const token = localStorage.getItem('hf_token') || ''
+    const token = localStorage.getItem('hf_token')
+    if (!token) {
+      window.location.href = '/housefolk.html'
+      return
+    }
 
     const params = new URLSearchParams()
     if (type) params.set('type', type)

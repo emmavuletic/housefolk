@@ -206,7 +206,13 @@ function signOut() {
 
 // ── SCREEN NAV ──
 function goToBrowse() {
-  window.location.href = '/listings'
+  const token = getToken()
+  if (token) {
+    window.location.href = '/listings'
+  } else {
+    showScreen('auth')
+    switchTab('up')
+  }
 }
 function goToPost() {
   const token = getToken()
