@@ -751,6 +751,17 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div class="stat-c"><div class="slabel">Total enquiries</div><div class="svalue">11</div><div class="ssub trend">↑ 3 new today</div></div>
             <div class="stat-c"><div class="slabel">Newsletter reach</div><div class="svalue">8.1k</div><div class="ssub">Next: Thursday</div></div>
           </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+            <button onclick="showPanel('post')" style="background:#1A1510;color:#fff;border:none;border-radius:14px;padding:1.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.4rem">
+              <span style="font-size:1.8rem">➕</span>
+              Post a listing
+            </button>
+            <button onclick="window.location.href='/listings'" style="background:#FAF7F5;color:#1A1510;border:1.5px solid #E2D9CE;border-radius:14px;padding:1.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.4rem">
+              <span style="font-size:1.8rem">🔍</span>
+              Find a place
+            </button>
+          </div>
+
           <div class="embargo-banner">
             <span class="eb-icon">📰</span>
             <div class="eb-text">
@@ -773,6 +784,17 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <h1>Good morning, <span id="greeting-name-tenant">there</span> 👋</h1>
             <p id="tenant-overview-sub">New listings arrive every Thursday.</p>
           </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
+            <button onclick="showPanel('post')" style="background:#1A1510;color:#fff;border:none;border-radius:14px;padding:1.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.4rem">
+              <span style="font-size:1.8rem">➕</span>
+              Post a listing
+            </button>
+            <button onclick="window.location.href='/listings'" style="background:#FAF7F5;color:#1A1510;border:1.5px solid #E2D9CE;border-radius:14px;padding:1.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.4rem">
+              <span style="font-size:1.8rem">🔍</span>
+              Find a place
+            </button>
+          </div>
+
           <div id="tenant-thursday-cta" style="display:none" class="fcard" style="background:var(--green-light);border-color:rgba(46,125,82,0.2);text-align:center;padding:2rem">
             <div style="font-size:2.5rem;margin-bottom:0.8rem">🎉</div>
             <div style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:0.5rem">It's Thursday — listings are live!</div>
