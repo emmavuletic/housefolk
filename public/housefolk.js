@@ -1974,9 +1974,13 @@ document.addEventListener('DOMContentLoaded', () => {
   checkSuccessParam()
 
   // Direct deep-link: ?goto=post or ?goto=browse
-  const goto = new URLSearchParams(window.location.search).get('goto')
-  if (goto === 'post') goToPost()
-  else if (goto === 'browse') goToBrowse()
+  const urlParams = new URLSearchParams(window.location.search)
+  const goto = urlParams.get('goto')
+  const tierParam = urlParams.get('tier')
+  if (goto === 'post') {
+    if (tierParam) _pendingTier = tierParam
+    goToPost()
+  } else if (goto === 'browse') goToBrowse()
 
   // Close dropdowns on outside click
   document.addEventListener('click', e => {
