@@ -215,13 +215,7 @@ function goToBrowse() {
   }
 }
 function goToPost() {
-  const token = getToken()
-  if (!token) {
-    document.getElementById('prepost-modal').style.display = 'flex'
-  } else {
-    showScreen('dash')
-    showPanel('post')
-  }
+  window.location.href = '/post'
 }
 
 let _pendingTier = null
