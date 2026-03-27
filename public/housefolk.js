@@ -294,12 +294,10 @@ function launchDash(first, last) {
   showScreen('dash')
   calcThursday()
 
-  // If user chose a tier before logging in, go straight to post form
+  // If user came from post.html, show the post panel with tier cards
   if (_pendingTier) {
-    const tier = _pendingTier
     _pendingTier = null
     showPanel('post')
-    selectTier(tier)
   } else {
     showPanel('overview')
   }
