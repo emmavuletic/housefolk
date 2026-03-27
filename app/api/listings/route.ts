@@ -66,8 +66,8 @@ export async function POST(req: NextRequest) {
     title: title.trim(),
     location: location.trim(),
     price: price ? Math.round(parseFloat(price) * 100) : null, // store in pence
-    beds,
-    baths,
+    beds: beds ? parseInt(beds, 10) : null,
+    baths: baths ? parseInt(baths, 10) : null,
     bills_included: bills_included || false,
     furnished,
     pet_friendly,

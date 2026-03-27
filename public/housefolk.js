@@ -217,11 +217,26 @@ function goToBrowse() {
 function goToPost() {
   const token = getToken()
   if (!token) {
-    showScreen('auth')
-    switchTab('up')
+    document.getElementById('prepost-modal').style.display = 'flex'
   } else {
     showScreen('dash')
     showPanel('post')
+  }
+}
+
+let _pendingTier = null
+
+function selectTierFromModal(tier) {
+  document.getElementById('prepost-modal').style.display = 'none'
+  const token = getToken()
+  if (token) {
+    showScreen('dash')
+    showPanel('post')
+    selectTier(tier)
+  } else {
+    _pendingTier = tier
+    showScreen('auth')
+    switchTab('up')
   }
 }
 function showScreen(name) {
@@ -259,6 +274,7 @@ function launchDash(first, last) {
   if (role === 'admin') {
     if (adminBadge) adminBadge.style.display = 'inline'
     document.querySelectorAll('.admin-only').forEach(el => el.style.display = '')
+    document.querySelectorAll('.non-admin').forEach(el => el.style.display = 'none')
   }
 
   // Swap overview panel based on role
@@ -276,7 +292,17 @@ function launchDash(first, last) {
 
   showScreen('dash')
   calcThursday()
-  showPanel('overview')
+
+  // If user chose a tier before logging in, go straight to post form
+  if (_pendingTier) {
+    const tier = _pendingTier
+    _pendingTier = null
+    showPanel('post')
+    selectTier(tier)
+  } else {
+    showPanel('overview')
+  }
+
   loadMyListings()
   loadEnquiries()
   if (role === 'admin') {

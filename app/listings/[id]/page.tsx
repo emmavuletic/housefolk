@@ -59,6 +59,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const [enquirySent, setEnquirySent] = useState(false)
   const [enquiryLoading, setEnquiryLoading] = useState(false)
   const [enquiryMessage, setEnquiryMessage] = useState('')
+  const [saved, setSaved] = useState(false)
 
   useEffect(() => {
     fetch(`/api/listings/${params.id}`)
@@ -72,9 +73,30 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
           return
         }
         setListing(data)
+        // Check saved state
+        if (token) {
+          fetch('/api/listings/saved', { headers: { Authorization: `Bearer ${token}` } })
+            .then(r => r.json())
+            .then(({ listings: saved }) => {
+              setSaved((saved || []).some((l: { id: string }) => l.id === params.id))
+            })
+            .catch(() => {})
+        }
       })
       .catch(() => setNotFound(true))
   }, [params.id])
+
+  async function toggleSave() {
+    const token = localStorage.getItem('hf_token')
+    if (!token) { window.location.href = '/housefolk.html'; return }
+    if (saved) {
+      await fetch(`/api/listings/${params.id}/save`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+      setSaved(false)
+    } else {
+      await fetch(`/api/listings/${params.id}/save`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+      setSaved(true)
+    }
+  }
 
   async function handleEnquiry() {
     const token = localStorage.getItem('hf_token')
@@ -156,6 +178,11 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
               <div style={styles.heroPlaceholder}>🏡</div>
             )}
             <span style={styles.heroBadge}>{typeInfo.emoji} {typeInfo.label}</span>
+            <button
+              onClick={toggleSave}
+              title={saved ? 'Remove from saved' : 'Save listing'}
+              style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: '50%', width: 42, height: 42, cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+            >{saved ? '❤️' : '🤍'}</button>
           </div>
 
           <div style={styles.content}>

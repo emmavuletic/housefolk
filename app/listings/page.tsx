@@ -79,7 +79,11 @@ function formatPrice(pence: number | null): string {
   return `£${(pence / 100).toLocaleString('en-GB')}/mo`
 }
 
-function ListingCard({ listing }: { listing: Listing }) {
+function ListingCard({ listing, isSaved, onToggleSave }: {
+  listing: Listing
+  isSaved: boolean
+  onToggleSave: (e: React.MouseEvent) => void
+}) {
   const photo = listing.photos?.[0]
   const typeInfo = TYPE_LABELS[listing.type] ?? { emoji: '🏠', label: listing.type }
 
@@ -92,6 +96,11 @@ function ListingCard({ listing }: { listing: Listing }) {
           <div style={styles.cardPlaceholder}>🏡</div>
         )}
         <span style={styles.typeBadge}>{typeInfo.emoji} {typeInfo.label}</span>
+        <button
+          onClick={onToggleSave}
+          title={isSaved ? 'Remove from saved' : 'Save listing'}
+          style={styles.heartBtn}
+        >{isSaved ? '❤️' : '🤍'}</button>
       </div>
       <div style={styles.cardBody}>
         <div style={styles.cardPrice}>{formatPrice(listing.price)}</div>
@@ -149,6 +158,7 @@ export default function ListingsPage() {
   const [type, setType] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
   const [city, setCity] = useState('London')
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const token = localStorage.getItem('hf_token')
@@ -171,7 +181,30 @@ export default function ListingsPage() {
         setLoading(false)
       })
       .catch(() => setLoading(false))
+
+    // Load saved IDs
+    fetch('/api/listings/saved', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(({ listings: saved }) => {
+        setSavedIds(new Set((saved || []).map((l: { id: string }) => l.id)))
+      })
+      .catch(() => {})
   }, [type, location, city])
+
+  async function toggleSave(listingId: string, e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+    const token = localStorage.getItem('hf_token')
+    if (!token) return
+    const isSaved = savedIds.has(listingId)
+    if (isSaved) {
+      await fetch(`/api/listings/${listingId}/save`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+      setSavedIds(prev => { const next = new Set(prev); next.delete(listingId); return next })
+    } else {
+      await fetch(`/api/listings/${listingId}/save`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+      setSavedIds(prev => new Set([...prev, listingId]))
+    }
+  }
 
   const filtered = maxPrice
     ? listings.filter(l => l.price == null || l.price <= parseInt(maxPrice) * 100)
@@ -258,7 +291,14 @@ export default function ListingsPage() {
           ) : (
             <div style={styles.grid}>
               {filtered.flatMap((l, i) => {
-                const cards = [<ListingCard key={l.id} listing={l} />]
+                const cards = [
+                  <ListingCard
+                    key={l.id}
+                    listing={l}
+                    isSaved={savedIds.has(l.id)}
+                    onToggleSave={e => toggleSave(l.id, e)}
+                  />
+                ]
                 if ((i + 1) % 3 === 0) {
                   cards.push(<BlogCard key={`blog-${i}`} index={Math.floor(i / 3)} />)
                 }
@@ -409,6 +449,23 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '0.75rem',
     fontWeight: 600,
     color: '#1A1A1A',
+  },
+  heartBtn: {
+    position: 'absolute' as const,
+    top: 10,
+    right: 10,
+    background: 'rgba(255,255,255,0.9)',
+    border: 'none',
+    borderRadius: '50%',
+    width: 34,
+    height: 34,
+    cursor: 'pointer',
+    fontSize: '1rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+    zIndex: 2,
   },
   cardBody: {
     padding: '1rem 1.1rem 1.2rem',
