@@ -206,16 +206,17 @@ function signOut() {
 
 // ── SCREEN NAV ──
 function goToBrowse() {
-  const token = getToken()
-  if (token) {
-    window.location.href = '/listings'
-  } else {
-    showScreen('auth')
-    switchTab('up')
-  }
+  window.location.href = '/listings'
 }
 function goToPost() {
-  window.location.href = '/post'
+  const token = getToken()
+  if (!token) {
+    showScreen('auth')
+    switchTab('up')
+  } else {
+    showScreen('dash')
+    showPanel('post')
+  }
 }
 
 let _pendingTier = null

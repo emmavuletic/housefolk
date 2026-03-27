@@ -218,7 +218,7 @@ export default function ListingsPage() {
         <nav style={styles.nav}>
           <a href="/housefolk.html" style={styles.navLogo}>Housefolk</a>
           <a href="/housefolk.html" style={styles.navBack}>← My account</a>
-          <a href="/post" style={styles.navCta}>Post a listing</a>
+          <a href="/post.html" style={styles.navCta}>Post a listing</a>
         </nav>
 
         <main style={styles.main}>
