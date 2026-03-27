@@ -222,7 +222,7 @@ export default function ListingsPage() {
         </nav>
 
         {/* Hero header */}
-        <div style={{ background: '#FFF5F0', borderBottom: '1px solid #F7D9CC', padding: '3rem 2rem 2.5rem' }}>
+        <div style={{ background: '#ffffff', borderBottom: '1px solid #E2D9CE', padding: '3rem 2rem 2.5rem' }}>
           <div style={{ maxWidth: 1160, margin: '0 auto' }}>
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 400, color: '#1A1A1A', marginBottom: '0.5rem' }}>Browse listings</h1>
             <p style={{ fontSize: '0.95rem', color: '#5A4F45' }}>Flatshares, rentals and sublets — new listings every Thursday.</p>
