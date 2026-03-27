@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Post a listing — Housefolk</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --cream: #FAF7F5; --warm-white: #FFF8F4; --dark: #1A1A1A; --mid: #5A4F45;
+  --accent: #f7b188; --border: #E2D9CE; --card: #FFFFFF; --green: #2E7D52;
+}
+body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); }
+a { text-decoration: none; color: inherit; }
+
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: #fff; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 56px;
+}
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 400; letter-spacing: 0.05em; }
+.nav-link { font-size: 0.85rem; color: var(--mid); font-weight: 500; }
+
+main { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 400; margin-bottom: 0.5rem; }
+.sub { font-size: 0.95rem; color: var(--mid); margin-bottom: 2.5rem; }
+
+.tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+
+.tier-card {
+  position: relative; background: #fff; border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 1.6rem 1.4rem;
+  cursor: pointer; text-align: left;
+  display: flex; flex-direction: column;
+  box-shadow: 0 2px 12px rgba(26,26,26,0.06);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.tier-card:hover { box-shadow: 0 6px 24px rgba(26,26,26,0.12); border-color: var(--accent); }
+
+.ribbon {
+  position: absolute; top: 0; right: 0;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 0.28rem 0.8rem; border-bottom-left-radius: 10px;
+  background: var(--accent); color: #fff; letter-spacing: 0.4px;
+}
+.tc-icon { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
+.tc-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.3rem; }
+.tc-desc { font-size: 0.82rem; color: var(--mid); line-height: 1.5; margin-bottom: 1rem; }
+.chip {
+  display: inline-block; background: #FFF3EC; color: #C06A2A;
+  border: 1px solid var(--accent); border-radius: 20px;
+  padding: 0.2rem 0.7rem; font-size: 0.73rem; font-weight: 600; margin-bottom: 1rem;
+}
+.chip.green { background: #E8F5EE; color: var(--green); border-color: var(--green); }
+.feats { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; flex: 1; margin-bottom: 1.2rem; }
+.feats li { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--mid); }
+.chk { color: var(--accent); font-weight: 700; }
+.chk.g { color: var(--green); }
+.tc-cta { font-weight: 700; font-size: 0.9rem; color: var(--dark); }
+.tc-cta.g { color: var(--green); }
+
+@media (max-width: 600px) {
+  nav { padding: 0 1rem; }
+  main { padding: 2rem 1rem 4rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Housefolk</a>
+  <a href="/listings" class="nav-link">Browse listings</a>
+</nav>
+
+<main>
+  <h1>Post a listing</h1>
+  <p class="sub">Choose your listing type to get started. All listings are free.</p>
+
+  <div class="tier-grid">
+
+    <div class="tier-card" onclick="choose('flatshare')">
+      <div class="ribbon">★ Popular</div>
+      <span class="tc-icon">🏠</span>
+      <div class="tc-name">Flatshare</div>
+      <div class="tc-desc">Find the right flatmate to share your home. Add photos and describe your space.</div>
+      <div class="chip">📰 Debuts Thursday</div>
+      <ul class="feats">
+        <li><span class="chk">✓</span> Up to 20 photos</li>
+        <li><span class="chk">✓</span> 7-day listing</li>
+        <li><span class="chk">✓</span> Enquiry inbox</li>
+        <li><span class="chk">✓</span> Thursday newsletter</li>
+      </ul>
+      <div class="tc-cta">Select →</div>
+    </div>
+
+    <div class="tier-card" onclick="choose('rental')">
+      <span class="tc-icon">🏢</span>
+      <div class="tc-name">To Let</div>
+      <div class="tc-desc">Rent out your whole property to a tenant or family.</div>
+      <div class="chip">📰 Debuts Thursday</div>
+      <ul class="feats">
+        <li><span class="chk">✓</span> Up to 20 photos</li>
+        <li><span class="chk">✓</span> 7-day listing</li>
+        <li><span class="chk">✓</span> Enquiry inbox</li>
+        <li><span class="chk">✓</span> Thursday newsletter</li>
+      </ul>
+      <div class="tc-cta">Select →</div>
+    </div>
+
+    <div class="tier-card" onclick="choose('sublet')">
+      <span class="tc-icon">🌿</span>
+      <div class="tc-name">Sublet</div>
+      <div class="tc-desc">Subletting short-term? Post it for free — no card needed, ever.</div>
+      <div class="chip green">✓ Debuts Thursday</div>
+      <ul class="feats">
+        <li><span class="chk g">✓</span> Up to 10 photos</li>
+        <li><span class="chk g">✓</span> 7-day listing</li>
+        <li><span class="chk g">✓</span> Enquiry form</li>
+        <li><span class="chk g">✓</span> Thursday newsletter</li>
+      </ul>
+      <div class="tc-cta g">Select →</div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+function choose(tier) {
+  window.location.href = '/housefolk.html?goto=post&tier=' + tier
+}
+</script>
+</body>
+</html>
