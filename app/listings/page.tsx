@@ -202,7 +202,7 @@ export default function ListingsPage() {
       setSavedIds(prev => { const next = new Set(prev); next.delete(listingId); return next })
     } else {
       await fetch(`/api/listings/${listingId}/save`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
-      setSavedIds(prev => new Set([...prev, listingId]))
+      setSavedIds(prev => { const next = new Set(prev); next.add(listingId); return next })
     }
   }
 
