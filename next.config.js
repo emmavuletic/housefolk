@@ -8,6 +8,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/post',
+        destination: '/post.html',
+        permanent: false,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
