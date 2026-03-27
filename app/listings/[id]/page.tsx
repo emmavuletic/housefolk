@@ -66,12 +66,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
       .then(r => r.json())
       .then(({ listing: data }) => {
         if (!data) { setNotFound(true); return }
-        // Auth check: if not featured and no token, redirect
         const token = localStorage.getItem('hf_token')
-        if (!data.featured && !token) {
-          window.location.href = '/housefolk.html'
-          return
-        }
         setListing(data)
         // Check saved state
         if (token) {
