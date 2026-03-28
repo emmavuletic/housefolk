@@ -60,6 +60,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const [enquiryLoading, setEnquiryLoading] = useState(false)
   const [enquiryMessage, setEnquiryMessage] = useState('')
   const [saved, setSaved] = useState(false)
+  const [photoIndex, setPhotoIndex] = useState(0)
 
   useEffect(() => {
     fetch(`/api/listings/${params.id}`)
@@ -105,7 +106,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
     }
     setEnquiryLoading(true)
     try {
-      await fetch('/api/enquiries', {
+      const res = await fetch('/api/enquiries', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +114,14 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
         },
         body: JSON.stringify({ listing_id: params.id, message: enquiryMessage.trim() }),
       })
-      setEnquirySent(true)
+      const data = await res.json()
+      if (res.ok && !data.error) {
+        setEnquirySent(true)
+      } else {
+        alert(data.error || 'Failed to send message. Please try again.')
+      }
+    } catch {
+      alert('Network error. Please try again.')
     } finally {
       setEnquiryLoading(false)
     }
@@ -155,7 +163,9 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   }
 
   const typeInfo = TYPE_LABELS[listing.type] ?? { emoji: '🏠', label: listing.type }
-  const photo = listing.photos?.[0]
+  const photos = listing.photos?.length ? listing.photos : []
+  const currentPhoto = photos[photoIndex] ?? null
+  const totalPhotos = photos.length
 
   return (
     <>
@@ -169,14 +179,29 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
         </nav>
 
         <main style={styles.main}>
-          {/* Hero photo */}
+          {/* Hero photo gallery */}
           <div style={styles.hero}>
-            {photo ? (
-              <img src={photo} alt={listing.title} style={styles.heroImg} />
+            {currentPhoto ? (
+              <img src={currentPhoto} alt={`${listing.title} photo ${photoIndex + 1}`} style={styles.heroImg} />
             ) : (
               <div style={styles.heroPlaceholder}>🏡</div>
             )}
             <span style={styles.heroBadge}>{typeInfo.emoji} {typeInfo.label}</span>
+            {totalPhotos > 1 && (
+              <>
+                <button
+                  onClick={() => setPhotoIndex(i => (i - 1 + totalPhotos) % totalPhotos)}
+                  style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.85)', border: 'none', borderRadius: '50%', width: 38, height: 38, cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                >‹</button>
+                <button
+                  onClick={() => setPhotoIndex(i => (i + 1) % totalPhotos)}
+                  style={{ position: 'absolute', right: 56, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.85)', border: 'none', borderRadius: '50%', width: 38, height: 38, cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                >›</button>
+                <span style={{ position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.5)', color: '#fff', borderRadius: 20, padding: '0.2rem 0.7rem', fontSize: '0.78rem', fontWeight: 600 }}>
+                  {photoIndex + 1} / {totalPhotos}
+                </span>
+              </>
+            )}
             <button
               onClick={toggleSave}
               title={saved ? 'Remove from saved' : 'Save listing'}

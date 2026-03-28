@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profile } = await supabase
     .from('users')
-    .select('first_name, last_name')
+    .select('first_name, last_name, star_sign, bio, instagram, linkedin')
     .eq('id', user.id)
     .single()
 
@@ -66,11 +66,18 @@ export async function POST(req: NextRequest) {
 
   const { data: listing } = await supabase
     .from('listings')
-    .select('id, title, landlord_id, users(email, first_name)')
+    .select('id, title, landlord_id')
     .eq('id', listing_id)
     .single()
 
   if (!listing) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
+
+  // Fetch landlord separately — more reliable than embed syntax
+  const { data: landlordData } = await supabase
+    .from('users')
+    .select('email, first_name')
+    .eq('id', listing.landlord_id)
+    .single()
 
   const { data: enquiry, error } = await supabase.from('enquiries').insert({
     tenant_id: user.id,
@@ -82,10 +89,17 @@ export async function POST(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  // Email landlord — no contact details shown
-  const landlordData = (listing.users as unknown as { email: string; first_name: string }[] | null)?.[0] ?? null
+  // Email landlord with renter profile
   if (landlordData?.email) {
     const tenantName = `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim()
+    const profileLines: string[] = []
+    if (profile?.star_sign) profileLines.push(`⭐ Star sign: ${profile.star_sign.charAt(0).toUpperCase() + profile.star_sign.slice(1)}`)
+    if (profile?.bio) profileLines.push(`💬 About them: ${profile.bio}`)
+    if (profile?.instagram) profileLines.push(`📸 Instagram: ${profile.instagram}`)
+    if (profile?.linkedin) profileLines.push(`💼 LinkedIn: ${profile.linkedin}`)
+    const profileHtml = profileLines.length > 0
+      ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Renter profile</strong><br>${profileLines.join('<br>')}</p>`
+      : ''
     await resend.emails.send({
       from: FROM_EMAIL,
       to: landlordData.email,
@@ -95,7 +109,8 @@ export async function POST(req: NextRequest) {
         <p>Hi ${landlordData.first_name},</p>
         <p>You have a new enquiry from <strong>${tenantName}</strong> about your listing <strong>${listing.title}</strong>.</p>
         <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${message.trim()}</blockquote>
-        <p>Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
+        ${profileHtml}
+        <p style="margin-top:1.2rem">Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
         <p>— The Housefolk team</p>
       `,
     })
