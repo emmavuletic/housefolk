@@ -158,7 +158,6 @@ async function loadProfile() {
   set('p-bio', u.bio)
   set('p-instagram', u.instagram)
   set('p-linkedin', u.linkedin)
-  set('p-airbnb', u.airbnb)
   set('p-job-title', u.job_title)
   set('p-company', u.company)
   // Star sign
@@ -181,7 +180,6 @@ async function saveProfile() {
       bio: get('p-bio'),
       instagram: get('p-instagram'),
       linkedin: get('p-linkedin'),
-      airbnb: get('p-airbnb'),
       job_title: get('p-job-title'),
       company: get('p-company'),
       star_sign: starSign,
@@ -632,7 +630,6 @@ async function publishListing(btnEl) {
       spotify_url: document.getElementById('f-spotify')?.value?.trim(),
       instagram: document.getElementById('f-instagram')?.value?.trim(),
       linkedin: document.getElementById('f-linkedin')?.value?.trim(),
-      airbnb: document.getElementById('f-airbnb')?.value?.trim(),
       photos: uploadedPhotoUrls,
       star_signs: getSelectedStarSigns(),
       music_vibes: getSelectedMusicVibes(),
