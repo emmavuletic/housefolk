@@ -90,6 +90,9 @@ export async function POST(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // Email landlord with renter profile
+  if (!landlordData?.email) {
+    console.error('[enquiries POST] No landlord email found for landlord_id:', listing.landlord_id)
+  }
   if (landlordData?.email) {
     const tenantName = `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim()
     const profileLines: string[] = []
@@ -100,7 +103,8 @@ export async function POST(req: NextRequest) {
     const profileHtml = profileLines.length > 0
       ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Renter profile</strong><br>${profileLines.join('<br>')}</p>`
       : ''
-    await resend.emails.send({
+    console.log('[enquiries POST] Sending email to:', landlordData.email, 'from:', FROM_EMAIL)
+    const emailResult = await resend.emails.send({
       from: FROM_EMAIL,
       to: landlordData.email,
       reply_to: `reply+${enquiry.id}@inbound.housefolk.co`,
@@ -114,6 +118,11 @@ export async function POST(req: NextRequest) {
         <p>— The Housefolk team</p>
       `,
     })
+    if (emailResult.error) {
+      console.error('[enquiries POST] Resend error:', emailResult.error)
+    } else {
+      console.log('[enquiries POST] Email sent, id:', emailResult.data?.id)
+    }
   }
 
   return NextResponse.json({ enquiry }, { status: 201 })
