@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profile } = await supabase
     .from('users')
-    .select('first_name, last_name, star_sign, bio, instagram, linkedin, job_title, company')
+    .select('first_name, last_name, star_sign, bio, instagram, linkedin, airbnb, job_title, company')
     .eq('id', user.id)
     .single()
 
@@ -99,8 +99,9 @@ export async function POST(req: NextRequest) {
     if (profile?.star_sign) profileLines.push(`⭐ Star sign: ${profile.star_sign.charAt(0).toUpperCase() + profile.star_sign.slice(1)}`)
     if (profile?.bio) profileLines.push(`💬 About them: ${profile.bio}`)
     if (profile?.job_title) profileLines.push(`💼 ${profile.job_title}${profile.company ? ` at ${profile.company}` : ''}`)
-    if (profile?.instagram) profileLines.push(`📸 Instagram: ${profile.instagram}`)
-    if (profile?.linkedin) profileLines.push(`🔗 LinkedIn: ${profile.linkedin}`)
+    if (profile?.instagram) profileLines.push(`📸 Instagram: <a href="${profile.instagram}">${profile.instagram}</a>`)
+    if (profile?.linkedin) profileLines.push(`🔗 LinkedIn: <a href="${profile.linkedin}">${profile.linkedin}</a>`)
+    if (profile?.airbnb) profileLines.push(`🏡 Airbnb: <a href="${profile.airbnb}">View profile →</a>`)
     const profileHtml = profileLines.length > 0
       ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Renter profile</strong><br>${profileLines.join('<br>')}</p>`
       : ''
