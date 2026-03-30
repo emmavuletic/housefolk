@@ -86,14 +86,14 @@ export async function POST(req: NextRequest) {
   if (!body || body.length < 2) return NextResponse.json({ ok: true })
   const trimmedBody = body.slice(0, 2000)
 
-  // Insert the message
+  // Insert the message (best-effort — email still sends even if this fails)
   const { error: insertError } = await supabase
     .from('messages')
     .insert({ enquiry_id: enquiryId, sender_id: senderId, body: trimmedBody })
 
   if (insertError) {
     console.error('[inbound] insert error:', insertError.message)
-    return NextResponse.json({ error: insertError.message }, { status: 500 })
+    // Continue anyway — still forward the reply email to recipient
   }
 
   // Notify the recipient by email
