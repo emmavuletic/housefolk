@@ -157,7 +157,8 @@ async function doSetNewPassword() {
     setTimeout(() => switchTab('in'), 2000)
   } else {
     const err = await res.json()
-    toast(err.message || 'Failed to update password')
+    const msg = err.message || ''
+    toast(msg.toLowerCase().includes('same') || msg.toLowerCase().includes('different') ? 'Please choose a different password — you cannot reuse your current one.' : (msg || 'Failed to update password'))
   }
 }
 
