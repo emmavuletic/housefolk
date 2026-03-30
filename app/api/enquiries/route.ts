@@ -72,6 +72,15 @@ export async function POST(req: NextRequest) {
 
   if (!listing) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
 
+  // Block duplicate enquiries from same tenant on same listing
+  const { data: existing } = await supabase
+    .from('enquiries')
+    .select('id')
+    .eq('tenant_id', user.id)
+    .eq('listing_id', listing_id)
+    .single()
+  if (existing) return NextResponse.json({ error: 'You have already sent an enquiry for this listing.' }, { status: 409 })
+
   // Fetch landlord separately — more reliable than embed syntax
   const { data: landlordData } = await supabase
     .from('users')
