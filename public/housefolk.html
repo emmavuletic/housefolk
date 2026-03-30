@@ -653,6 +653,11 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div class="field"><label>Password</label><input type="password" id="si-pass" placeholder="••••••••"></div>
         <div class="forgot-link" onclick="switchTab('forgot')">Forgot password?</div>
         <button class="btn btn-primary" onclick="doSignIn()">Sign in →</button>
+        <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
+        <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+          Continue with LinkedIn
+        </a>
         <p class="auth-foot">No account? <a onclick="switchTab('up')">Create one free</a></p>
       </div>
 
@@ -681,6 +686,11 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           Subscribe to the Thursday newsletter — new listings delivered every week
         </label>
         <button class="btn btn-primary" onclick="doSignUp()">Create my account →</button>
+        <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
+        <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+          Continue with LinkedIn
+        </a>
         <p class="auth-foot">By signing up you agree to our <a onclick="showTerms()" style="cursor:pointer">Terms &amp; Privacy Policy</a></p>
       </div>
 
@@ -1297,6 +1307,10 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div class="field"><label>Last name</label><input type="text" id="p-last" placeholder="Smith"></div>
           </div>
           <div class="field"><label>About you <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-bio" placeholder="A short bio tenants will see when you reply to enquiries…"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Job title <span style="font-weight:400;color:var(--light)">(optional)</span></label><input type="text" id="p-job-title" placeholder="e.g. Software Engineer"></div>
+            <div class="field"><label>Company <span style="font-weight:400;color:var(--light)">(optional)</span></label><input type="text" id="p-company" placeholder="e.g. Acme Ltd"></div>
+          </div>
           <div class="field">
             <label>Social links <span style="font-weight:400;color:var(--light)">(optional)</span></label>
             <div style="display:flex;flex-direction:column;gap:0.55rem">

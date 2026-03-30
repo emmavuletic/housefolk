@@ -159,6 +159,8 @@ async function loadProfile() {
   set('p-instagram', u.instagram)
   set('p-linkedin', u.linkedin)
   set('p-airbnb', u.airbnb)
+  set('p-job-title', u.job_title)
+  set('p-company', u.company)
   // Star sign
   buildSeekerSignGrid(u.star_sign || null)
   if (u.star_sign) {
@@ -180,6 +182,8 @@ async function saveProfile() {
       instagram: get('p-instagram'),
       linkedin: get('p-linkedin'),
       airbnb: get('p-airbnb'),
+      job_title: get('p-job-title'),
+      company: get('p-company'),
       star_sign: starSign,
     }),
   })
