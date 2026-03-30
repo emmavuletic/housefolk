@@ -702,6 +702,15 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <button class="btn btn-primary" onclick="doForgotPassword()">Send reset link →</button>
         <p class="auth-foot"><a onclick="switchTab('in')">← Back to sign in</a></p>
       </div>
+
+      <!-- SET NEW PASSWORD (after clicking reset link in email) -->
+      <div id="form-setnew" style="display:none">
+        <div class="auth-title">Set new password</div>
+        <p class="auth-sub">Choose a new password for your account.</p>
+        <div class="field"><label>New password</label><input type="password" id="setnew-pass" placeholder="Minimum 8 characters"></div>
+        <div class="field"><label>Confirm password</label><input type="password" id="setnew-confirm" placeholder="Repeat your new password"></div>
+        <button class="btn btn-primary" onclick="doSetNewPassword()">Save new password →</button>
+      </div>
     </div>
   </div>
 </div>

@@ -139,6 +139,28 @@ async function doSignUp() {
   setTimeout(() => switchTab('in'), 2000)
 }
 
+let recoveryToken = null
+
+async function doSetNewPassword() {
+  const pass = document.getElementById('setnew-pass').value
+  const confirm = document.getElementById('setnew-confirm').value
+  if (!pass || pass.length < 8) { toast('Password must be at least 8 characters'); return }
+  if (pass !== confirm) { toast('Passwords do not match'); return }
+  const res = await fetch('https://agfgtajovhhxswfdcqen.supabase.co/auth/v1/user', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${recoveryToken}`, 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnZmd0YWpvdmhoeHN3ZmRjcWVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDc3NjIsImV4cCI6MjA4ODI4Mzc2Mn0.ewkfK672jnQXAhq_Fh4CoGBOUmBNXxhZU4B_d4QnsvQ' },
+    body: JSON.stringify({ password: pass })
+  })
+  if (res.ok) {
+    toast('✓ Password updated — please sign in', 'green')
+    recoveryToken = null
+    setTimeout(() => switchTab('in'), 2000)
+  } else {
+    const err = await res.json()
+    toast(err.message || 'Failed to update password')
+  }
+}
+
 async function doForgotPassword() {
   const email = document.querySelector('#form-forgot input[type=email]').value.trim()
   if (!email) { toast('Please enter your email address'); return }
@@ -1877,7 +1899,7 @@ function generateCode() {
 
 // ── AUTH TABS ──
 function switchTab(tab) {
-  ;['in', 'up', 'forgot'].forEach(x => {
+  ;['in', 'up', 'forgot', 'setnew'].forEach(x => {
     const el = document.getElementById('form-' + x)
     if (el) el.style.display = x === tab ? '' : 'none'
   })
@@ -1924,8 +1946,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('cookie-banner')
     if (el) { el.style.display = 'flex' }
   }
-  // Handle Google OAuth redirect (token arrives in URL hash)
+  // Handle password recovery redirect
   const hash = new URLSearchParams(window.location.hash.slice(1))
+  if (hash.get('type') === 'recovery' && hash.get('access_token')) {
+    recoveryToken = hash.get('access_token')
+    window.history.replaceState({}, '', window.location.pathname)
+    showScreen('auth')
+    switchTab('setnew')
+    return
+  }
+
+  // Handle Google OAuth redirect (token arrives in URL hash)
   const oauthToken = hash.get('access_token')
   if (oauthToken) {
     const oauthRefresh = hash.get('refresh_token')
