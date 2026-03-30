@@ -1085,7 +1085,7 @@ async function openChatThread(enquiryId) {
   const suggestBtn = document.getElementById('chat-suggest-btn')
   const suggestRow = document.getElementById('chat-suggest-row')
   const isLandlordThread = _activeMsgTab === 'received'
-  if (suggestBtn) suggestBtn.style.display = isLandlordThread ? '' : 'none'
+  if (suggestBtn) suggestBtn.style.display = ''
   if (suggestRow) suggestRow.style.display = 'none' // always collapsed on open
 
   // Mobile: hide conv list, show thread
