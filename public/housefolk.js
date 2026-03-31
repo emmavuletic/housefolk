@@ -146,10 +146,10 @@ async function doSetNewPassword() {
   const confirm = document.getElementById('setnew-confirm').value
   if (!pass || pass.length < 8) { toast('Password must be at least 8 characters'); return }
   if (pass !== confirm) { toast('Passwords do not match'); return }
-  const res = await fetch('https://agfgtajovhhxswfdcqen.supabase.co/auth/v1/user', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${recoveryToken}`, 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnZmd0YWpvdmhoeHN3ZmRjcWVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDc3NjIsImV4cCI6MjA4ODI4Mzc2Mn0.ewkfK672jnQXAhq_Fh4CoGBOUmBNXxhZU4B_d4QnsvQ' },
-    body: JSON.stringify({ password: pass })
+  const res = await fetch('/api/auth/set-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pass, recovery_token: recoveryToken })
   })
   if (res.ok) {
     toast('✓ Password updated — please sign in', 'green')
@@ -157,7 +157,7 @@ async function doSetNewPassword() {
     setTimeout(() => switchTab('in'), 2000)
   } else {
     const err = await res.json()
-    const msg = err.message || ''
+    const msg = err.error || ''
     toast(msg.toLowerCase().includes('same') || msg.toLowerCase().includes('different') ? 'Please choose a different password — you cannot reuse your current one.' : (msg || 'Failed to update password'))
   }
 }

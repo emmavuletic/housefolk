@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   const { refresh_token } = await req.json()
   if (!refresh_token) return NextResponse.json({ error: 'No refresh token.' }, { status: 400 })
 
-  const supabaseUrl = 'https://agfgtajovhhxswfdcqen.supabase.co'
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const res = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=refresh_token`, {
     method: 'POST',
     headers: {
