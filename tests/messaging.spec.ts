@@ -383,8 +383,12 @@ test('5. Full flow: tenant sends message, landlord sees it in inbox', async ({ p
   await page.locator('#si-inbox').click();
   await expect(page.locator('#panel-inbox')).toBeVisible({ timeout: 10000 });
 
-  const inboxCard = page.locator('#panel-inbox .fcard');
-  await expect(inboxCard).toBeAttached();
+  // Switch to "received" tab — messages from tenants
+  await page.locator('#msgtab-received').click();
+
+  // Wait for at least one conversation item to appear in the list
+  const convItem = page.locator('#chat-conv-list .chat-conv-item');
+  await expect(convItem.first()).toBeAttached({ timeout: 10000 });
 });
 
 // ─── Test 6: Renter account panel is accessible ──────────────────────────────
@@ -425,5 +429,6 @@ test('8. Landlord inbox panel renders fcard container', async ({ page }) => {
   await page.locator('#si-inbox').click();
   await expect(page.locator('#panel-inbox')).toBeVisible({ timeout: 10000 });
 
-  await expect(page.locator('#panel-inbox .fcard')).toBeAttached();
+  // The chat layout container should always be present
+  await expect(page.locator('#chat-conv-list')).toBeAttached();
 });

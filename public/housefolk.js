@@ -250,6 +250,16 @@ function goToPost() {
   }
 }
 
+function goToRoommates() {
+  const token = getToken()
+  if (!token) {
+    showScreen('auth')
+  } else {
+    showScreen('dash')
+    showPanel('roommates')
+  }
+}
+
 let _pendingTier = null
 
 function selectTierFromModal(tier) {
@@ -340,6 +350,7 @@ const PANEL_MAP = {
   overview: 'si-overview', post: 'si-post', mylistings: 'si-listings',
   inbox: 'si-inbox', newsletter: 'si-nl', promos: 'si-promos',
   profile: 'si-profile', billing: 'si-billing', tenant: 'si-tenant',
+  roommates: 'si-roommates',
 }
 const MOB_NAV_MAP = { overview: 'mob-overview', post: 'mob-post', mylistings: 'mob-listings', inbox: 'mob-inbox', profile: 'mob-profile' }
 function showPanel(name) {
@@ -368,6 +379,7 @@ function showPanel(name) {
   if (name === 'weeklistings') loadWeekListings()
   if (name === 'profile') { buildSeekerSignGrid(null); loadProfile() }
   if (name === 'tenant') loadSavedListings()
+  if (name === 'roommates') loadRoommates()
 }
 
 function switchMainTab(tab) {
@@ -1456,11 +1468,60 @@ async function toggleSaveListing(id, e) {
   }
 }
 
+async function loadRoommates() {
+  const grid = document.getElementById('roommates-grid')
+  if (!grid) return
+  grid.innerHTML = '<div style="color:var(--light);font-size:0.86rem;padding:1rem">Loading…</div>'
+  const data = await api('/api/roommates')
+  if (data.error) { grid.innerHTML = `<div style="color:var(--light);font-size:0.86rem;padding:1rem">${data.error}</div>`; return }
+  const roommates = data.roommates || []
+  if (roommates.length === 0) {
+    grid.innerHTML = '<div style="color:var(--light);font-size:0.86rem;padding:1rem">No one in the directory yet — be the first to opt in from your Renter account.</div>'
+    return
+  }
+  grid.innerHTML = roommates.map(r => {
+    const name = [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Member'
+    const initials = [r.first_name?.[0], r.last_name?.[0]].filter(Boolean).join('').toUpperCase() || '?'
+    const jobLine = r.job_title ? `${r.job_title}${r.company ? ` at ${r.company}` : ''}` : ''
+    const bio = r.bio ? (r.bio.length > 100 ? r.bio.slice(0, 97) + '…' : r.bio) : ''
+    const socials = [
+      r.instagram ? `<a href="${r.instagram}" target="_blank" rel="noopener" style="color:#7C9885;font-size:0.78rem">📸 Instagram</a>` : '',
+      r.linkedin ? `<a href="${r.linkedin}" target="_blank" rel="noopener" style="color:#7C9885;font-size:0.78rem">🔗 LinkedIn</a>` : '',
+    ].filter(Boolean).join(' · ')
+    return `
+      <div style="background:#f0f4f1;border-radius:16px;padding:1.4rem 1.4rem 1.2rem;display:flex;flex-direction:column;gap:0.5rem">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.2rem">
+          <div style="width:40px;height:40px;border-radius:50%;background:#7C9885;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.95rem;flex-shrink:0">${initials}</div>
+          <div>
+            <div style="font-weight:700;font-size:0.95rem;color:var(--dark)">${name}</div>
+            ${r.star_sign ? `<div style="font-size:0.75rem;color:var(--mid)">⭐ ${r.star_sign.charAt(0).toUpperCase() + r.star_sign.slice(1)}</div>` : ''}
+          </div>
+        </div>
+        ${bio ? `<div style="font-size:0.82rem;color:var(--mid);line-height:1.5">${bio}</div>` : ''}
+        ${jobLine ? `<div style="font-size:0.8rem;color:var(--mid)">💼 ${jobLine}</div>` : ''}
+        ${socials ? `<div style="display:flex;gap:0.5rem;flex-wrap:wrap">${socials}</div>` : ''}
+        <button onclick="openRoommateModal('${r.id}', '${name.replace(/'/g, "\\'")}')" style="margin-top:0.6rem;background:#7C9885;color:#fff;border:none;border-radius:10px;padding:0.55rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;align-self:flex-start">Message →</button>
+      </div>`
+  }).join('')
+}
+
+async function saveRoommateOpt() {
+  const checked = document.getElementById('roommate-opt-in')?.checked ?? false
+  const data = await api('/api/users/me', { method: 'PATCH', body: JSON.stringify({ show_in_roommates: checked }) })
+  if (data.error) { toast(data.error); return }
+  toast(checked ? '✓ You are now in the roommate directory' : '✓ Removed from roommate directory')
+}
+
 async function loadSavedListings() {
   const wrap = document.getElementById('saved-listings-wrap')
   if (!wrap) return
   const token = getToken()
   if (!token) return
+  // Populate roommate opt-in checkbox
+  api('/api/users/me').then(d => {
+    const cb = document.getElementById('roommate-opt-in')
+    if (cb && d.user) cb.checked = !!d.user.show_in_roommates
+  })
   const data = await api('/api/listings/saved')
   const listings = data.listings || []
   if (listings.length === 0) {
@@ -1522,6 +1583,27 @@ function openEnquiryModal(listingId, listingTitle) {
   if (titleEl) titleEl.textContent = listingTitle || 'Contact landlord'
   const msgEl = document.getElementById('contact-message')
   if (msgEl) msgEl.value = ''
+  const typeEl = document.getElementById('contact-enquiry-type')
+  if (typeEl) typeEl.value = 'listing'
+  const recipEl = document.getElementById('contact-recipient-id')
+  if (recipEl) recipEl.value = ''
+  const modal = document.getElementById('contact-modal')
+  if (modal) modal.style.display = 'flex'
+}
+
+function openRoommateModal(userId, name) {
+  if (!getToken()) { showScreen('auth'); return }
+  const titleEl = document.getElementById('contact-listing-title')
+  if (titleEl) titleEl.textContent = `Message ${name}`
+  const msgEl = document.getElementById('contact-message')
+  if (msgEl) msgEl.value = ''
+  const typeEl = document.getElementById('contact-enquiry-type')
+  if (typeEl) typeEl.value = 'roommate'
+  const recipEl = document.getElementById('contact-recipient-id')
+  if (recipEl) recipEl.value = userId
+  _enquiryListingId = null
+  const detailsEl = document.getElementById('contact-details')
+  if (detailsEl) detailsEl.style.display = 'none'
   const modal = document.getElementById('contact-modal')
   if (modal) modal.style.display = 'flex'
 }
@@ -1531,17 +1613,25 @@ async function sendEnquiry() {
   if (!token) { showScreen('auth'); return }
   const message = document.getElementById('contact-message')?.value?.trim()
   if (!message) { toast('Please write a message first'); return }
+  const enquiryType = document.getElementById('contact-enquiry-type')?.value || 'listing'
+  const recipientId = document.getElementById('contact-recipient-id')?.value || ''
   const btn = document.querySelector('#contact-modal .btn-primary')
   const orig = btn?.textContent
   if (btn) btn.textContent = 'Sending…'
+  const body = enquiryType === 'roommate'
+    ? { enquiry_type: 'roommate', recipient_id: recipientId, message }
+    : { listing_id: _enquiryListingId, message }
   const data = await api('/api/enquiries', {
     method: 'POST',
-    body: JSON.stringify({ listing_id: _enquiryListingId, message }),
+    body: JSON.stringify(body),
   })
   if (btn) btn.textContent = orig
   if (data.error) { toast(data.error); return }
   document.getElementById('contact-modal').style.display = 'none'
-  toast('✓ Message sent to landlord')
+  // Restore contact-details visibility for future listing enquiries
+  const detailsEl = document.getElementById('contact-details')
+  if (detailsEl) detailsEl.style.display = ''
+  toast(enquiryType === 'roommate' ? '✓ Message sent!' : '✓ Message sent to landlord')
   loadTenantMessages()
 }
 

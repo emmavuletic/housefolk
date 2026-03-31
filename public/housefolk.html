@@ -436,12 +436,14 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 .cta-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
 .cta-card.browse { border-color:rgba(255,255,255,0.1); }
 .cta-card.post { border-color:#f7b188; }
+.cta-card.roommates { border-color:#7C9885; }
 .cta-icon { font-size:2.2rem; margin-bottom:0.8rem; display:block; }
 .cta-title { font-family:"Playfair Display",serif; font-size:1.25rem; font-weight:700; color:var(--dark); margin-bottom:0.4rem; }
 .cta-desc { font-size:0.82rem; color:var(--mid); line-height:1.55; margin-bottom:1rem; }
 .cta-btn { display:inline-block; width:100%; text-align:center; padding:0.7rem 1rem; border-radius:10px; font-family:"DM Sans",sans-serif; font-size:0.86rem; font-weight:700; border:none; cursor:pointer; }
 .cta-btn.browse { background:var(--dark); color:#fff; }
 .cta-btn.post { background:#f7b188; color:#1A1A1A; }
+.cta-btn.roommates { background:#7C9885; color:#fff; }
 .landing-listings-preview { padding:3rem 2.5rem; max-width:1080px; margin:0 auto; width:100%; }
 .landing-listings-preview h2 { font-family:"Playfair Display",serif; font-size:1.5rem; margin-bottom:0.4rem; }
 .landing-listings-preview p { color:var(--mid); font-size:0.86rem; margin-bottom:1.8rem; }
@@ -587,6 +589,12 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div class="cta-title">Post a listing</div>
         <div class="cta-desc">List your flatshare, rental or sublet. Reach mindful renters every Thursday.</div>
         <div class="cta-btn post">Post a listing →</div>
+      </div>
+      <div class="cta-card roommates" onclick="goToRoommates()">
+        <span class="cta-icon">🤝</span>
+        <div class="cta-title">Find a roommate</div>
+        <div class="cta-desc">Browse people looking for a flatshare. Message them directly.</div>
+        <div class="cta-btn roommates">Find a roommate →</div>
       </div>
     </div>
   </div>
@@ -753,6 +761,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <div style="background:#FFF0E8;padding:0.6rem 0.8rem">
         <div class="sb-label" style="font-weight:700;color:var(--dark)">Tenant / Sharer zone</div>
         <button class="sb-item" id="si-tenant" onclick="showPanel('tenant')"><span class="sb-icon">🔍</span> Renter account</button>
+        <button class="sb-item" id="si-roommates" onclick="showPanel('roommates')"><span class="sb-icon">🤝</span> Find a roommate</button>
         <button class="sb-item" id="si-profile" onclick="showPanel('profile')"><span class="sb-icon">👤</span> Profile</button>
       </div>
       <!-- Admin block -->
@@ -1351,6 +1360,29 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           </div>
         </div>
 
+        <!-- Roommate directory opt-in -->
+        <div class="fcard" style="background:#f0f4f1;border:1.5px solid #c4d4c9">
+          <div class="fcard-title">🤝 Roommate directory</div>
+          <div class="fcard-sub">Let other members find and message you.</div>
+          <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-top:0.8rem">
+            <input type="checkbox" id="roommate-opt-in" style="margin-top:3px;width:16px;height:16px;accent-color:#7C9885;flex-shrink:0">
+            <div>
+              <div style="font-size:0.88rem;font-weight:600;color:var(--dark)">Show me in the roommate directory</div>
+              <div style="font-size:0.8rem;color:var(--mid);margin-top:0.2rem">Your name, bio, job and social links will be visible to other members.</div>
+            </div>
+          </div>
+          <button class="btn btn-auto" onclick="saveRoommateOpt()" style="margin-top:1rem;background:#7C9885;color:#fff;border:none;padding:0.6rem 1.3rem;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;cursor:pointer">Save preference</button>
+        </div>
+
+      </div>
+
+      <!-- ── ROOMMATES ── -->
+      <div class="dash-panel" id="panel-roommates">
+        <div class="panel-header" style="background:#f0f4f1;border-radius:16px;padding:1.5rem 1.8rem;margin-bottom:1.5rem">
+          <h1>Find a Roommate</h1>
+          <p>People looking for a flatshare or someone to share with.</p>
+        </div>
+        <div id="roommates-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem"></div>
       </div>
 
       <!-- ── BILLING ── -->
@@ -1671,6 +1703,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
     </div>
     <div id="contact-details" style="background:var(--cream);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;font-size:0.86rem;line-height:2"></div>
     <div class="field"><label>Your message</label><textarea id="contact-message" placeholder="Hi, I am interested in your listing…" style="min-height:90px"></textarea></div>
+    <input type="hidden" id="contact-enquiry-type" value="listing">
+    <input type="hidden" id="contact-recipient-id" value="">
     <button class="btn btn-primary" onclick="sendEnquiry()">Send message →</button>
   </div>
 </div>

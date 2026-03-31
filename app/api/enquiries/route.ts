@@ -56,12 +56,71 @@ export async function POST(req: NextRequest) {
     .eq('id', user.id)
     .single()
 
-  const { listing_id, message } = await req.json()
-  if (!listing_id || !message?.trim()) {
-    return NextResponse.json({ error: 'listing_id and message required.' }, { status: 400 })
+  const { listing_id, message, recipient_id, enquiry_type } = await req.json()
+  if (!message?.trim()) {
+    return NextResponse.json({ error: 'message required.' }, { status: 400 })
   }
   if (message.length > 2000) {
     return NextResponse.json({ error: 'Message too long (max 2000 characters).' }, { status: 400 })
+  }
+
+  const isRoommate = enquiry_type === 'roommate'
+
+  if (isRoommate) {
+    if (!recipient_id) return NextResponse.json({ error: 'recipient_id required for roommate messages.' }, { status: 400 })
+
+    const { data: recipientData } = await supabase
+      .from('users')
+      .select('id, email, first_name')
+      .eq('id', recipient_id)
+      .single()
+
+    if (!recipientData) return NextResponse.json({ error: 'Recipient not found.' }, { status: 404 })
+
+    const { data: enquiry, error } = await supabase.from('enquiries').insert({
+      tenant_id: user.id,
+      landlord_id: recipient_id,
+      listing_id: null,
+      enquiry_type: 'roommate',
+      message: message.trim(),
+      read: false,
+    }).select().single()
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+    if (recipientData.email) {
+      const senderName = `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim()
+      const profileLines: string[] = []
+      if (profile?.star_sign) profileLines.push(`⭐ Star sign: ${profile.star_sign.charAt(0).toUpperCase() + profile.star_sign.slice(1)}`)
+      if (profile?.bio) profileLines.push(`💬 About them: ${profile.bio}`)
+      if (profile?.job_title) profileLines.push(`💼 ${profile.job_title}${profile.company ? ` at ${profile.company}` : ''}`)
+      if (profile?.instagram) profileLines.push(`📸 Instagram: <a href="${profile.instagram}">${profile.instagram}</a>`)
+      if (profile?.linkedin) profileLines.push(`🔗 LinkedIn: <a href="${profile.linkedin}">${profile.linkedin}</a>`)
+      const profileHtml = profileLines.length > 0
+        ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Their profile</strong><br>${profileLines.join('<br>')}</p>`
+        : ''
+      await resend.emails.send({
+        from: FROM_EMAIL,
+        to: recipientData.email,
+        reply_to: `reply+${enquiry.id}@inbound.housefolk.co`,
+        subject: `Someone wants to connect on Housefolk`,
+        html: `
+          <p>Hi ${recipientData.first_name},</p>
+          <p><strong>${senderName}</strong> wants to connect with you on Housefolk.</p>
+          <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${message.trim()}</blockquote>
+          ${profileHtml}
+          <p style="margin-top:1.2rem">Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
+          <p>— The Housefolk team</p>
+        `,
+      })
+    }
+
+    return NextResponse.json({ enquiry }, { status: 201 })
+  }
+
+  // Listing enquiry (default path)
+  if (!listing_id) {
+    return NextResponse.json({ error: 'listing_id required.' }, { status: 400 })
   }
 
   const { data: listing } = await supabase
@@ -92,6 +151,7 @@ export async function POST(req: NextRequest) {
     tenant_id: user.id,
     landlord_id: listing.landlord_id,
     listing_id,
+    enquiry_type: 'listing',
     message: message.trim(),
     read: false,
   }).select().single()
