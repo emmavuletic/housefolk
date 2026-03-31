@@ -621,8 +621,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
   <div class="auth-left">
     <a class="auth-logo" href="https://www.housefolk.co">House<span>folk</span></a>
     <div class="auth-left-body">
-      <h2>Find your <em>place.</em></h2>
-      <p>Every listing debuts in our Thursday newsletter to renters — the same day it goes live.</p>
+      <h2>Find your <em>folk.</em></h2>
+      <p>Our newsletter goes out every Thursday.</p>
       <div class="tier-pills">
         <div class="tier-pill">
           <span class="tp-icon">🏠</span>
@@ -638,6 +638,11 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <span class="tp-icon">🌿</span>
           <div class="tp-info"><div class="tp-name">Apartment Sublet</div><div class="tp-meta">Short-term sublet · up to 10 photos · 7 days</div></div>
           <span class="tp-price price-paid">Free</span>
+        </div>
+        <div class="tier-pill" style="background:rgba(124,152,133,0.15);border:1px solid rgba(124,152,133,0.3)">
+          <span class="tp-icon">📖</span>
+          <div class="tp-info"><div class="tp-name">Roommates</div><div class="tp-meta">Browse people looking for a flatshare</div></div>
+          <span class="tp-price" style="color:#7C9885;font-weight:700;font-size:0.78rem">Directory</span>
         </div>
       </div>
     </div>
@@ -1324,6 +1329,13 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div class="panel-header"><h1>My profile</h1><p>Your details and social links.</p></div>
         <div class="fcard">
           <div class="fcard-title" style="margin-bottom:1rem">Personal details</div>
+          <div style="display:flex;align-items:center;gap:1.2rem;margin-bottom:1.2rem">
+            <div id="p-avatar-preview" style="width:64px;height:64px;border-radius:50%;background:#7C9885;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.3rem;flex-shrink:0;overflow:hidden"></div>
+            <div>
+              <label style="display:block;font-size:0.82rem;font-weight:600;margin-bottom:0.4rem">Profile photo <span style="font-weight:400;color:var(--light)">(optional)</span></label>
+              <input type="file" id="p-avatar-file" accept="image/*" style="font-size:0.82rem" onchange="previewAvatar(this)">
+            </div>
+          </div>
           <div class="field-row">
             <div class="field"><label>First name</label><input type="text" id="p-first" placeholder="Alex"></div>
             <div class="field"><label>Last name</label><input type="text" id="p-last" placeholder="Smith"></div>
@@ -1347,6 +1359,11 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
               <div class="star-sign-dropdown" id="seeker-sign-drop"><div class="star-sign-grid" id="seeker-sign-grid"></div></div>
             </div>
           </div>
+          <div class="field"><label>Interests &amp; hobbies <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-interests" placeholder="e.g. hiking, cooking, live music, pottery…"></textarea></div>
+          <div class="field"><label>Pet peeves <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-pet-peeves" placeholder="e.g. dishes left in the sink, loud calls in shared spaces…"></textarea></div>
+          <div class="field"><label>Hopes &amp; dreams <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-hopes-dreams" placeholder="e.g. building a small business, travelling for a year…"></textarea></div>
+          <div class="field"><label>Hard no to… <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-hard-nos" placeholder="e.g. smoking indoors, overnight guests every weekend…"></textarea></div>
+          <div class="field"><label>Daily schedule <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-daily-schedule" placeholder="e.g. early riser, WFH Mon–Wed, gym most mornings…"></textarea></div>
           <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.5rem" onclick="saveProfile()">Save profile</button>
         </div>
       </div>
@@ -1714,6 +1731,26 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
     <input type="hidden" id="contact-enquiry-type" value="listing">
     <input type="hidden" id="contact-recipient-id" value="">
     <button class="btn btn-primary" onclick="sendEnquiry()">Send message →</button>
+  </div>
+</div>
+
+<!-- ══════════════ ROOMMATE DETAIL MODAL ══════════════ -->
+<div id="roommate-modal" style="display:none;position:fixed;inset:0;background:rgba(26,21,16,0.55);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--card);border-radius:24px;padding:2rem;max-width:480px;width:100%;box-shadow:var(--shadow-lg);animation:fadeUp 0.3s ease both;max-height:90vh;overflow-y:auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem">
+      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700" id="rm-modal-name">Profile</div>
+      <button onclick="document.getElementById('roommate-modal').style.display='none'" style="background:var(--cream);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;cursor:pointer">✕</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.4rem">
+      <div id="rm-modal-avatar" style="width:60px;height:60px;border-radius:50%;background:#7C9885;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.3rem;flex-shrink:0;overflow:hidden"></div>
+      <div>
+        <div id="rm-modal-job" style="font-size:0.86rem;color:var(--mid)"></div>
+        <div id="rm-modal-sign" style="font-size:0.82rem;color:var(--mid)"></div>
+      </div>
+    </div>
+    <div id="rm-modal-fields" style="display:flex;flex-direction:column;gap:0.9rem;margin-bottom:1.4rem"></div>
+    <div id="rm-modal-socials" style="display:flex;gap:0.8rem;flex-wrap:wrap;margin-bottom:1.4rem"></div>
+    <button id="rm-modal-msg-btn" class="btn btn-primary" style="width:100%">Message →</button>
   </div>
 </div>
 

@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabase
     .from('users')
-    .select('id, first_name, last_name, bio, job_title, company, star_sign, instagram, linkedin')
+    .select('id, first_name, last_name, bio, job_title, company, star_sign, instagram, linkedin, interests, pet_peeves, hopes_dreams, hard_nos, daily_schedule, avatar_url')
     .eq('show_in_roommates', true)
     .order('created_at', { ascending: false })
 

@@ -183,6 +183,21 @@ async function loadProfile() {
   set('p-linkedin', u.linkedin)
   set('p-job-title', u.job_title)
   set('p-company', u.company)
+  set('p-interests', u.interests)
+  set('p-pet-peeves', u.pet_peeves)
+  set('p-hopes-dreams', u.hopes_dreams)
+  set('p-hard-nos', u.hard_nos)
+  set('p-daily-schedule', u.daily_schedule)
+  // Avatar
+  const preview = document.getElementById('p-avatar-preview')
+  if (preview) {
+    if (u.avatar_url) {
+      preview.innerHTML = `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover">`
+    } else {
+      const initials = ((u.first_name?.[0] || '') + (u.last_name?.[0] || '')).toUpperCase() || '?'
+      preview.textContent = initials
+    }
+  }
   // Star sign
   buildSeekerSignGrid(u.star_sign || null)
   if (u.star_sign) {
@@ -192,9 +207,30 @@ async function loadProfile() {
   }
 }
 
+function previewAvatar(input) {
+  const file = input.files?.[0]
+  if (!file) return
+  const preview = document.getElementById('p-avatar-preview')
+  if (!preview) return
+  const url = URL.createObjectURL(file)
+  preview.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`
+}
+
 async function saveProfile() {
   const get = id => document.getElementById(id)?.value?.trim() || null
   const starSign = document.querySelector('input[name="seeker-sign-radio"]:checked')?.value || null
+
+  // Upload avatar if a new file was selected
+  const avatarFile = document.getElementById('p-avatar-file')?.files?.[0]
+  if (avatarFile) {
+    const fd = new FormData()
+    fd.append('file', avatarFile)
+    const token = getToken()
+    const res = await fetch('/api/users/me/avatar', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd })
+    const avatarData = await res.json()
+    if (avatarData.error) { toast(avatarData.error); return }
+  }
+
   const data = await api('/api/users/me', {
     method: 'PATCH',
     body: JSON.stringify({
@@ -206,10 +242,14 @@ async function saveProfile() {
       job_title: get('p-job-title'),
       company: get('p-company'),
       star_sign: starSign,
+      interests: get('p-interests'),
+      pet_peeves: get('p-pet-peeves'),
+      hopes_dreams: get('p-hopes-dreams'),
+      hard_nos: get('p-hard-nos'),
+      daily_schedule: get('p-daily-schedule'),
     }),
   })
   if (data.error) { toast(data.error); return }
-  // Update the displayed name in nav if changed
   if (data.user) {
     const first = data.user.first_name || ''
     const last = data.user.last_name || ''
@@ -1468,6 +1508,8 @@ async function toggleSaveListing(id, e) {
   }
 }
 
+let _roommateCache = []
+
 async function loadRoommates() {
   const grid = document.getElementById('roommates-grid')
   if (!grid) return
@@ -1475,6 +1517,7 @@ async function loadRoommates() {
   const data = await api('/api/roommates')
   if (data.error) { grid.innerHTML = `<div style="color:var(--light);font-size:0.86rem;padding:1rem">${data.error}</div>`; return }
   const roommates = data.roommates || []
+  _roommateCache = roommates
   if (roommates.length === 0) {
     grid.innerHTML = '<div style="color:var(--light);font-size:0.86rem;padding:1rem">No one in the directory yet — be the first to opt in from your Renter account.</div>'
     return
@@ -1483,15 +1526,14 @@ async function loadRoommates() {
     const name = [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Member'
     const initials = [r.first_name?.[0], r.last_name?.[0]].filter(Boolean).join('').toUpperCase() || '?'
     const jobLine = r.job_title ? `${r.job_title}${r.company ? ` at ${r.company}` : ''}` : ''
-    const bio = r.bio ? (r.bio.length > 100 ? r.bio.slice(0, 97) + '…' : r.bio) : ''
-    const socials = [
-      r.instagram ? `<a href="${r.instagram}" target="_blank" rel="noopener" style="color:#7C9885;font-size:0.78rem">📸 Instagram</a>` : '',
-      r.linkedin ? `<a href="${r.linkedin}" target="_blank" rel="noopener" style="color:#7C9885;font-size:0.78rem">🔗 LinkedIn</a>` : '',
-    ].filter(Boolean).join(' · ')
+    const bio = r.bio ? (r.bio.length > 80 ? r.bio.slice(0, 77) + '…' : r.bio) : ''
+    const avatarHtml = r.avatar_url
+      ? `<img src="${r.avatar_url}" style="width:100%;height:100%;object-fit:cover">`
+      : initials
     return `
-      <div style="background:#f0f4f1;border-radius:16px;padding:1.4rem 1.4rem 1.2rem;display:flex;flex-direction:column;gap:0.5rem">
+      <div onclick="openRoommateDetail('${r.id}')" style="background:#f0f4f1;border-radius:16px;padding:1.4rem 1.4rem 1.2rem;display:flex;flex-direction:column;gap:0.5rem;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.2rem">
-          <div style="width:40px;height:40px;border-radius:50%;background:#7C9885;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.95rem;flex-shrink:0">${initials}</div>
+          <div style="width:40px;height:40px;border-radius:50%;background:#7C9885;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.95rem;flex-shrink:0;overflow:hidden">${avatarHtml}</div>
           <div>
             <div style="font-weight:700;font-size:0.95rem;color:var(--dark)">${name}</div>
             ${r.star_sign ? `<div style="font-size:0.75rem;color:var(--mid)">⭐ ${r.star_sign.charAt(0).toUpperCase() + r.star_sign.slice(1)}</div>` : ''}
@@ -1499,10 +1541,53 @@ async function loadRoommates() {
         </div>
         ${bio ? `<div style="font-size:0.82rem;color:var(--mid);line-height:1.5">${bio}</div>` : ''}
         ${jobLine ? `<div style="font-size:0.8rem;color:var(--mid)">💼 ${jobLine}</div>` : ''}
-        ${socials ? `<div style="display:flex;gap:0.5rem;flex-wrap:wrap">${socials}</div>` : ''}
-        <button onclick="openRoommateModal('${r.id}', '${name.replace(/'/g, "\\'")}')" style="margin-top:0.6rem;background:#7C9885;color:#fff;border:none;border-radius:10px;padding:0.55rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;align-self:flex-start">Message →</button>
+        <div style="font-size:0.78rem;color:#7C9885;font-weight:600;margin-top:0.3rem">View profile →</div>
       </div>`
   }).join('')
+}
+
+function openRoommateDetail(userId) {
+  const r = _roommateCache.find(x => x.id === userId)
+  if (!r) return
+  const name = [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Member'
+  const initials = [r.first_name?.[0], r.last_name?.[0]].filter(Boolean).join('').toUpperCase() || '?'
+
+  document.getElementById('rm-modal-name').textContent = name
+
+  const avatar = document.getElementById('rm-modal-avatar')
+  avatar.innerHTML = r.avatar_url ? `<img src="${r.avatar_url}" style="width:100%;height:100%;object-fit:cover">` : initials
+  avatar.style.fontSize = r.avatar_url ? '' : '1.3rem'
+
+  const jobLine = [r.job_title, r.company ? `at ${r.company}` : ''].filter(Boolean).join(' ')
+  document.getElementById('rm-modal-job').textContent = jobLine ? `💼 ${jobLine}` : ''
+  document.getElementById('rm-modal-sign').textContent = r.star_sign ? `⭐ ${r.star_sign.charAt(0).toUpperCase() + r.star_sign.slice(1)}` : ''
+
+  const fields = [
+    { label: 'About', value: r.bio },
+    { label: 'Interests & hobbies', value: r.interests },
+    { label: 'Daily schedule', value: r.daily_schedule },
+    { label: 'Hopes & dreams', value: r.hopes_dreams },
+    { label: 'Pet peeves', value: r.pet_peeves },
+    { label: 'Hard no to…', value: r.hard_nos },
+  ]
+  document.getElementById('rm-modal-fields').innerHTML = fields
+    .filter(f => f.value)
+    .map(f => `<div><div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--mid);margin-bottom:0.2rem">${f.label}</div><div style="font-size:0.88rem;color:var(--dark);line-height:1.55">${f.value}</div></div>`)
+    .join('')
+
+  const socials = [
+    r.instagram ? `<a href="${r.instagram}" target="_blank" rel="noopener" style="background:#f0f4f1;border:1px solid #c4d4c9;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.8rem;color:#7C9885;text-decoration:none;font-weight:600">📸 Instagram</a>` : '',
+    r.linkedin ? `<a href="${r.linkedin}" target="_blank" rel="noopener" style="background:#f0f4f1;border:1px solid #c4d4c9;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.8rem;color:#7C9885;text-decoration:none;font-weight:600">🔗 LinkedIn</a>` : '',
+  ].filter(Boolean)
+  document.getElementById('rm-modal-socials').innerHTML = socials.join('')
+
+  const msgBtn = document.getElementById('rm-modal-msg-btn')
+  msgBtn.onclick = () => {
+    document.getElementById('roommate-modal').style.display = 'none'
+    openRoommateModal(userId, name)
+  }
+
+  document.getElementById('roommate-modal').style.display = 'flex'
 }
 
 async function saveRoommateOpt() {
