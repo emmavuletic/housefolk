@@ -1,11 +1,37 @@
-.env.local
+# Environment — never commit secrets
 .env
+.env.local
+.env.local.save
+.env.test
+.env.production
+.env*.local
+
+# Dependencies
 node_modules/
+
+# Build output
 .next/
 out/
+dist/
+
+# Logs
 *.log
+npm-debug.log*
+
+# OS
 .DS_Store
-.env.local.save
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Secrets / credentials
+*.pem
+*.key
+serviceAccountKey.json
+credentials.json
 
 # Playwright
 /test-results/
@@ -13,4 +39,6 @@ out/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-.env.test
+
+# Build cache
+tsconfig.tsbuildinfo

@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
 import { resend, FROM_EMAIL } from '@/lib/resend'
 
+function escapeHtml(str: string) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 async function getAuthedUser(req: NextRequest) {
   const supabase = createServerClient()
   const auth = req.headers.get('authorization')
@@ -88,9 +92,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       reply_to: `reply+${params.id}@inbound.housefolk.co`,
       subject: `New message from ${senderName} on Housefolk`,
       html: `
-        <p>Hi ${recipient.first_name},</p>
-        <p><strong>${senderName}</strong> sent you a message about <strong>${listingTitle}</strong>.</p>
-        <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${body.trim()}</blockquote>
+        <p>Hi ${escapeHtml(recipient.first_name || '')},</p>
+        <p><strong>${escapeHtml(senderName)}</strong> sent you a message about <strong>${escapeHtml(listingTitle)}</strong>.</p>
+        <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${escapeHtml(body.trim())}</blockquote>
         <p>Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
         <p>— The Housefolk team</p>
       `,

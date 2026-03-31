@@ -615,15 +615,15 @@ function buildPaySummary() {
   if (summary) {
     summary.innerHTML = `
       <div class="pay-row"><span class="pl">Listing type</span><span class="pv">${P.icon} ${P.name}</span></div>
-      <div class="pay-row"><span class="pl">Title</span><span class="pv" style="max-width:230px;text-align:right;font-size:0.82rem">${title}</span></div>
-      <div class="pay-row"><span class="pl">Location</span><span class="pv">${loc}</span></div>
+      <div class="pay-row"><span class="pl">Title</span><span class="pv" style="max-width:230px;text-align:right;font-size:0.82rem">${escapeHtml(title)}</span></div>
+      <div class="pay-row"><span class="pl">Location</span><span class="pv">${escapeHtml(loc)}</span></div>
       ${price ? `<div class="pay-row"><span class="pl">Monthly rent</span><span class="pv">£${price}/mo</span></div>` : ''}
       ${beds ? `<div class="pay-row"><span class="pl">Bedrooms</span><span class="pv">${beds}</span></div>` : ''}
       ${baths ? `<div class="pay-row"><span class="pl">Bathrooms</span><span class="pv">${baths}</span></div>` : ''}
       ${avail ? `<div class="pay-row"><span class="pl">Available from</span><span class="pv">${new Date(avail).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}</span></div>` : ''}
       ${bills ? `<div class="pay-row"><span class="pl">Bills</span><span class="pv">${bills}</span></div>` : ''}
       ${furn ? `<div class="pay-row"><span class="pl">Furnishing</span><span class="pv">${furn}</span></div>` : ''}
-      ${desc ? `<div class="pay-row" style="align-items:flex-start"><span class="pl">Description</span><span class="pv" style="max-width:230px;text-align:right;font-size:0.82rem">${desc}</span></div>` : ''}
+      ${desc ? `<div class="pay-row" style="align-items:flex-start"><span class="pl">Description</span><span class="pv" style="max-width:230px;text-align:right;font-size:0.82rem">${escapeHtml(desc)}</span></div>` : ''}
       <div class="pay-row"><span class="pl">Photos</span><span class="pv">${photos.length} uploaded</span></div>
       <div class="pay-row"><span class="pl">Duration</span><span class="pv">7 days</span></div>
       <div class="pay-row"><span class="pl">Goes live</span><span class="pv">${thuStr}</span></div>
@@ -867,8 +867,8 @@ async function loadMyListings() {
       <div style="display:flex;align-items:flex-start;gap:0.8rem;margin-bottom:0.9rem">
         <span style="font-size:1.6rem;flex-shrink:0">${typeIcon[l.type] || '🏠'}</span>
         <div style="flex:1;min-width:0">
-          <div style="font-weight:700;font-size:0.93rem;margin-bottom:0.15rem">${l.title}</div>
-          <div style="font-size:0.75rem;color:var(--light);margin-bottom:0.4rem">📍 ${l.location}</div>
+          <div style="font-weight:700;font-size:0.93rem;margin-bottom:0.15rem">${escapeHtml(l.title)}</div>
+          <div style="font-size:0.75rem;color:var(--light);margin-bottom:0.4rem">📍 ${escapeHtml(l.location)}</div>
           <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center">
             ${statusBadge[l.status] || ''}
             <span class="badge badge-type">${typeIcon[l.type]} ${l.type}</span>
@@ -1124,8 +1124,8 @@ function renderConvList() {
       <div class="chat-conv-item ${isActive ? 'active' : ''} ${isUnread ? 'unread' : ''}" onclick="openChatThread('${e.id}')">
         <div class="i-avatar" style="background:linear-gradient(135deg,#4A90D9,#7B68EE);width:34px;height:34px;font-size:0.75rem;flex-shrink:0">${initials}</div>
         <div class="chat-conv-meta">
-          <div class="chat-conv-name">${name}</div>
-          <div class="chat-conv-listing">Re: ${listing.title || 'Listing'}</div>
+          <div class="chat-conv-name">${escapeHtml(name)}</div>
+          <div class="chat-conv-listing">Re: ${escapeHtml(listing.title || 'Listing')}</div>
           <div class="chat-conv-preview">${escapeHtml(preview)}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.3rem">
@@ -1153,7 +1153,7 @@ async function openChatThread(enquiryId) {
   const inner = document.getElementById('chat-thread-inner')
   inner.style.display = 'flex'
   document.getElementById('chat-thread-name').textContent = otherName
-  const listingLink = listing.id ? `<a href="/listings/${listing.id}">${listing.title || 'Listing'} →</a>` : (listing.title || 'Listing')
+  const listingLink = listing.id ? `<a href="/listings/${listing.id}">${escapeHtml(listing.title || 'Listing')} →</a>` : escapeHtml(listing.title || 'Listing')
   document.getElementById('chat-thread-sub').innerHTML = listingLink
 
 
@@ -1343,29 +1343,30 @@ async function loadBrowseListings(type = '', location = '') {
     return
   }
 
+  data.listings.forEach(l => { _listingCache[l.id] = l })
   grid.innerHTML = data.listings.map(l => {
     const priceStr = l.price ? `£${Math.round(l.price / 100).toLocaleString()}<span>/mo</span>` : 'Free sublet'
     const photo = l.photos?.[0]
     return `
       <div class="listing-card" onclick="window.location.href='/listings/${l.id}'" style="cursor:pointer">
         <div class="lc-photo">
-          ${photo ? `<img src="${photo}" alt="${l.title}">` : `<div class="lc-photo-placeholder">${typeIcon[l.type] || '🏠'}</div>`}
+          ${photo ? `<img src="${photo}" alt="${escapeHtml(l.title)}">` : `<div class="lc-photo-placeholder">${typeIcon[l.type] || '🏠'}</div>`}
           <span class="lc-type-badge">${typeIcon[l.type]} ${l.type}</span>
         </div>
         <div class="lc-body">
           <div class="lc-price">${priceStr}</div>
-          <div class="lc-title">${l.title}</div>
-          <div class="lc-location">📍 ${l.location}</div>
+          <div class="lc-title">${escapeHtml(l.title)}</div>
+          <div class="lc-location">📍 ${escapeHtml(l.location)}</div>
           <div class="lc-meta">
             ${l.beds ? `<span class="lc-tag">🛏 ${l.beds} bed</span>` : ''}
             ${l.baths ? `<span class="lc-tag">🚿 ${l.baths} bath</span>` : ''}
             ${l.bills_included ? '<span class="lc-tag">Bills incl.</span>' : ''}
           </div>
-          ${l.description ? `<div class="lc-desc">${l.description}</div>` : ''}
+          ${l.description ? `<div class="lc-desc">${escapeHtml(l.description)}</div>` : ''}
           <div class="lc-footer">
             <span class="lc-avail">${l.available_date ? 'From ' + new Date(l.available_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Available now'}</span>
             ${isLoggedIn
-              ? `<button class="lc-contact-btn" onclick="event.stopPropagation();openEnquiryModal('${l.id}','${l.title}')">Message →</button>`
+              ? `<button class="lc-contact-btn" data-listing-id="${l.id}" onclick="event.stopPropagation();openEnquiryModal(this.dataset.listingId)">Message →</button>`
               : `<button class="lc-locked-btn" onclick="event.stopPropagation();showScreen('auth');switchTab('up')">Sign up to message →</button>`}
           </div>
         </div>
@@ -1468,7 +1469,7 @@ async function openListing(id) {
   // Contact wrap — show enquiry button if logged in and not own listing
   const contactWrap = document.getElementById('detail-contact-wrap')
   if (currentUser && l.landlord_id !== currentUser.id) {
-    contactWrap.innerHTML = `<button class="btn btn-primary" style="width:100%" onclick="openEnquiryModal('${l.id}', ${JSON.stringify(l.title)})">Message landlord →</button>`
+    contactWrap.innerHTML = `<button class="btn btn-primary" style="width:100%" data-listing-id="${l.id}" onclick="openEnquiryModal(this.dataset.listingId)">Message landlord →</button>`
   } else {
     contactWrap.innerHTML = ''
   }
@@ -1618,8 +1619,8 @@ async function loadSavedListings() {
     <div style="display:flex;align-items:center;gap:0.9rem;padding:0.85rem 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="openListing('${l.id}')">
       <span style="font-size:1.5rem;flex-shrink:0">${typeIcon[l.type] || '🏠'}</span>
       <div style="flex:1;min-width:0">
-        <div style="font-weight:600;font-size:0.88rem">${l.title}</div>
-        <div style="font-size:0.75rem;color:var(--light)">📍 ${l.location}</div>
+        <div style="font-weight:600;font-size:0.88rem">${escapeHtml(l.title)}</div>
+        <div style="font-size:0.75rem;color:var(--light)">📍 ${escapeHtml(l.location)}</div>
       </div>
       ${l.price ? `<div style="font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;flex-shrink:0">£${Math.round(l.price/100).toLocaleString()}/mo</div>` : ''}
     </div>`).join('')
@@ -1660,12 +1661,13 @@ async function startTenantSubscription() {
 }
 
 let _enquiryListingId = null
+const _listingCache = {}
 
-function openEnquiryModal(listingId, listingTitle) {
+function openEnquiryModal(listingId) {
   if (!getToken()) { showScreen('auth'); switchTab('up'); return }
   _enquiryListingId = listingId
   const titleEl = document.getElementById('contact-listing-title')
-  if (titleEl) titleEl.textContent = listingTitle || 'Contact landlord'
+  if (titleEl) titleEl.textContent = _listingCache[listingId]?.title || 'Contact landlord'
   const msgEl = document.getElementById('contact-message')
   if (msgEl) msgEl.value = ''
   const typeEl = document.getElementById('contact-enquiry-type')
@@ -1746,13 +1748,13 @@ async function loadLandingPreview() {
     return `
       <div class="listing-card preview-blur" style="cursor:default">
         <div class="lc-photo">
-          ${photo ? `<img src="${photo}" alt="${l.title}">` : `<div class="lc-photo-placeholder">${typeIcon[l.type]}</div>`}
+          ${photo ? `<img src="${photo}" alt="${escapeHtml(l.title)}">` : `<div class="lc-photo-placeholder">${typeIcon[l.type]}</div>`}
           <span class="lc-type-badge">${typeIcon[l.type]} ${l.type}</span>
         </div>
         <div class="lc-body">
           <div class="lc-price">${priceStr}</div>
-          <div class="lc-title">${l.title}</div>
-          <div class="lc-location">📍 ${l.location}</div>
+          <div class="lc-title">${escapeHtml(l.title)}</div>
+          <div class="lc-location">📍 ${escapeHtml(l.location)}</div>
         </div>
       </div>`
   }).join('')

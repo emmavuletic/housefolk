@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
 import { resend, FROM_EMAIL } from '@/lib/resend'
 
-const ADMIN_EMAILS = ['admin@housefolk.co', 'emma@housefolk.co']
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim())
 
 // POST /api/newsletter/send — admin only, sends Thursday newsletter
 export async function POST(req: NextRequest) {

@@ -3,6 +3,10 @@ import { createServerClient } from '@/lib/supabase-server'
 import { resend, FROM_EMAIL } from '@/lib/resend'
 import { rateLimit } from '@/lib/rate-limit'
 
+function escapeHtml(str: string) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 // GET /api/enquiries — get enquiries for logged-in user (landlord or tenant)
 export async function GET(req: NextRequest) {
   const supabase = createServerClient()
@@ -107,7 +111,7 @@ export async function POST(req: NextRequest) {
         html: `
           <p>Hi ${recipientData.first_name},</p>
           <p><strong>${senderName}</strong> wants to connect with you on Housefolk.</p>
-          <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${message.trim()}</blockquote>
+          <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${escapeHtml(message.trim())}</blockquote>
           ${profileHtml}
           <p style="margin-top:1.2rem">Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
           <p>— The Housefolk team</p>
@@ -182,7 +186,7 @@ export async function POST(req: NextRequest) {
       html: `
         <p>Hi ${landlordData.first_name},</p>
         <p>You have a new enquiry from <strong>${tenantName}</strong> about your listing <strong>${listing.title}</strong>.</p>
-        <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${message.trim()}</blockquote>
+        <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${escapeHtml(message.trim())}</blockquote>
         ${profileHtml}
         <p style="margin-top:1.2rem">Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
         <p>— The Housefolk team</p>
