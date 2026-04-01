@@ -8,51 +8,33 @@ let currentUser = null
 let authToken = null
 let currentListingId = null
 
+const _supabase = supabase.createClient(
+  'https://agfgtajovhhxswfdcqen.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnZmd0YWpvdmhoeHN3ZmRjcWVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3MDc3NjIsImV4cCI6MjA4ODI4Mzc2Mn0.ewkfK672jnQXAhq_Fh4CoGBOUmBNXxhZU4B_d4QnsvQ'
+)
+
 function getToken() {
-  return authToken || localStorage.getItem('hf_token')
+  return authToken
 }
-function setSession(user, token, refreshToken, expiresAt) {
+function setSession(user, token) {
   currentUser = user
   authToken = token
-  localStorage.setItem('hf_token', token)
   localStorage.setItem('hf_user', JSON.stringify(user))
-  if (refreshToken) localStorage.setItem('hf_refresh', refreshToken)
-  if (expiresAt) localStorage.setItem('hf_expires', String(expiresAt))
 }
 function clearSession() {
   currentUser = null
   authToken = null
-  localStorage.removeItem('hf_token')
   localStorage.removeItem('hf_user')
+  // Clean up keys from old auth implementation
+  localStorage.removeItem('hf_token')
   localStorage.removeItem('hf_refresh')
   localStorage.removeItem('hf_expires')
 }
 
-async function refreshTokenIfNeeded() {
-  const expiresAt = parseInt(localStorage.getItem('hf_expires') || '0', 10)
-  const now = Math.floor(Date.now() / 1000)
-  if (!expiresAt || now < expiresAt - 60) return true // still valid
-  const refreshToken = localStorage.getItem('hf_refresh')
-  if (!refreshToken) return false
-  const res = await fetch('/api/auth/refresh', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refresh_token: refreshToken }),
-  })
-  if (!res.ok) return false
-  const data = await res.json()
-  if (data.error) return false
-  authToken = data.access_token
-  localStorage.setItem('hf_token', data.access_token)
-  if (data.refresh_token) localStorage.setItem('hf_refresh', data.refresh_token)
-  if (data.expires_at) localStorage.setItem('hf_expires', String(data.expires_at))
-  return true
-}
-
 // ── API HELPER ──
 async function api(path, opts = {}) {
-  await refreshTokenIfNeeded()
-  const token = getToken()
+  const { data: { session } } = await _supabase.auth.getSession()
+  const token = session?.access_token || authToken
   const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) }
   if (token) headers['Authorization'] = `Bearer ${token}`
   const controller = new AbortController()
@@ -92,18 +74,17 @@ async function doSignIn() {
   btn.textContent = 'Signing in…'
   btn.disabled = true
 
-  const data = await api('/api/auth/signin', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-  })
+  const { data, error } = await _supabase.auth.signInWithPassword({ email, password })
 
   btn.disabled = false
   btn.textContent = 'Sign in →'
 
-  if (data.error) { toast(data.error); return }
+  if (error) { toast(error.message); return }
 
-  setSession(data.user, data.session.access_token, data.session.refresh_token, data.session.expires_at)
-  launchDash(data.user.first_name || email.split('@')[0], data.user.last_name || '')
+  const profile = await api('/api/users/me')
+  const user = profile.user || { email, first_name: email.split('@')[0], last_name: '' }
+  setSession(user, data.session.access_token)
+  launchDash(user.first_name || email.split('@')[0], user.last_name || '')
   checkSuccessParam()
 }
 
@@ -122,52 +103,59 @@ async function doSignUp() {
   btn.textContent = 'Creating account…'
   btn.disabled = true
 
-  const data = await api('/api/auth/signup', {
-    method: 'POST',
-    body: JSON.stringify({
-      email, password, first_name: first, last_name: last,
-      role: role === 'list' ? 'landlord' : 'tenant',
-      subscribe_newsletter: subscribe,
-    }),
+  const { error } = await _supabase.auth.signUp({
+    email, password,
+    options: {
+      data: {
+        first_name: first, last_name: last,
+        role: role === 'list' ? 'landlord' : 'tenant',
+        subscribe_newsletter: subscribe,
+      }
+    }
   })
 
   btn.disabled = false
   btn.textContent = 'Create my account →'
 
-  if (data.error) { toast(data.error); return }
+  if (error) { toast(error.message); return }
   toast('✓ Account created — you can sign in now', 'green')
   setTimeout(() => switchTab('in'), 2000)
 }
-
-let recoveryToken = null
 
 async function doSetNewPassword() {
   const pass = document.getElementById('setnew-pass').value
   const confirm = document.getElementById('setnew-confirm').value
   if (!pass || pass.length < 8) { toast('Password must be at least 8 characters'); return }
   if (pass !== confirm) { toast('Passwords do not match'); return }
-  const res = await fetch('/api/auth/set-password', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password: pass, recovery_token: recoveryToken })
-  })
-  if (res.ok) {
-    toast('✓ Password updated — please sign in', 'green')
-    recoveryToken = null
-    setTimeout(() => switchTab('in'), 2000)
-  } else {
-    const err = await res.json()
-    const msg = err.error || ''
+  const { error } = await _supabase.auth.updateUser({ password: pass })
+  if (error) {
+    const msg = error.message || ''
     toast(msg.toLowerCase().includes('same') || msg.toLowerCase().includes('different') ? 'Please choose a different password — you cannot reuse your current one.' : (msg || 'Failed to update password'))
+  } else {
+    toast('✓ Password updated — please sign in', 'green')
+    setTimeout(() => switchTab('in'), 2000)
   }
 }
 
 async function doForgotPassword() {
-  const email = document.querySelector('#form-forgot input[type=email]').value.trim()
+  const email = document.getElementById('forgot-email').value.trim()
   if (!email) { toast('Please enter your email address'); return }
-  await api('/api/auth/reset-password', { method: 'POST', body: JSON.stringify({ email }) })
+  await _supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://app.housefolk.co/homefolk.html'
+  })
   toast('✓ Reset link sent if that email exists', 'green')
   setTimeout(() => switchTab('in'), 2000)
+}
+
+async function doMagicLink() {
+  const email = document.getElementById('magic-email').value.trim()
+  if (!email) { toast('Please enter your email address'); return }
+  const { error } = await _supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: 'https://app.housefolk.co/homefolk.html' }
+  })
+  if (error) { toast(error.message); return }
+  toast('✓ Check your email for a sign-in link!', 'green')
 }
 
 // ── PROFILE ──
@@ -262,6 +250,7 @@ async function saveProfile() {
 }
 
 function signOut() {
+  _supabase.auth.signOut()
   clearSession()
   document.getElementById('dash-screen').classList.remove('active')
   document.getElementById('dash-screen').style.display = 'none'
@@ -2118,53 +2107,44 @@ function declineCookies() {
 }
 
 // ── INIT ──
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Show cookie banner if not yet accepted
   if (!localStorage.getItem('hf_cookies')) {
     const el = document.getElementById('cookie-banner')
     if (el) { el.style.display = 'flex' }
   }
-  // Handle password recovery redirect
+
+  // Listen for PASSWORD_RECOVERY event (works for both PKCE and implicit flows)
+  let _recoveryHandled = false
+  _supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY' && !_recoveryHandled) {
+      _recoveryHandled = true
+      window.history.replaceState({}, '', window.location.pathname)
+      showScreen('auth')
+      switchTab('setnew')
+    }
+  })
+
+  // Also handle implicit-flow recovery hash directly (belt-and-suspenders)
   const hash = new URLSearchParams(window.location.hash.slice(1))
-  if (hash.get('type') === 'recovery' && hash.get('access_token')) {
-    recoveryToken = hash.get('access_token')
+  if (hash.get('type') === 'recovery') {
+    _recoveryHandled = true
     window.history.replaceState({}, '', window.location.pathname)
     showScreen('auth')
     switchTab('setnew')
+    await _supabase.auth.getSession() // let SDK exchange the token
     return
   }
 
-  // Handle Google OAuth redirect (token arrives in URL hash)
-  const oauthToken = hash.get('access_token')
-  if (oauthToken) {
-    const oauthRefresh = hash.get('refresh_token')
-    const oauthExpiresRaw = hash.get('expires_at')
-    const oauthExpires = oauthExpiresRaw ? parseInt(oauthExpiresRaw, 10) : null
+  // Check for active session (covers OAuth callback, magic link, persisted session)
+  const { data: { session } } = await _supabase.auth.getSession()
+  if (session && !_recoveryHandled) {
     window.history.replaceState({}, '', window.location.pathname)
-    authToken = oauthToken
-    api('/api/auth/me').then(data => {
-      if (data.user) {
-        setSession(data.user, oauthToken, oauthRefresh, oauthExpires)
-        launchDash(data.user.first_name || data.user.email?.split('@')[0] || 'You', data.user.last_name || '')
-      } else {
-        toast('Google sign-in failed. Please try again.')
-        showScreen('landing')
-      }
-    })
+    const profile = await api('/api/users/me')
+    const user = profile.user || { email: session.user.email, first_name: session.user.email?.split('@')[0] || 'You', last_name: '' }
+    setSession(user, session.access_token)
+    launchDash(user.first_name || user.email?.split('@')[0] || 'You', user.last_name || '')
     return
-  }
-
-  // Restore session if exists
-  const savedToken = localStorage.getItem('hf_token')
-  const savedUser = localStorage.getItem('hf_user')
-  const savedRefresh = localStorage.getItem('hf_refresh')
-  const savedExpires = localStorage.getItem('hf_expires')
-  if (savedToken && savedUser) {
-    try {
-      const user = JSON.parse(savedUser)
-      setSession(user, savedToken, savedRefresh, savedExpires ? parseInt(savedExpires, 10) : null)
-      launchDash(user.first_name || user.email?.split('@')[0] || 'You', user.last_name || '')
-    } catch {}
   }
 
   // Newsletter char count
