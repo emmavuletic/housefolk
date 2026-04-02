@@ -52,6 +52,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   delete updates.stripe_payment_intent_id
   delete updates.created_at
 
+  if (Array.isArray(updates.photos) && updates.photos.length > 10) {
+    return NextResponse.json({ error: 'Maximum 10 photos per listing.' }, { status: 400 })
+  }
+
   const { data, error } = await supabase
     .from('listings')
     .update(updates)

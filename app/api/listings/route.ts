@@ -54,6 +54,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Type, title and location are required.' }, { status: 400 })
   }
 
+  if (Array.isArray(photos) && photos.length > 10) {
+    return NextResponse.json({ error: 'Maximum 10 photos per listing.' }, { status: 400 })
+  }
+
   const now = new Date()
   const goesLive = now
 
