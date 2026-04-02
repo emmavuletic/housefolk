@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Only JPG, PNG and WEBP images are allowed.' }, { status: 400 })
   }
 
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+  const extMap: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }
+  const ext = extMap[file.type] || 'jpg'
   const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
   const { error: uploadError } = await supabase.storage
