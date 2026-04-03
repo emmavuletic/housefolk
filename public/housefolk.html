@@ -665,6 +665,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div class="field"><label>Email address</label><input type="email" id="si-email" placeholder="you@example.com"></div>
         <div class="field"><label>Password</label><input type="password" id="si-pass" placeholder="••••••••"></div>
         <div class="forgot-link" onclick="switchTab('forgot')">Forgot password?</div>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible"></div>
         <button class="btn btn-primary" onclick="doSignIn()">Sign in →</button>
         <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
         <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
@@ -703,6 +704,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <input type="checkbox" id="su-nl" checked style="margin-top:2px;accent-color:var(--accent)">
           Subscribe to the Thursday newsletter — new listings delivered every week
         </label>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible"></div>
         <button class="btn btn-primary" onclick="doSignUp()">Create my account →</button>
         <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
         <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
@@ -1509,6 +1511,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 </div>
 
 
+<!-- Cloudflare Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <!-- Real API client -->
