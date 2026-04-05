@@ -643,7 +643,8 @@ function buildPaySummary() {
 
 // ── PUBLISH LISTING ──
 async function publishListing(btnEl) {
-  await refreshTokenIfNeeded()
+  const { data: { session } } = await _supabase.auth.getSession()
+  if (session?.access_token) setSession(currentUser, session.access_token)
   const token = getToken()
   if (!token) { toast('Please sign in first'); return }
 
