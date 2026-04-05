@@ -626,18 +626,18 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <div class="tier-pills">
         <div class="tier-pill">
           <span class="tp-icon">🏠</span>
-          <div class="tp-info"><div class="tp-name">Flatshare</div><div class="tp-meta">Find a flatmate · up to 20 photos · 7 days</div></div>
-          <span class="tp-price price-paid">Free</span>
+          <div class="tp-info"><div class="tp-name">Flatshare</div><div class="tp-meta">Find a flatmate · up to 20 photos · weekly subscription</div></div>
+          <span class="tp-price price-paid">£15/wk</span>
         </div>
         <div class="tier-pill">
           <span class="tp-icon">🏢</span>
-          <div class="tp-info"><div class="tp-name">Apartment Rental</div><div class="tp-meta">Full rental · up to 20 photos · 7 days</div></div>
-          <span class="tp-price price-paid">Free</span>
+          <div class="tp-info"><div class="tp-name">Apartment Rental</div><div class="tp-meta">Full rental · up to 20 photos · weekly subscription</div></div>
+          <span class="tp-price price-paid">£15/wk</span>
         </div>
         <div class="tier-pill">
           <span class="tp-icon">🌿</span>
-          <div class="tp-info"><div class="tp-name">Apartment Sublet</div><div class="tp-meta">Short-term sublet · up to 10 photos · 7 days</div></div>
-          <span class="tp-price price-paid">Free</span>
+          <div class="tp-info"><div class="tp-name">Apartment Sublet</div><div class="tp-meta">Short-term sublet · up to 10 photos · weekly subscription</div></div>
+          <span class="tp-price price-paid">£20/wk</span>
         </div>
         <div class="tier-pill" style="background:rgba(124,152,133,0.15);border:1px solid rgba(124,152,133,0.3)">
           <span class="tp-icon">📖</span>
@@ -665,7 +665,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div class="field"><label>Email address</label><input type="email" id="si-email" placeholder="you@example.com"></div>
         <div class="field"><label>Password</label><input type="password" id="si-pass" placeholder="••••••••"></div>
         <div class="forgot-link" onclick="switchTab('forgot')">Forgot password?</div>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible"></div>
+        <div class="cf-turnstile" id="ts-signin" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible" data-callback="onTurnstileSignIn" data-expired-callback="onTurnstileSignInExpired"></div>
         <button class="btn btn-primary" onclick="doSignIn()">Sign in →</button>
         <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
         <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
@@ -704,7 +704,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <input type="checkbox" id="su-nl" checked style="margin-top:2px;accent-color:var(--accent)">
           Subscribe to the Thursday newsletter — new listings delivered every week
         </label>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible"></div>
+        <div class="cf-turnstile" id="ts-signup" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible" data-callback="onTurnstileSignUp" data-expired-callback="onTurnstileSignUpExpired"></div>
         <button class="btn btn-primary" onclick="doSignUp()">Create my account →</button>
         <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
         <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
@@ -907,11 +907,12 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
               <div class="tc-ribbon orange">★ Popular</div>
               <span class="tc-icon">🏠</span>
               <div class="tc-name">Flatshare</div>
+              <div class="tc-price">£15/week</div>
               <div class="tc-desc">Find the right flatmate to share your home. Add photos and describe your space.</div>
               <div class="nl-chip">📰 Debuts Thursday</div>
               <ul class="tc-feats">
                 <li><span class="chk">✓</span> Up to 20 photos</li>
-                <li><span class="chk">✓</span> 7-day listing</li>
+                <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
                 <li><span class="chk">✓</span> Top of search results</li>
                 <li><span class="chk">✓</span> Enquiry inbox</li>
                 <li><span class="chk">✓</span> Thursday newsletter to renters</li>
@@ -921,11 +922,12 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div class="tier-card" id="tc-rental" onclick="selectTier('rental')">
               <span class="tc-icon">🏢</span>
               <div class="tc-name">Apartment Rental</div>
+              <div class="tc-price">£15/week</div>
               <div class="tc-desc">Rent out your whole property to a tenant or family.</div>
               <div class="nl-chip">📰 Debuts Thursday</div>
               <ul class="tc-feats">
                 <li><span class="chk">✓</span> Up to 20 photos</li>
-                <li><span class="chk">✓</span> 7-day listing</li>
+                <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
                 <li><span class="chk">✓</span> Top of search results</li>
                 <li><span class="chk">✓</span> Enquiry inbox</li>
                 <li><span class="chk">✓</span> Thursday newsletter to renters</li>
@@ -935,16 +937,17 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div class="tier-card" id="tc-sublet" onclick="selectTier('sublet')">
               <span class="tc-icon">🌿</span>
               <div class="tc-name">Apartment Sublet</div>
-              <div class="tc-desc">Subletting short-term? Post it for free — no card needed, ever.</div>
-              <div class="nl-chip g">✓ Debuts Thursday</div>
+              <div class="tc-price">£20/week</div>
+              <div class="tc-desc">Subletting short-term? List your space for £20/week.</div>
+              <div class="nl-chip">📰 Debuts Thursday</div>
               <ul class="tc-feats">
-                <li><span class="chk-g">✓</span> Up to 10 photos</li>
-                <li><span class="chk-g">✓</span> 7-day listing</li>
-                <li><span class="chk-g">✓</span> Appears in search</li>
-                <li><span class="chk-g">✓</span> Enquiry form</li>
-                <li><span class="chk-g">✓</span> Thursday newsletter to renters</li>
+                <li><span class="chk">✓</span> Up to 10 photos</li>
+                <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
+                <li><span class="chk">✓</span> Appears in search</li>
+                <li><span class="chk">✓</span> Enquiry form</li>
+                <li><span class="chk">✓</span> Thursday newsletter to renters</li>
               </ul>
-              <button class="btn btn-green btn-sm" style="width:100%">Select →</button>
+              <button class="btn btn-primary btn-sm" style="width:100%">Select →</button>
             </div>
           </div>
         </div>
@@ -1460,8 +1463,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div class="field">
               <label>Discount type</label>
               <select id="new-promo-type">
-                <option value="free-flatshare">Free flatshare listing (£10 off)</option>
-                <option value="free-rental">Free rental listing (£15 off)</option>
+                <option value="free-flatshare">Free flatshare listing (£15/week off)</option>
+                <option value="free-rental">Free rental listing (£15/week off)</option>
                 <option value="free-any">Free any listing</option>
               </select>
             </div>
@@ -2360,11 +2363,12 @@ setTimeout(() => {
           <div class="tc-ribbon orange">★ Popular</div>
           <span class="tc-icon">🏠</span>
           <div class="tc-name">Flatshare</div>
+          <div class="tc-price">£15/week</div>
           <div class="tc-desc">Find the right flatmate to share your home. Add photos and describe your space.</div>
           <div class="nl-chip">📰 Debuts Thursday</div>
           <ul class="tc-feats">
             <li><span class="chk">✓</span> Up to 20 photos</li>
-            <li><span class="chk">✓</span> 7-day listing</li>
+            <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
             <li><span class="chk">✓</span> Enquiry inbox</li>
             <li><span class="chk">✓</span> Thursday newsletter</li>
           </ul>
@@ -2373,11 +2377,12 @@ setTimeout(() => {
         <div class="tier-card" onclick="selectTierFromModal('rental')">
           <span class="tc-icon">🏢</span>
           <div class="tc-name">Apartment Rental</div>
+          <div class="tc-price">£15/week</div>
           <div class="tc-desc">Rent out your whole property to a tenant or family.</div>
           <div class="nl-chip">📰 Debuts Thursday</div>
           <ul class="tc-feats">
             <li><span class="chk">✓</span> Up to 20 photos</li>
-            <li><span class="chk">✓</span> 7-day listing</li>
+            <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
             <li><span class="chk">✓</span> Enquiry inbox</li>
             <li><span class="chk">✓</span> Thursday newsletter</li>
           </ul>
@@ -2386,13 +2391,14 @@ setTimeout(() => {
         <div class="tier-card" onclick="selectTierFromModal('sublet')">
           <span class="tc-icon">🌿</span>
           <div class="tc-name">Apartment Sublet</div>
-          <div class="tc-desc">Subletting short-term? Post it for free — no card needed, ever.</div>
-          <div class="nl-chip g">✓ Debuts Thursday</div>
+          <div class="tc-price">£20/week</div>
+          <div class="tc-desc">Subletting short-term? List your space for £20/week.</div>
+          <div class="nl-chip">📰 Debuts Thursday</div>
           <ul class="tc-feats">
-            <li><span class="chk-g">✓</span> Up to 10 photos</li>
-            <li><span class="chk-g">✓</span> 7-day listing</li>
-            <li><span class="chk-g">✓</span> Enquiry form</li>
-            <li><span class="chk-g">✓</span> Thursday newsletter</li>
+            <li><span class="chk">✓</span> Up to 10 photos</li>
+            <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
+            <li><span class="chk">✓</span> Enquiry form</li>
+            <li><span class="chk">✓</span> Thursday newsletter</li>
           </ul>
           <button class="btn btn-green btn-sm" style="width:100%">Select →</button>
         </div>

@@ -2,18 +2,18 @@
 
 const CSP = [
   "default-src 'self'",
-  // Scripts: self + inline (needed for housefolk.js inline handlers) + Google Fonts
-  "script-src 'self' 'unsafe-inline'",
+  // Scripts: self + inline + Supabase SDK CDN + Cloudflare Turnstile
+  "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://challenges.cloudflare.com",
   // Styles: self + inline + Google Fonts
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   // Fonts
   "font-src 'self' https://fonts.gstatic.com",
   // Images: self + Supabase storage + data URIs
   "img-src 'self' data: blob: https://*.supabase.co",
-  // API calls: self + Supabase + Stripe + Resend
-  "connect-src 'self' https://*.supabase.co https://api.stripe.com https://api.resend.com",
-  // Stripe JS (for checkout)
-  "frame-src https://js.stripe.com https://hooks.stripe.com",
+  // API calls: self + Supabase + Stripe + Resend + Cloudflare Turnstile
+  "connect-src 'self' https://*.supabase.co https://api.stripe.com https://api.resend.com https://challenges.cloudflare.com",
+  // Stripe JS + Cloudflare Turnstile (for checkout and CAPTCHA)
+  "frame-src https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com",
   // No plugins, no objects
   "object-src 'none'",
   // Prevent framing (clickjacking)

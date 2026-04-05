@@ -12,7 +12,7 @@ export const PRICES = {
 }
 
 export const LISTING_AMOUNTS = {
-  flatshare: 1000, // £10 in pence
-  rental:    1500, // £15
-  sublet:    1500, // £15
+  flatshare: 1500, // £15/week in pence
+  rental:    1500, // £15/week
+  sublet:    2000, // £20/week
 }

@@ -65,6 +65,13 @@ function toast(msg, type = '') {
 
 // ══ AUTH ══
 
+let _tsSignInToken = null
+let _tsSignUpToken = null
+function onTurnstileSignIn(token) { _tsSignInToken = token }
+function onTurnstileSignUp(token) { _tsSignUpToken = token }
+function onTurnstileSignInExpired() { _tsSignInToken = null }
+function onTurnstileSignUpExpired() { _tsSignUpToken = null }
+
 async function doSignIn() {
   const email = document.getElementById('si-email').value.trim()
   const password = document.getElementById('si-pass').value
@@ -74,12 +81,19 @@ async function doSignIn() {
   btn.textContent = 'Signing in…'
   btn.disabled = true
 
-  const { data, error } = await _supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await _supabase.auth.signInWithPassword({
+    email, password,
+    options: { captchaToken: _tsSignInToken || undefined },
+  })
+  _tsSignInToken = null
 
   btn.disabled = false
   btn.textContent = 'Sign in →'
 
-  if (error) { toast(error.message); return }
+  if (error) {
+    if (window.turnstile) turnstile.reset('#ts-signin')
+    toast(error.message); return
+  }
 
   const profile = await api('/api/users/me')
   const user = profile.user || { email, first_name: email.split('@')[0], last_name: '' }
@@ -106,18 +120,23 @@ async function doSignUp() {
   const { error } = await _supabase.auth.signUp({
     email, password,
     options: {
+      captchaToken: _tsSignUpToken || undefined,
       data: {
         first_name: first, last_name: last,
         role: role === 'list' ? 'landlord' : 'tenant',
         subscribe_newsletter: subscribe,
-      }
-    }
+      },
+    },
   })
+  _tsSignUpToken = null
 
   btn.disabled = false
   btn.textContent = 'Create my account →'
 
-  if (error) { toast(error.message); return }
+  if (error) {
+    if (window.turnstile) turnstile.reset('#ts-signup')
+    toast(error.message); return
+  }
   toast('✓ Account created — you can sign in now', 'green')
   setTimeout(() => switchTab('in'), 2000)
 }
@@ -439,9 +458,9 @@ function calcThursday() {
 
 // ── POST A LISTING FLOW ──
 const PLANS = {
-  flatshare: { name: 'Flatshare', icon: '🏠', price: 0, label: 'Free', maxPhotos: 20 },
-  rental: { name: 'Apartment Rental', icon: '🏢', price: 0, label: 'Free', maxPhotos: 20 },
-  sublet: { name: 'Apartment Sublet', icon: '🌿', price: 0, label: 'Free', maxPhotos: 10 },
+  flatshare: { name: 'Flatshare', icon: '🏠', price: 1500, label: '£15/week', maxPhotos: 20 },
+  rental:    { name: 'Apartment Rental', icon: '🏢', price: 1500, label: '£15/week', maxPhotos: 20 },
+  sublet:    { name: 'Apartment Sublet', icon: '🌿', price: 2000, label: '£20/week', maxPhotos: 10 },
 }
 
 let currentTier = null
@@ -614,7 +633,7 @@ function buildPaySummary() {
       ${furn ? `<div class="pay-row"><span class="pl">Furnishing</span><span class="pv">${furn}</span></div>` : ''}
       ${desc ? `<div class="pay-row" style="align-items:flex-start"><span class="pl">Description</span><span class="pv" style="max-width:230px;text-align:right;font-size:0.82rem">${escapeHtml(desc)}</span></div>` : ''}
       <div class="pay-row"><span class="pl">Photos</span><span class="pv">${photos.length} uploaded</span></div>
-      <div class="pay-row"><span class="pl">Duration</span><span class="pv">7 days</span></div>
+      <div class="pay-row"><span class="pl">Duration</span><span class="pv">Weekly subscription, cancel anytime</span></div>
       <div class="pay-row"><span class="pl">Goes live</span><span class="pv">${thuStr}</span></div>
       <div class="pay-row"><span class="pl">Newsletter debut</span><span class="pv">✓ Thursday edition</span></div>
       ${isFree ? `<div class="pay-row"><span class="pl">Promo code</span><span class="pv" style="color:var(--green)">${promoApplied} ✓</span></div>` : ''}
@@ -712,9 +731,23 @@ async function publishListing(btnEl) {
 
     currentListingId = listingResult.listing.id
 
-    resetBtn()
-    showSuccessScreen(true)
-    loadMyListings()
+    if (promoApplied) {
+      const checkoutResult = await api('/api/checkout', {
+        method: 'POST',
+        body: JSON.stringify({ listing_id: currentListingId, type: currentTier, promo_code: promoApplied }),
+      })
+      if (checkoutResult.free) { showSuccessScreen(true); loadMyListings(); return }
+      toast(checkoutResult.error || 'Promo failed'); resetBtn(); return
+    }
+
+    // Paid path — redirect to Stripe
+    if (btn) btn.textContent = 'Redirecting to payment…'
+    const checkoutResult = await api('/api/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ listing_id: currentListingId, type: currentTier }),
+    })
+    if (checkoutResult.url) { window.location.href = checkoutResult.url; return }
+    toast(checkoutResult.error || 'Checkout failed'); resetBtn()
   } catch (err) {
     resetBtn()
     toast('Something went wrong: ' + (err.message || err))

@@ -32,18 +32,6 @@ export async function POST(req: NextRequest) {
       }
 
       if (listing_id) {
-        await supabase.from('listings').update({
-          stripe_payment_intent_id: session.payment_intent as string,
-        }).eq('id', listing_id)
-      }
-      break
-    }
-
-    case 'payment_intent.succeeded': {
-      const pi = event.data.object as Stripe.PaymentIntent
-      const { listing_id } = pi.metadata || {}
-
-      if (listing_id) {
         const { data: listing } = await supabase
           .from('listings')
           .select('*, users(email, first_name)')
@@ -52,7 +40,8 @@ export async function POST(req: NextRequest) {
 
         if (listing) {
           await supabase.from('listings').update({
-            status: 'pending', // goes active on Thursday
+            stripe_subscription_id: session.subscription as string,
+            status: 'pending',
           }).eq('id', listing_id)
 
           // Email landlord confirmation
@@ -83,6 +72,11 @@ export async function POST(req: NextRequest) {
 
     case 'customer.subscription.deleted': {
       const sub = event.data.object as Stripe.Subscription
+      // Expire listing if this is a listing subscription
+      await supabase.from('listings')
+        .update({ status: 'expired' })
+        .eq('stripe_subscription_id', sub.id)
+      // Also handle tenant subscriptions
       await supabase.from('users')
         .update({ tenant_subscription_status: 'cancelled', tenant_subscription_id: null })
         .eq('tenant_subscription_id', sub.id)
@@ -91,6 +85,13 @@ export async function POST(req: NextRequest) {
 
     case 'customer.subscription.updated': {
       const sub = event.data.object as Stripe.Subscription
+      // Expire listing on payment failure
+      if (['past_due', 'unpaid', 'canceled'].includes(sub.status)) {
+        await supabase.from('listings')
+          .update({ status: 'expired' })
+          .eq('stripe_subscription_id', sub.id)
+      }
+      // Also handle tenant subscriptions
       await supabase.from('users')
         .update({ tenant_subscription_status: sub.status })
         .eq('tenant_subscription_id', sub.id)

@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     linkedin,
     airbnb,
     photos: photos || [],
-    status: 'active',
+    status: 'draft',
     goes_live_at: goesLive.toISOString(),
     expires_at: expiresAt.toISOString(),
   }).select().single()
