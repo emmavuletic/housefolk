@@ -88,6 +88,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: 'Forbidden.' }, { status: 403 })
   }
 
+  // Check if either party has blocked the other
+  const otherId = enquiry.tenant_id === user.id ? enquiry.landlord_id : enquiry.tenant_id
+  const { data: block } = await supabase
+    .from('user_blocks')
+    .select('id')
+    .or(`and(blocker_id.eq.${user.id},blocked_id.eq.${otherId}),and(blocker_id.eq.${otherId},blocked_id.eq.${user.id})`)
+    .maybeSingle()
+  if (block) return NextResponse.json({ error: 'You cannot send messages in this conversation.' }, { status: 403 })
+
   const { body } = await req.json()
   if (!body?.trim()) return NextResponse.json({ error: 'Message body required.' }, { status: 400 })
   if (body.length > 1000) return NextResponse.json({ error: 'Message too long (max 1000 characters).' }, { status: 400 })
