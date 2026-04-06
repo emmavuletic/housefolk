@@ -45,14 +45,21 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: 'Forbidden.' }, { status: 403 })
   }
 
-  const updates = await req.json()
-  // Prevent overwriting protected fields
-  delete updates.id
-  delete updates.landlord_id
-  delete updates.stripe_payment_intent_id
-  delete updates.created_at
+  const body = await req.json()
 
-  if (Array.isArray(updates.photos) && updates.photos.length > 10) {
+  // Whitelist only fields an owner is allowed to edit
+  const ALLOWED_FIELDS = [
+    'title', 'location', 'price', 'beds', 'baths', 'bills_included',
+    'furnished', 'pet_friendly', 'description', 'motto', 'available_date',
+    'sublet_until', 'star_signs', 'music_vibes', 'spotify_url',
+    'instagram', 'linkedin', 'airbnb', 'photos', 'newsletter_included',
+  ]
+  const updates: Record<string, unknown> = {}
+  for (const key of ALLOWED_FIELDS) {
+    if (key in body) updates[key] = body[key]
+  }
+
+  if (Array.isArray(updates.photos) && (updates.photos as unknown[]).length > 10) {
     return NextResponse.json({ error: 'Maximum 10 photos per listing.' }, { status: 400 })
   }
 

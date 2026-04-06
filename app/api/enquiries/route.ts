@@ -7,6 +7,13 @@ function escapeHtml(str: string) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
+function safeUrl(url: string): string | null {
+  try {
+    const u = new URL(url)
+    return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : null
+  } catch { return null }
+}
+
 // GET /api/enquiries — get enquiries for logged-in user (landlord or tenant)
 export async function GET(req: NextRequest) {
   const supabase = createServerClient()
@@ -98,8 +105,10 @@ export async function POST(req: NextRequest) {
       if (profile?.star_sign) profileLines.push(`⭐ Star sign: ${profile.star_sign.charAt(0).toUpperCase() + profile.star_sign.slice(1)}`)
       if (profile?.bio) profileLines.push(`💬 About them: ${profile.bio}`)
       if (profile?.job_title) profileLines.push(`💼 ${profile.job_title}${profile.company ? ` at ${profile.company}` : ''}`)
-      if (profile?.instagram) profileLines.push(`📸 Instagram: <a href="${profile.instagram}">${profile.instagram}</a>`)
-      if (profile?.linkedin) profileLines.push(`🔗 LinkedIn: <a href="${profile.linkedin}">${profile.linkedin}</a>`)
+      const igUrl = profile?.instagram ? safeUrl(profile.instagram) : null
+      const liUrl = profile?.linkedin ? safeUrl(profile.linkedin) : null
+      if (igUrl) profileLines.push(`📸 Instagram: <a href="${igUrl}">${escapeHtml(profile.instagram)}</a>`)
+      if (liUrl) profileLines.push(`🔗 LinkedIn: <a href="${liUrl}">${escapeHtml(profile.linkedin)}</a>`)
       const profileHtml = profileLines.length > 0
         ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Their profile</strong><br>${profileLines.join('<br>')}</p>`
         : ''
