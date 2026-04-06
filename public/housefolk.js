@@ -224,18 +224,30 @@ function previewAvatar(input) {
 }
 
 async function saveProfile() {
+  const btn = document.querySelector('#panel-profile .btn-primary')
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…' }
+  const resetBtn = () => { if (btn) { btn.disabled = false; btn.textContent = 'Save profile' } }
+
+  // Refresh session token
+  const { data: { session } } = await _supabase.auth.getSession()
+  if (session?.access_token) setSession(currentUser, session.access_token)
+  const token = getToken()
+  if (!token) { toast('Please sign in first'); resetBtn(); return }
+
   const get = id => document.getElementById(id)?.value?.trim() || null
   const starSign = document.querySelector('input[name="seeker-sign-radio"]:checked')?.value || null
 
   // Upload avatar if a new file was selected
   const avatarFile = document.getElementById('p-avatar-file')?.files?.[0]
   if (avatarFile) {
+    if (avatarFile.size > 2 * 1024 * 1024) {
+      toast('Photo must be under 2MB'); resetBtn(); return
+    }
     const fd = new FormData()
     fd.append('file', avatarFile)
-    const token = getToken()
     const res = await fetch('/api/users/me/avatar', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd })
     const avatarData = await res.json()
-    if (avatarData.error) { toast(avatarData.error); return }
+    if (avatarData.error) { toast(avatarData.error); resetBtn(); return }
   }
 
   const data = await api('/api/users/me', {
@@ -256,7 +268,7 @@ async function saveProfile() {
       daily_schedule: get('p-daily-schedule'),
     }),
   })
-  if (data.error) { toast(data.error); return }
+  if (data.error) { toast(data.error); resetBtn(); return }
   if (data.user) {
     const first = data.user.first_name || ''
     const last = data.user.last_name || ''
@@ -265,6 +277,7 @@ async function saveProfile() {
     const initEl = document.getElementById('u-initials')
     if (initEl) initEl.textContent = ((first[0] || '') + (last[0] || first[1] || '')).toUpperCase()
   }
+  resetBtn()
   toast('✓ Profile saved', 'green')
 }
 
