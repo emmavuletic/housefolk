@@ -1,6 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
 import { resend, FROM_EMAIL } from '@/lib/resend'
+import Anthropic from '@anthropic-ai/sdk'
+
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
+
+async function moderateMessage(text: string): Promise<{ blocked: boolean; reason?: string }> {
+  try {
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 50,
+      messages: [{
+        role: 'user',
+        content: `You are a content moderator for a UK housing platform. Review this message and reply with only "OK" if it is acceptable, or "BLOCK: <brief reason>" if it contains obscenities, sexual content, threats, harassment, or hate speech. Message: """${text}"""`,
+      }],
+    })
+    const result = (response.content[0] as { text: string }).text.trim()
+    if (result.startsWith('BLOCK:')) {
+      return { blocked: true, reason: result.replace('BLOCK:', '').trim() }
+    }
+    return { blocked: false }
+  } catch {
+    return { blocked: false } // fail open — don't block messages if AI is unavailable
+  }
+}
 
 function escapeHtml(str: string) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -67,7 +90,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   const { body } = await req.json()
   if (!body?.trim()) return NextResponse.json({ error: 'Message body required.' }, { status: 400 })
-  if (body.length > 2000) return NextResponse.json({ error: 'Message too long (max 2000 characters).' }, { status: 400 })
+  if (body.length > 1000) return NextResponse.json({ error: 'Message too long (max 1000 characters).' }, { status: 400 })
+
+  const moderation = await moderateMessage(body.trim())
+  if (moderation.blocked) {
+    return NextResponse.json({ error: 'Your message was not sent — it contains content that isn\'t allowed on Housefolk.' }, { status: 400 })
+  }
 
   const { data: message, error } = await supabase
     .from('messages')
