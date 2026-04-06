@@ -107,8 +107,8 @@ export async function POST(req: NextRequest) {
       if (profile?.job_title) profileLines.push(`💼 ${profile.job_title}${profile.company ? ` at ${profile.company}` : ''}`)
       const igUrl = profile?.instagram ? safeUrl(profile.instagram) : null
       const liUrl = profile?.linkedin ? safeUrl(profile.linkedin) : null
-      if (igUrl) profileLines.push(`📸 Instagram: <a href="${igUrl}">${escapeHtml(profile.instagram)}</a>`)
-      if (liUrl) profileLines.push(`🔗 LinkedIn: <a href="${liUrl}">${escapeHtml(profile.linkedin)}</a>`)
+      if (igUrl && profile) profileLines.push(`📸 Instagram: <a href="${igUrl}">${escapeHtml(profile.instagram)}</a>`)
+      if (liUrl && profile) profileLines.push(`🔗 LinkedIn: <a href="${liUrl}">${escapeHtml(profile.linkedin)}</a>`)
       const profileHtml = profileLines.length > 0
         ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Their profile</strong><br>${profileLines.join('<br>')}</p>`
         : ''
