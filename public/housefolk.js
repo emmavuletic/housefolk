@@ -527,6 +527,9 @@ function selectTier(tier) {
   const funtil = document.getElementById('f-until-wrap')
   if (funtil) funtil.style.display = tier === 'sublet' ? '' : 'none'
 
+  const fextras = document.getElementById('f-extras')
+  if (fextras) fextras.style.display = tier === 'flatshare' ? '' : 'none'
+
   const cmax = document.getElementById('c-max')
   if (cmax) cmax.textContent = P.maxPhotos
 
@@ -746,6 +749,13 @@ async function publishListing(btnEl) {
       available_date: document.getElementById('f-avail')?.value,
       sublet_until: document.getElementById('f-until')?.value || null,
       photos: uploadedPhotoUrls,
+      ...(currentTier === 'flatshare' ? {
+        spotify_url: document.getElementById('f-spotify')?.value?.trim(),
+        instagram: document.getElementById('f-instagram')?.value?.trim(),
+        linkedin: document.getElementById('f-linkedin')?.value?.trim(),
+        star_signs: getSelectedStarSigns(),
+        music_vibes: getSelectedMusicVibes(),
+      } : {}),
     }
 
     const listingResult = await api('/api/listings', {
@@ -956,6 +966,7 @@ async function deleteListing(id) {
 }
 
 let _editingListingId = null
+let _editingListingType = null
 
 function updateElStarLabel() {
   const checks = document.querySelectorAll('#el-stars input:checked')
@@ -974,6 +985,7 @@ async function editListing(id) {
   if (data.error) { toast('Could not load listing'); return }
   const l = data.listing
   _editingListingId = id
+  _editingListingType = l.type || null
 
   document.getElementById('el-title').value = l.title || ''
   document.getElementById('el-location').value = l.location || ''
@@ -986,6 +998,20 @@ async function editListing(id) {
   document.getElementById('el-desc').value = l.description || ''
   document.getElementById('el-motto').value = l.motto || ''
   document.getElementById('el-avail').value = l.available_date || ''
+
+  const elExtras = document.getElementById('el-extras')
+  if (elExtras) elExtras.style.display = l.type === 'flatshare' ? '' : 'none'
+  if (l.type === 'flatshare') {
+    document.getElementById('el-spotify').value = l.spotify_url || ''
+    document.querySelectorAll('#el-stars input[type=checkbox]').forEach(cb => {
+      cb.checked = (l.star_signs || []).includes(cb.value)
+    })
+    updateElStarLabel()
+    document.querySelectorAll('#el-music input[type=checkbox]').forEach(cb => {
+      cb.checked = (l.music_vibes || []).includes(cb.value)
+    })
+    updateElMusicLabel()
+  }
 
   document.getElementById('listing-edit-modal').style.display = 'flex'
 }
@@ -1010,6 +1036,11 @@ async function saveListingEdit() {
     description: document.getElementById('el-desc').value.trim(),
     motto: document.getElementById('el-motto').value.trim(),
     available_date: document.getElementById('el-avail').value || null,
+    ...(_editingListingType === 'flatshare' ? {
+      spotify_url: document.getElementById('el-spotify').value.trim() || null,
+      star_signs: Array.from(document.querySelectorAll('#el-stars input:checked')).map(c => c.value),
+      music_vibes: Array.from(document.querySelectorAll('#el-music input:checked')).map(c => c.value),
+    } : {}),
   }
 
   if (!updates.title || !updates.location) {
@@ -1477,6 +1508,20 @@ async function openListing(id) {
   if (l.available_date) meta.push(`📅 Available ${new Date(l.available_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`)
   document.getElementById('detail-meta').innerHTML = meta.map(m => `<span class="badge badge-type" style="font-size:0.78rem">${m}</span>`).join('')
 
+  // Star signs (flatshare only)
+  const starsEl = document.getElementById('detail-stars')
+  if (starsEl) {
+    starsEl.style.display = l.star_signs?.length ? '' : 'none'
+    starsEl.innerHTML = l.star_signs?.length ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.4rem;font-weight:600">Looking for</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem">${l.star_signs.map(s => `<span class="badge badge-type" style="font-size:0.78rem">✨ ${s}</span>`).join('')}</div>` : ''
+  }
+
+  // Music vibes (flatshare only)
+  const musicEl = document.getElementById('detail-music')
+  if (musicEl) {
+    musicEl.style.display = l.music_vibes?.length ? '' : 'none'
+    musicEl.innerHTML = l.music_vibes?.length ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.4rem;font-weight:600">Music vibe</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem">${l.music_vibes.map(v => `<span class="badge badge-type" style="font-size:0.78rem">🎵 ${v}</span>`).join('')}</div>` : ''
+  }
+
   document.getElementById('detail-motto').textContent = l.motto || ''
   document.getElementById('detail-motto').style.display = l.motto ? '' : 'none'
   document.getElementById('detail-desc').textContent = l.description || ''
@@ -1485,7 +1530,8 @@ async function openListing(id) {
   const statusLabel = { pending: '📰 Scheduled for Thursday', active: '● Live', let: 'Let', expired: 'Expired' }
   document.getElementById('detail-grid').innerHTML = `
     <div style="font-size:0.8rem;color:var(--mid)">Status</div><div style="font-size:0.85rem;font-weight:600">${statusLabel[l.status] || l.status}</div>
-    ${l.goes_live_at ? `<div style="font-size:0.8rem;color:var(--mid)">Goes live</div><div style="font-size:0.85rem;font-weight:600">${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' })}</div>` : ''}`
+    ${l.goes_live_at ? `<div style="font-size:0.8rem;color:var(--mid)">Goes live</div><div style="font-size:0.85rem;font-weight:600">${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' })}</div>` : ''}
+    ${l.spotify_url ? `<div style="font-size:0.8rem;color:var(--mid)">Spotify</div><div style="font-size:0.85rem"><a href="${l.spotify_url}" target="_blank" style="color:var(--accent)">🎵 Playlist</a></div>` : ''}`
 
   // Contact wrap — show enquiry button if logged in and not own listing
   const contactWrap = document.getElementById('detail-contact-wrap')
