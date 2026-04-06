@@ -1137,6 +1137,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
                   <div class="chat-thread-name" id="chat-thread-name"></div>
                   <div class="chat-thread-sub" id="chat-thread-sub"></div>
                 </div>
+                <button onclick="reportChatUser()" title="Report user" style="background:none;border:1px solid var(--border);border-radius:8px;padding:0.3rem 0.65rem;font-size:0.75rem;color:var(--mid);cursor:pointer;white-space:nowrap">🚩 Report</button>
+                <button onclick="blockChatUser()" title="Block user" style="background:none;border:1px solid var(--border);border-radius:8px;padding:0.3rem 0.65rem;font-size:0.75rem;color:var(--mid);cursor:pointer;white-space:nowrap">🚫 Block</button>
               </div>
               <div class="chat-messages" id="chat-messages-list"></div>
               <!-- Viewing time suggester — landlord only -->
@@ -1481,6 +1483,27 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 
 </div>
 
+
+<!-- REPORT MODAL -->
+<div id="report-modal" style="display:none;position:fixed;inset:0;background:rgba(26,21,16,0.55);z-index:400;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--card);border-radius:20px;padding:1.8rem;max-width:380px;width:100%;box-shadow:var(--shadow-lg)">
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.5rem">Report this user</div>
+    <p style="font-size:0.84rem;color:var(--mid);margin-bottom:1rem">Tell us what's wrong and we'll review it.</p>
+    <select id="report-reason" style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:var(--dark);margin-bottom:0.75rem">
+      <option value="">Select a reason…</option>
+      <option value="harassment">Harassment or threatening behaviour</option>
+      <option value="inappropriate">Inappropriate or offensive messages</option>
+      <option value="scam">Suspected scam or fraud</option>
+      <option value="spam">Spam</option>
+      <option value="other">Other</option>
+    </select>
+    <textarea id="report-detail" placeholder="Any extra detail (optional)" style="width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:var(--dark);resize:none;height:80px;margin-bottom:1rem"></textarea>
+    <div style="display:flex;gap:0.6rem">
+      <button onclick="document.getElementById('report-modal').style.display='none'" class="btn btn-ghost" style="flex:1">Cancel</button>
+      <button onclick="submitReport()" class="btn btn-primary" style="flex:1">Send report →</button>
+    </div>
+  </div>
+</div>
 
 <!-- Cloudflare Turnstile -->
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>

@@ -1311,6 +1311,54 @@ function closeChatThread() {
   renderConvList()
 }
 
+function _getOtherUserId() {
+  if (!_activeEnquiryId) return null
+  const enquiry = currentTabEnquiries().find(e => e.id === _activeEnquiryId)
+  if (!enquiry) return null
+  const isLandlord = (currentUser?.role === 'landlord' || currentUser?.role === 'admin')
+  const other = isLandlord ? (enquiry.tenant || {}) : (enquiry.landlord || {})
+  return other.id || null
+}
+
+async function blockChatUser() {
+  const otherId = _getOtherUserId()
+  if (!otherId) return
+  const enquiry = currentTabEnquiries().find(e => e.id === _activeEnquiryId)
+  const other = (currentUser?.role === 'landlord' || currentUser?.role === 'admin') ? (enquiry?.tenant || {}) : (enquiry?.landlord || {})
+  const name = `${other.first_name || ''} ${other.last_name || ''}`.trim() || 'this user'
+  if (!confirm(`Block ${name}? They won't be able to message you and this conversation will be hidden.`)) return
+  const data = await api(`/api/users/${otherId}/block`, { method: 'POST' })
+  if (data.error) { toast(data.error); return }
+  toast('User blocked.', 'green')
+  closeChatThread()
+  // Remove blocked enquiries from local state
+  _sentEnquiries = _sentEnquiries.filter(e => e.id !== _activeEnquiryId)
+  _receivedEnquiries = _receivedEnquiries.filter(e => e.id !== _activeEnquiryId)
+  renderConvList()
+}
+
+function reportChatUser() {
+  if (!_activeEnquiryId) return
+  document.getElementById('report-reason').value = ''
+  document.getElementById('report-detail').value = ''
+  document.getElementById('report-modal').style.display = 'flex'
+}
+
+async function submitReport() {
+  const reason = document.getElementById('report-reason').value
+  if (!reason) { toast('Please select a reason'); return }
+  const detail = document.getElementById('report-detail').value.trim()
+  const otherId = _getOtherUserId()
+  if (!otherId) return
+  const data = await api(`/api/users/${otherId}/report`, {
+    method: 'POST',
+    body: JSON.stringify({ reason, detail, enquiry_id: _activeEnquiryId }),
+  })
+  document.getElementById('report-modal').style.display = 'none'
+  if (data.error) { toast(data.error); return }
+  toast('Report submitted — thank you.', 'green')
+}
+
 function toggleSuggestRow() {
   const row = document.getElementById('chat-suggest-row')
   if (!row) return
