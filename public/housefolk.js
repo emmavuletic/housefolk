@@ -67,10 +67,13 @@ function toast(msg, type = '') {
 
 let _tsSignInToken = null
 let _tsSignUpToken = null
+let _tsForgotToken = null
 function onTurnstileSignIn(token) { _tsSignInToken = token }
 function onTurnstileSignUp(token) { _tsSignUpToken = token }
+function onTurnstileForgot(token) { _tsForgotToken = token }
 function onTurnstileSignInExpired() { _tsSignInToken = null }
 function onTurnstileSignUpExpired() { _tsSignUpToken = null }
+function onTurnstileForgotExpired() { _tsForgotToken = null }
 
 async function getSignInToken() {
   if (_tsSignInToken) return _tsSignInToken
@@ -87,6 +90,15 @@ async function getSignUpToken() {
   for (let i = 0; i < 100; i++) {
     await new Promise(r => setTimeout(r, 100))
     if (_tsSignUpToken) return _tsSignUpToken
+  }
+  return null
+}
+async function getForgotToken() {
+  if (_tsForgotToken) return _tsForgotToken
+  if (window.turnstile) turnstile.execute('#ts-forgot')
+  for (let i = 0; i < 100; i++) {
+    await new Promise(r => setTimeout(r, 100))
+    if (_tsForgotToken) return _tsForgotToken
   }
   return null
 }
@@ -180,9 +192,13 @@ async function doSetNewPassword() {
 async function doForgotPassword() {
   const email = document.getElementById('forgot-email').value.trim()
   if (!email) { toast('Please enter your email address'); return }
+  const captchaToken = await getForgotToken()
+  _tsForgotToken = null
   await _supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://app.housefolk.co/homefolk.html'
+    redirectTo: 'https://app.housefolk.co/homefolk.html',
+    captchaToken: captchaToken || undefined,
   })
+  if (window.turnstile) turnstile.reset('#ts-forgot')
   toast('✓ Reset link sent if that email exists', 'green')
   setTimeout(() => switchTab('in'), 2000)
 }
@@ -190,10 +206,16 @@ async function doForgotPassword() {
 async function doMagicLink() {
   const email = document.getElementById('magic-email').value.trim()
   if (!email) { toast('Please enter your email address'); return }
+  const captchaToken = await getSignInToken()
+  _tsSignInToken = null
   const { error } = await _supabase.auth.signInWithOtp({
     email,
-    options: { emailRedirectTo: 'https://app.housefolk.co/homefolk.html' }
+    options: {
+      emailRedirectTo: 'https://app.housefolk.co/homefolk.html',
+      captchaToken: captchaToken || undefined,
+    }
   })
+  if (window.turnstile) turnstile.reset('#ts-signin')
   if (error) { toast(error.message); return }
   toast('✓ Check your email for a sign-in link!', 'green')
 }
