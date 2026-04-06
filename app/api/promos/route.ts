@@ -83,8 +83,15 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: 'Admin only.' }, { status: 403 })
   }
 
-  const { code, ...updates } = await req.json()
+  const body = await req.json()
+  const { code } = body
   if (!code) return NextResponse.json({ error: 'Code required.' }, { status: 400 })
+
+  const ALLOWED = ['active', 'discount_type', 'max_uses', 'expiry', 'note']
+  const updates: Record<string, unknown> = {}
+  for (const key of ALLOWED) {
+    if (key in body) updates[key] = body[key]
+  }
 
   const { data, error } = await supabase
     .from('promo_codes')

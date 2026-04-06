@@ -20,13 +20,11 @@ function extractReplyText(text: string): string {
 
 // POST /api/email/inbound — Resend inbound webhook
 export async function POST(req: NextRequest) {
-  // Optional: verify secret to ensure request is from Resend
   const secret = process.env.INBOUND_WEBHOOK_SECRET
-  if (secret) {
-    const sig = req.headers.get('x-resend-signature') || req.headers.get('authorization')
-    if (sig !== secret) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
+  if (!secret) return NextResponse.json({ error: 'Server misconfigured.' }, { status: 500 })
+  const sig = req.headers.get('x-resend-signature') || req.headers.get('authorization')
+  if (sig !== secret) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   const payload = await req.json()
