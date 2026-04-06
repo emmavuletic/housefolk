@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase-client'
 
 interface Listing {
   id: string
@@ -161,40 +162,43 @@ export default function ListingsPage() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    const token = localStorage.getItem('hf_token')
-    if (!token) {
-      window.location.href = '/housefolk.html'
-      return
-    }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const token = session?.access_token
+      if (!token) {
+        window.location.href = '/housefolk.html'
+        return
+      }
 
-    const params = new URLSearchParams()
-    if (type) params.set('type', type)
-    if (location) params.set('location', location)
-    else if (city) params.set('location', city)
+      const params = new URLSearchParams()
+      if (type) params.set('type', type)
+      if (location) params.set('location', location)
+      else if (city) params.set('location', city)
 
-    fetch(`/api/listings?${params}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      fetch(`/api/listings?${params}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(r => r.json())
+        .then(({ listings: data }) => {
+          setListings(data ?? [])
+          setLoading(false)
+        })
+        .catch(() => setLoading(false))
+
+      // Load saved IDs
+      fetch('/api/listings/saved', { headers: { Authorization: `Bearer ${token}` } })
+        .then(r => r.json())
+        .then(({ listings: saved }) => {
+          setSavedIds(new Set((saved || []).map((l: { id: string }) => l.id)))
+        })
+        .catch(() => {})
     })
-      .then(r => r.json())
-      .then(({ listings: data }) => {
-        setListings(data ?? [])
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-
-    // Load saved IDs
-    fetch('/api/listings/saved', { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(({ listings: saved }) => {
-        setSavedIds(new Set((saved || []).map((l: { id: string }) => l.id)))
-      })
-      .catch(() => {})
   }, [type, location, city])
 
   async function toggleSave(listingId: string, e: React.MouseEvent) {
     e.preventDefault()
     e.stopPropagation()
-    const token = localStorage.getItem('hf_token')
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
     if (!token) return
     const isSaved = savedIds.has(listingId)
     if (isSaved) {
