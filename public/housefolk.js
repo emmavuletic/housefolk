@@ -72,6 +72,25 @@ function onTurnstileSignUp(token) { _tsSignUpToken = token }
 function onTurnstileSignInExpired() { _tsSignInToken = null }
 function onTurnstileSignUpExpired() { _tsSignUpToken = null }
 
+async function getSignInToken() {
+  if (_tsSignInToken) return _tsSignInToken
+  if (window.turnstile) turnstile.execute('#ts-signin')
+  for (let i = 0; i < 100; i++) {
+    await new Promise(r => setTimeout(r, 100))
+    if (_tsSignInToken) return _tsSignInToken
+  }
+  return null
+}
+async function getSignUpToken() {
+  if (_tsSignUpToken) return _tsSignUpToken
+  if (window.turnstile) turnstile.execute('#ts-signup')
+  for (let i = 0; i < 100; i++) {
+    await new Promise(r => setTimeout(r, 100))
+    if (_tsSignUpToken) return _tsSignUpToken
+  }
+  return null
+}
+
 async function doSignIn() {
   const email = document.getElementById('si-email').value.trim()
   const password = document.getElementById('si-pass').value
@@ -81,9 +100,10 @@ async function doSignIn() {
   btn.textContent = 'Signing in…'
   btn.disabled = true
 
+  const captchaToken = await getSignInToken()
   const { data, error } = await _supabase.auth.signInWithPassword({
     email, password,
-    options: { captchaToken: _tsSignInToken || undefined },
+    options: { captchaToken: captchaToken || undefined },
   })
   _tsSignInToken = null
 
@@ -117,10 +137,11 @@ async function doSignUp() {
   btn.textContent = 'Creating account…'
   btn.disabled = true
 
+  const captchaToken = await getSignUpToken()
   const { error } = await _supabase.auth.signUp({
     email, password,
     options: {
-      captchaToken: _tsSignUpToken || undefined,
+      captchaToken: captchaToken || undefined,
       data: {
         first_name: first, last_name: last,
         role: role === 'list' ? 'landlord' : 'tenant',
@@ -724,12 +745,7 @@ async function publishListing(btnEl) {
       motto: document.getElementById('f-motto')?.value?.trim(),
       available_date: document.getElementById('f-avail')?.value,
       sublet_until: document.getElementById('f-until')?.value || null,
-      spotify_url: document.getElementById('f-spotify')?.value?.trim(),
-      instagram: document.getElementById('f-instagram')?.value?.trim(),
-      linkedin: document.getElementById('f-linkedin')?.value?.trim(),
       photos: uploadedPhotoUrls,
-      star_signs: getSelectedStarSigns(),
-      music_vibes: getSelectedMusicVibes(),
     }
 
     const listingResult = await api('/api/listings', {
@@ -970,19 +986,6 @@ async function editListing(id) {
   document.getElementById('el-desc').value = l.description || ''
   document.getElementById('el-motto').value = l.motto || ''
   document.getElementById('el-avail').value = l.available_date || ''
-  document.getElementById('el-spotify').value = l.spotify_url || ''
-
-  // Star signs
-  document.querySelectorAll('#el-stars input[type=checkbox]').forEach(cb => {
-    cb.checked = (l.star_signs || []).includes(cb.value)
-  })
-  updateElStarLabel()
-
-  // Music vibes
-  document.querySelectorAll('#el-music input[type=checkbox]').forEach(cb => {
-    cb.checked = (l.music_vibes || []).includes(cb.value)
-  })
-  updateElMusicLabel()
 
   document.getElementById('listing-edit-modal').style.display = 'flex'
 }
@@ -1007,9 +1010,6 @@ async function saveListingEdit() {
     description: document.getElementById('el-desc').value.trim(),
     motto: document.getElementById('el-motto').value.trim(),
     available_date: document.getElementById('el-avail').value || null,
-    spotify_url: document.getElementById('el-spotify').value.trim() || null,
-    star_signs: Array.from(document.querySelectorAll('#el-stars input:checked')).map(c => c.value),
-    music_vibes: Array.from(document.querySelectorAll('#el-music input:checked')).map(c => c.value),
   }
 
   if (!updates.title || !updates.location) {
@@ -1477,20 +1477,6 @@ async function openListing(id) {
   if (l.available_date) meta.push(`📅 Available ${new Date(l.available_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`)
   document.getElementById('detail-meta').innerHTML = meta.map(m => `<span class="badge badge-type" style="font-size:0.78rem">${m}</span>`).join('')
 
-  // Star signs
-  const starsEl = document.getElementById('detail-stars')
-  if (starsEl) {
-    starsEl.style.display = l.star_signs?.length ? '' : 'none'
-    starsEl.innerHTML = l.star_signs?.length ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.4rem;font-weight:600">Looking for</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem">${l.star_signs.map(s => `<span class="badge badge-type" style="font-size:0.78rem">✨ ${s}</span>`).join('')}</div>` : ''
-  }
-
-  // Music vibes
-  const musicEl = document.getElementById('detail-music')
-  if (musicEl) {
-    musicEl.style.display = l.music_vibes?.length ? '' : 'none'
-    musicEl.innerHTML = l.music_vibes?.length ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.4rem;font-weight:600">Music vibe</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem">${l.music_vibes.map(v => `<span class="badge badge-type" style="font-size:0.78rem">🎵 ${v}</span>`).join('')}</div>` : ''
-  }
-
   document.getElementById('detail-motto').textContent = l.motto || ''
   document.getElementById('detail-motto').style.display = l.motto ? '' : 'none'
   document.getElementById('detail-desc').textContent = l.description || ''
@@ -1499,8 +1485,7 @@ async function openListing(id) {
   const statusLabel = { pending: '📰 Scheduled for Thursday', active: '● Live', let: 'Let', expired: 'Expired' }
   document.getElementById('detail-grid').innerHTML = `
     <div style="font-size:0.8rem;color:var(--mid)">Status</div><div style="font-size:0.85rem;font-weight:600">${statusLabel[l.status] || l.status}</div>
-    ${l.goes_live_at ? `<div style="font-size:0.8rem;color:var(--mid)">Goes live</div><div style="font-size:0.85rem;font-weight:600">${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' })}</div>` : ''}
-    ${l.spotify_url ? `<div style="font-size:0.8rem;color:var(--mid)">Spotify</div><div style="font-size:0.85rem"><a href="${l.spotify_url}" target="_blank" style="color:var(--accent)">🎵 Playlist</a></div>` : ''}`
+    ${l.goes_live_at ? `<div style="font-size:0.8rem;color:var(--mid)">Goes live</div><div style="font-size:0.85rem;font-weight:600">${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' })}</div>` : ''}`
 
   // Contact wrap — show enquiry button if logged in and not own listing
   const contactWrap = document.getElementById('detail-contact-wrap')

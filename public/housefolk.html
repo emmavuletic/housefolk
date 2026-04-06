@@ -665,7 +665,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div class="field"><label>Email address</label><input type="email" id="si-email" placeholder="you@example.com"></div>
         <div class="field"><label>Password</label><input type="password" id="si-pass" placeholder="••••••••"></div>
         <div class="forgot-link" onclick="switchTab('forgot')">Forgot password?</div>
-        <div class="cf-turnstile" id="ts-signin" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible" data-callback="onTurnstileSignIn" data-expired-callback="onTurnstileSignInExpired"></div>
+        <div class="cf-turnstile" id="ts-signin" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible" data-execution="execute" data-callback="onTurnstileSignIn" data-expired-callback="onTurnstileSignInExpired"></div>
         <button class="btn btn-primary" onclick="doSignIn()">Sign in →</button>
         <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
         <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
@@ -704,7 +704,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <input type="checkbox" id="su-nl" checked style="margin-top:2px;accent-color:var(--accent)">
           Subscribe to the Thursday newsletter — new listings delivered every week
         </label>
-        <div class="cf-turnstile" id="ts-signup" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible" data-callback="onTurnstileSignUp" data-expired-callback="onTurnstileSignUpExpired"></div>
+        <div class="cf-turnstile" id="ts-signup" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible" data-execution="execute" data-callback="onTurnstileSignUp" data-expired-callback="onTurnstileSignUpExpired"></div>
         <button class="btn btn-primary" onclick="doSignUp()">Create my account →</button>
         <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
         <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
@@ -978,104 +978,6 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             </div>
             <div class="field"><label>Description</label><textarea id="f-desc" placeholder="Tell renters what makes your home special — the vibe, neighbourhood, transport links, house rules, ideal tenant…"></textarea></div>
             <div class="field"><label>House motto or hobbies 🍳 <span style="font-weight:400;color:var(--light)">(optional — renters love this!)</span></label><input type="text" id="f-motto" placeholder="e.g. We love Sunday roasts, bad movies and a clean kitchen 🍳"></div>
-
-            <!-- Star signs - flatshare only -->
-            <div class="field" id="starsign-field">
-              <label>Star signs in the household ✨ <span style="font-weight:400;color:var(--light)">(optional — helps renters find their folk)</span></label>
-              <div class="star-select-wrap">
-                <button type="button" class="star-select-btn" onclick="toggleStarDropdown('landlord-stars')">
-                  <span id="landlord-stars-label">Select star signs…</span>
-                  <span>▾</span>
-                </button>
-                <div class="star-dropdown" id="landlord-stars">
-                  <div class="star-option"><input type="checkbox" value="aries" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♈</span> Aries</div>
-                  <div class="star-option"><input type="checkbox" value="taurus" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♉</span> Taurus</div>
-                  <div class="star-option"><input type="checkbox" value="gemini" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♊</span> Gemini</div>
-                  <div class="star-option"><input type="checkbox" value="cancer" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♋</span> Cancer</div>
-                  <div class="star-option"><input type="checkbox" value="leo" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♌</span> Leo</div>
-                  <div class="star-option"><input type="checkbox" value="virgo" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♍</span> Virgo</div>
-                  <div class="star-option"><input type="checkbox" value="libra" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♎</span> Libra</div>
-                  <div class="star-option"><input type="checkbox" value="scorpio" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♏</span> Scorpio</div>
-                  <div class="star-option"><input type="checkbox" value="sagittarius" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♐</span> Sagittarius</div>
-                  <div class="star-option"><input type="checkbox" value="capricorn" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♑</span> Capricorn</div>
-                  <div class="star-option"><input type="checkbox" value="aquarius" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♒</span> Aquarius</div>
-                  <div class="star-option"><input type="checkbox" value="pisces" onchange="updateStarLabel('landlord-stars')"><span class="sign-emoji">♓</span> Pisces</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Music taste -->
-            <div class="field">
-              <label>Music vibe in the house 🎵 <span style="font-weight:400;color:var(--light)">(optional — helps renters feel the atmosphere)</span></label>
-              <div class="star-select-wrap">
-                <button type="button" class="star-select-btn" onclick="toggleStarDropdown('music-taste')">
-                  <span id="music-taste-label">Select music vibes…</span>
-                  <span>▾</span>
-                </button>
-                <div class="star-dropdown" id="music-taste">
-                  <div class="star-option"><input type="checkbox" value="classical" onchange="updateMusicLabel()"><span class="sign-emoji">🎼</span> Classical</div>
-                  <div class="star-option"><input type="checkbox" value="jazz" onchange="updateMusicLabel()"><span class="sign-emoji">🎷</span> Jazz</div>
-                  <div class="star-option"><input type="checkbox" value="binaural" onchange="updateMusicLabel()"><span class="sign-emoji">🧘</span> Binaural beats</div>
-                  <div class="star-option"><input type="checkbox" value="silence" onchange="updateMusicLabel()"><span class="sign-emoji">🤫</span> Silence is golden</div>
-                  <div class="star-option"><input type="checkbox" value="livejams" onchange="updateMusicLabel()"><span class="sign-emoji">🎸</span> Live jams</div>
-                  <div class="star-option"><input type="checkbox" value="indie" onchange="updateMusicLabel()"><span class="sign-emoji">🎤</span> Indie / alternative</div>
-                  <div class="star-option"><input type="checkbox" value="hiphop" onchange="updateMusicLabel()"><span class="sign-emoji">🎧</span> Hip hop / R&B</div>
-                  <div class="star-option"><input type="checkbox" value="electronic" onchange="updateMusicLabel()"><span class="sign-emoji">🎛️</span> Electronic / ambient</div>
-                  <div class="star-option"><input type="checkbox" value="folk" onchange="updateMusicLabel()"><span class="sign-emoji">🪕</span> Folk / acoustic</div>
-                  <div class="star-option"><input type="checkbox" value="pop" onchange="updateMusicLabel()"><span class="sign-emoji">🎶</span> Pop</div>
-                  <div class="star-option"><input type="checkbox" value="world" onchange="updateMusicLabel()"><span class="sign-emoji">🌍</span> World music</div>
-                  <div class="star-option"><input type="checkbox" value="whatever" onchange="updateMusicLabel()"><span class="sign-emoji">🎲</span> Whatever's on</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Spotify embed -->
-            <div class="field">
-              <label>Spotify track or playlist 🎵 <span style="font-weight:400;color:var(--light)">(optional — paste a Spotify link so renters can feel the vibe)</span></label>
-              <input type="text" id="f-spotify" placeholder="e.g. https://open.spotify.com/track/… or playlist/…">
-              <div style="font-size:0.75rem;color:var(--light);margin-top:0.4rem">📖 On Spotify: right-click any song or playlist → Share → Copy link</div>
-            </div>
-
-            <!-- Social links for landlord -->
-            <div class="field">
-              <label>Your social links <span style="font-weight:400;color:var(--light)">(optional — helps renters know you're real)</span></label>
-              <div class="social-link-row">
-                <div class="social-icon" style="background:#E1306C;color:#fff">📸</div>
-                <input type="text" id="f-instagram" placeholder="Instagram profile URL">
-              </div>
-              <div class="social-link-row">
-                <div class="social-icon" style="background:#0077B5;color:#fff">💼</div>
-                <input type="text" id="f-linkedin" placeholder="LinkedIn profile URL">
-              </div>
-            </div>
-
-            <!-- Star signs - flatshare only -->
-            <div class="field" id="starsign-field" style="display:none">
-              <label>Star signs in the household ✨ <span style="font-weight:400;color:var(--light)">(optional — select all that apply)</span></label>
-              <div class="star-sign-wrap">
-                <button type="button" class="star-sign-trigger" onclick="toggleStarDrop('household-signs')">
-                  <span id="household-signs-label">Select star signs…</span>
-                  <span>▾</span>
-                </button>
-                <div class="star-sign-dropdown" id="household-signs-drop">
-                  <div class="star-sign-grid" id="household-signs-grid"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Star sign for new tenant seeking flatshare -->
-            <div class="field" id="seeker-starsign-field" style="display:none">
-              <label>Your star sign ✨ <span style="font-weight:400;color:var(--light)">(optional)</span></label>
-              <div class="star-sign-wrap">
-                <button type="button" class="star-sign-trigger" onclick="toggleStarDrop('post-seeker-sign', event)">
-                  <span id="post-seeker-sign-label">Select your star sign…</span>
-                  <span>▾</span>
-                </button>
-                <div class="star-sign-dropdown" id="post-seeker-sign-drop">
-                  <div class="star-sign-grid" id="post-seeker-sign-grid"></div>
-                </div>
-              </div>
-            </div>
 
           </div>
           <div style="display:flex;gap:0.8rem">
@@ -1607,10 +1509,6 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <div style="font-size:0.85rem;color:#f7b188;font-style:italic;border-left:3px solid #f7b188;padding-left:0.8rem;margin-bottom:1.2rem;line-height:1.6" id="detail-motto"></div>
       <!-- Description -->
       <div style="font-size:0.88rem;color:var(--mid);line-height:1.75;margin-bottom:1.4rem" id="detail-desc"></div>
-      <!-- Star signs -->
-      <div id="detail-stars" style="display:none;margin-bottom:1.2rem"></div>
-      <!-- Music vibes -->
-      <div id="detail-music" style="display:none;margin-bottom:1.2rem"></div>
       <!-- Details grid -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;background:var(--cream);border-radius:14px;padding:1.1rem 1.2rem;margin-bottom:1.4rem" id="detail-grid"></div>
       <!-- Contact button -->
@@ -1689,47 +1587,6 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
     </div>
     <div class="field"><label>Listing motto</label><input type="text" id="el-motto" placeholder="One-line hook for your listing"></div>
     <div class="field"><label>Description</label><textarea id="el-desc" style="min-height:100px" placeholder="Describe your space…"></textarea></div>
-    <div class="field"><label>Spotify playlist URL (optional)</label><input type="url" id="el-spotify" placeholder="https://open.spotify.com/…"></div>
-    <div class="field">
-      <label>Star signs in the household ✨ <span style="font-weight:400;color:var(--light)">(optional)</span></label>
-      <div class="star-select-wrap">
-        <button type="button" class="star-select-btn" onclick="toggleStarDropdown('el-stars')">
-          <span id="el-stars-label">Select star signs…</span><span>▾</span>
-        </button>
-        <div class="star-dropdown" id="el-stars">
-          <div class="star-option"><input type="checkbox" value="aries" onchange="updateElStarLabel()"><span class="sign-emoji">♈</span> Aries</div>
-          <div class="star-option"><input type="checkbox" value="taurus" onchange="updateElStarLabel()"><span class="sign-emoji">♉</span> Taurus</div>
-          <div class="star-option"><input type="checkbox" value="gemini" onchange="updateElStarLabel()"><span class="sign-emoji">♊</span> Gemini</div>
-          <div class="star-option"><input type="checkbox" value="cancer" onchange="updateElStarLabel()"><span class="sign-emoji">♋</span> Cancer</div>
-          <div class="star-option"><input type="checkbox" value="leo" onchange="updateElStarLabel()"><span class="sign-emoji">♌</span> Leo</div>
-          <div class="star-option"><input type="checkbox" value="virgo" onchange="updateElStarLabel()"><span class="sign-emoji">♍</span> Virgo</div>
-          <div class="star-option"><input type="checkbox" value="libra" onchange="updateElStarLabel()"><span class="sign-emoji">♎</span> Libra</div>
-          <div class="star-option"><input type="checkbox" value="scorpio" onchange="updateElStarLabel()"><span class="sign-emoji">♏</span> Scorpio</div>
-          <div class="star-option"><input type="checkbox" value="sagittarius" onchange="updateElStarLabel()"><span class="sign-emoji">♐</span> Sagittarius</div>
-          <div class="star-option"><input type="checkbox" value="capricorn" onchange="updateElStarLabel()"><span class="sign-emoji">♑</span> Capricorn</div>
-          <div class="star-option"><input type="checkbox" value="aquarius" onchange="updateElStarLabel()"><span class="sign-emoji">♒</span> Aquarius</div>
-          <div class="star-option"><input type="checkbox" value="pisces" onchange="updateElStarLabel()"><span class="sign-emoji">♓</span> Pisces</div>
-        </div>
-      </div>
-    </div>
-    <div class="field">
-      <label>Music vibe 🎵 <span style="font-weight:400;color:var(--light)">(optional)</span></label>
-      <div class="star-select-wrap">
-        <button type="button" class="star-select-btn" onclick="toggleStarDropdown('el-music')">
-          <span id="el-music-label">Select music vibes…</span><span>▾</span>
-        </button>
-        <div class="star-dropdown" id="el-music">
-          <div class="star-option"><input type="checkbox" value="classical" onchange="updateElMusicLabel()"><span class="sign-emoji">🎼</span> Classical</div>
-          <div class="star-option"><input type="checkbox" value="jazz" onchange="updateElMusicLabel()"><span class="sign-emoji">🎷</span> Jazz</div>
-          <div class="star-option"><input type="checkbox" value="indie" onchange="updateElMusicLabel()"><span class="sign-emoji">🎤</span> Indie / alternative</div>
-          <div class="star-option"><input type="checkbox" value="hiphop" onchange="updateElMusicLabel()"><span class="sign-emoji">🎧</span> Hip hop / R&B</div>
-          <div class="star-option"><input type="checkbox" value="electronic" onchange="updateElMusicLabel()"><span class="sign-emoji">🎛️</span> Electronic / ambient</div>
-          <div class="star-option"><input type="checkbox" value="folk" onchange="updateElMusicLabel()"><span class="sign-emoji">🪕</span> Folk / acoustic</div>
-          <div class="star-option"><input type="checkbox" value="pop" onchange="updateElMusicLabel()"><span class="sign-emoji">🎶</span> Pop</div>
-          <div class="star-option"><input type="checkbox" value="whatever" onchange="updateElMusicLabel()"><span class="sign-emoji">🎲</span> Whatever's on</div>
-        </div>
-      </div>
-    </div>
     <button class="btn btn-primary" id="el-save-btn" onclick="saveListingEdit()">Save changes →</button>
   </div>
 </div>
