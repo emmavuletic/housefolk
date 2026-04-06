@@ -664,7 +664,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <p class="auth-sub">Sign in to manage your listings and enquiries.</p>
         <div class="field"><label>Email address</label><input type="email" id="si-email" placeholder="you@example.com"></div>
         <div class="field"><label>Password</label><input type="password" id="si-pass" placeholder="••••••••"></div>
-        <div class="cf-turnstile" id="ts-signin" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible" data-execution="execute" data-callback="onTurnstileSignIn" data-expired-callback="onTurnstileSignInExpired"></div>
+        <div class="cf-turnstile" id="ts-signin" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="normal" data-execution="execute" data-callback="onTurnstileSignIn" data-expired-callback="onTurnstileSignInExpired"></div>
         <button class="btn btn-primary" onclick="doSignIn()">Sign in →</button>
         <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
         <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
@@ -703,7 +703,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <input type="checkbox" id="su-nl" checked style="margin-top:2px;accent-color:var(--accent)">
           Subscribe to the Thursday newsletter — new listings delivered every week
         </label>
-        <div class="cf-turnstile" id="ts-signup" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="invisible" data-execution="execute" data-callback="onTurnstileSignUp" data-expired-callback="onTurnstileSignUpExpired"></div>
+        <div class="cf-turnstile" id="ts-signup" data-sitekey="0x4AAAAAAC0BPWSX_ClLQFms" data-size="normal" data-execution="execute" data-callback="onTurnstileSignUp" data-expired-callback="onTurnstileSignUpExpired"></div>
         <button class="btn btn-primary" onclick="doSignUp()">Create my account →</button>
         <div style="display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:0.8rem;color:var(--light)">or</span><div style="flex:1;height:1px;background:var(--border)"></div></div>
         <a href="/api/auth/linkedin" class="btn" style="background:#0077B5;color:#fff;display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:0.75rem;text-decoration:none">
