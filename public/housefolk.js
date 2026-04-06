@@ -614,7 +614,7 @@ function buildPaySummary() {
   if (pp) pp.style.display = isFree ? 'none' : ''
 
   const ps = document.getElementById('promo-section')
-  if (ps) ps.style.display = !promoApplied ? '' : 'none'
+  if (ps) ps.style.display = 'none'
 
   const pba = document.getElementById('pay-btn-amt')
   if (!isFree && pba) pba.textContent = P.label
