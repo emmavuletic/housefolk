@@ -73,6 +73,7 @@ export async function POST(req: NextRequest) {
     customer: customerId,
     mode: 'subscription',
     line_items: [{ price: priceId, quantity: 1 }],
+    allow_promotion_codes: true,
     metadata: { listing_id, user_id: user.id, type },
     success_url: `${appUrl}?success=listing&listing_id=${listing_id}`,
     cancel_url: `${appUrl}?cancelled=true`,
