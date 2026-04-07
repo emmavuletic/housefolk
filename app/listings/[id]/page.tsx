@@ -61,7 +61,13 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const [enquiryLoading, setEnquiryLoading] = useState(false)
   const [enquiryMessage, setEnquiryMessage] = useState('')
   const [saved, setSaved] = useState(false)
-  const [photoIndex, setPhotoIndex] = useState(0)
+  const [carouselOpen, setCarouselOpen] = useState(false)
+  const [carouselIndex, setCarouselIndex] = useState(0)
+
+  function openCarousel(index: number) { setCarouselIndex(index); setCarouselOpen(true) }
+  function closeCarousel() { setCarouselOpen(false) }
+  function carouselPrev(total: number) { setCarouselIndex(i => (i - 1 + total) % total) }
+  function carouselNext(total: number) { setCarouselIndex(i => (i + 1) % total) }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -164,8 +170,6 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
 
   const typeInfo = TYPE_LABELS[listing.type] ?? { emoji: '🏠', label: listing.type }
   const photos = listing.photos?.length ? listing.photos : []
-  const currentPhoto = photos[photoIndex] ?? null
-  const totalPhotos = photos.length
 
   return (
     <>
@@ -179,35 +183,63 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
         </nav>
 
         <main style={styles.main}>
-          {/* Hero photo gallery */}
-          <div style={styles.hero}>
-            {currentPhoto ? (
-              <img src={currentPhoto} alt={`${listing.title} photo ${photoIndex + 1}`} style={styles.heroImg} />
-            ) : (
+          {/* Collage photo grid */}
+          <div style={{ position: 'relative', marginBottom: '2rem' }}>
+            {photos.length === 0 ? (
               <div style={styles.heroPlaceholder}>🏡</div>
+            ) : photos.length === 1 ? (
+              <div style={{ borderRadius: 12, overflow: 'hidden', height: 480, cursor: 'zoom-in' }} onClick={() => openCarousel(0)}>
+                <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: photos.length >= 4 ? '1fr 1fr' : '1fr', gap: 4, height: 480, borderRadius: 12, overflow: 'hidden' }}>
+                {/* Main large photo */}
+                <div style={{ gridRow: '1 / -1', overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(0)}>
+                  <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
+                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
+                    onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                  />
+                </div>
+                {/* Right column: up to 2 smaller photos */}
+                {photos.slice(1, 3).map((p, i) => (
+                  <div key={i} style={{ overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(i + 1)}>
+                    <img src={p} alt={`${listing.title} ${i + 2}`} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
+                      onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
+                      onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                    />
+                    {/* Show "X more" overlay on last visible tile if more photos exist */}
+                    {i === 1 && photos.length > 3 && (
+                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.02em' }}>
+                        +{photos.length - 3} more
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             )}
+            {/* Type badge */}
             <span style={styles.heroBadge}>{typeInfo.emoji} {typeInfo.label}</span>
-            {totalPhotos > 1 && (
-              <>
-                <button
-                  onClick={() => setPhotoIndex(i => (i - 1 + totalPhotos) % totalPhotos)}
-                  style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.85)', border: 'none', borderRadius: '50%', width: 38, height: 38, cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
-                >‹</button>
-                <button
-                  onClick={() => setPhotoIndex(i => (i + 1) % totalPhotos)}
-                  style={{ position: 'absolute', right: 56, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.85)', border: 'none', borderRadius: '50%', width: 38, height: 38, cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
-                >›</button>
-                <span style={{ position: 'absolute', bottom: 16, left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.5)', color: '#fff', borderRadius: 20, padding: '0.2rem 0.7rem', fontSize: '0.78rem', fontWeight: 600 }}>
-                  {photoIndex + 1} / {totalPhotos}
-                </span>
-              </>
-            )}
-            <button
-              onClick={toggleSave}
-              title={saved ? 'Remove from saved' : 'Save listing'}
-              style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: '50%', width: 42, height: 42, cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+            {/* Save button */}
+            <button onClick={toggleSave} title={saved ? 'Remove from saved' : 'Save listing'}
+              style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: '50%', width: 42, height: 42, cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', zIndex: 2 }}
             >{saved ? '❤️' : '🤍'}</button>
           </div>
+
+          {/* Carousel modal */}
+          {carouselOpen && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              onClick={closeCarousel}>
+              <button onClick={closeCarousel} style={{ position: 'absolute', top: 20, right: 24, background: 'none', border: 'none', color: '#fff', fontSize: '2rem', cursor: 'pointer', lineHeight: 1 }}>×</button>
+              <button onClick={e => { e.stopPropagation(); carouselPrev(photos.length) }}
+                style={{ position: 'absolute', left: 20, background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '50%', width: 48, height: 48, color: '#fff', fontSize: '1.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>‹</button>
+              <img src={photos[carouselIndex]} alt={`${listing.title} ${carouselIndex + 1}`}
+                style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain', borderRadius: 8 }}
+                onClick={e => e.stopPropagation()} />
+              <button onClick={e => { e.stopPropagation(); carouselNext(photos.length) }}
+                style={{ position: 'absolute', right: 20, background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '50%', width: 48, height: 48, color: '#fff', fontSize: '1.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>›</button>
+              <span style={{ position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', fontWeight: 600 }}>{carouselIndex + 1} / {photos.length}</span>
+            </div>
+          )}
 
           <div style={styles.content}>
             {/* Header */}
