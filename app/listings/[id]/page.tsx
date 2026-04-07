@@ -184,23 +184,23 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
 
         <main style={styles.main}>
           {/* Motto + Collage row */}
-          <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', marginBottom: '2rem' }}>
-            {/* Motto — narrow left strip */}
+          <div className="photo-motto-row">
+            {/* Motto — desktop only left strip */}
             {listing.motto && (
-              <div style={{ flexShrink: 0, width: 180, paddingTop: '3.5rem' }}>
+              <div className="motto-strip">
                 <h4 style={styles.motto}>"{listing.motto}"</h4>
               </div>
             )}
             {/* Collage photo grid — fills remaining space */}
-            <div style={{ position: 'relative', flex: 1 }}>
+            <div className="photo-collage" style={{ position: 'relative', flex: 1 }}>
               {photos.length === 0 ? (
                 <div style={styles.heroPlaceholder}>🏡</div>
               ) : photos.length === 1 ? (
-                <div style={{ borderRadius: 12, overflow: 'hidden', height: 480, cursor: 'zoom-in' }} onClick={() => openCarousel(0)}>
+                <div className="photo-single" style={{ borderRadius: 12, overflow: 'hidden', height: 480, cursor: 'zoom-in' }} onClick={() => openCarousel(0)}>
                   <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: photos.length >= 4 ? '1fr 1fr' : '1fr', gap: 4, height: 480, borderRadius: 12, overflow: 'hidden' }}>
+                <div className="photo-collage-inner" style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: photos.length >= 4 ? '1fr 1fr' : '1fr', gap: 4, height: 480, borderRadius: 12, overflow: 'hidden' }}>
                   <div style={{ gridRow: '1 / -1', overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(0)}>
                     <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
                       onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
@@ -228,6 +228,13 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
               >{saved ? '❤️' : '🤍'}</button>
             </div>
           </div>
+
+          {/* Motto — mobile only, shown below photos */}
+          {listing.motto && (
+            <div className="mobile-motto">
+              <h4 style={styles.motto}>"{listing.motto}"</h4>
+            </div>
+          )}
 
           {/* Carousel modal */}
           {carouselOpen && (
@@ -387,6 +394,19 @@ const globalStyles = `
   body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--dark); }
   a { text-decoration: none; color: inherit; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  .photo-motto-row { display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 2rem; }
+  .motto-strip { flex-shrink: 0; width: 180px; padding-top: 3.5rem; }
+  .mobile-motto { display: none; }
+
+  @media (max-width: 680px) {
+    .photo-motto-row { flex-direction: column; gap: 0; margin-bottom: 0; }
+    .motto-strip { display: none; }
+    .mobile-motto { display: block; padding: 1.4rem 0 0.5rem; }
+    .photo-collage { border-radius: 0 !important; margin: 0 -1.5rem; width: calc(100% + 3rem) !important; }
+    .photo-collage-inner { border-radius: 0 !important; height: 300px !important; }
+    .photo-single { border-radius: 0 !important; height: 300px !important; margin: 0 -1.5rem; width: calc(100% + 3rem) !important; }
+  }
 `
 
 const styles: Record<string, React.CSSProperties> = {
