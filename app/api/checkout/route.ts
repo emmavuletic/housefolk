@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     line_items: [{ price: priceId, quantity: 1 }],
     allow_promotion_codes: true,
     metadata: { listing_id, user_id: user.id, type },
-    success_url: `${appUrl}?success=listing&listing_id=${listing_id}`,
+    success_url: `${appUrl}?success=listing&listing_id=${listing_id}&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${appUrl}?cancelled=true`,
     subscription_data: { metadata: { listing_id, user_id: user.id } },
   })

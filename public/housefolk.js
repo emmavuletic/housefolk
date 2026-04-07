@@ -2200,14 +2200,25 @@ function switchTab(tab) {
 }
 
 // ── CHECK URL PARAMS (return from Stripe) ──
-function checkSuccessParam() {
+async function checkSuccessParam() {
   const params = new URLSearchParams(window.location.search)
   if (params.get('success') === 'listing') {
     showScreen('dash')
     showPanel('mylistings')
-    toast('✓ Payment confirmed — your listing is now live!', 'green')
-    loadMyListings()
     window.history.replaceState({}, '', '/')
+    // Confirm payment with Stripe directly — activates listing even if webhook failed
+    const sessionId = params.get('session_id')
+    const listingId = params.get('listing_id')
+    if (sessionId && listingId) {
+      const result = await api('/api/checkout/confirm', {
+        method: 'POST',
+        body: JSON.stringify({ session_id: sessionId, listing_id: listingId }),
+      })
+      toast(result.ok ? '✓ Payment confirmed — your listing is now live!' : '✓ Payment received — listing activating shortly.', 'green')
+    } else {
+      toast('✓ Payment confirmed — your listing is now live!', 'green')
+    }
+    loadMyListings()
   } else if (params.get('success') === 'subscription') {
     toast('✓ Subscription active — you can now message landlords!', 'green')
     window.history.replaceState({}, '', '/')
