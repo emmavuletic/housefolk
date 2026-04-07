@@ -428,7 +428,7 @@ const PANEL_MAP = {
   overview: 'si-overview', post: 'si-post', mylistings: 'si-listings',
   inbox: 'si-inbox', newsletter: 'si-nl', promos: 'si-promos',
   profile: 'si-profile', billing: 'si-billing', tenant: 'si-tenant',
-  roommates: 'si-roommates',
+  roommates: 'si-roommates', saved: 'si-saved',
 }
 const MOB_NAV_MAP = { overview: 'mob-overview', post: 'mob-post', mylistings: 'mob-listings', inbox: 'mob-inbox', profile: 'mob-profile' }
 function showPanel(name) {
@@ -457,6 +457,7 @@ function showPanel(name) {
   if (name === 'weeklistings') loadWeekListings()
   if (name === 'profile') { buildSeekerSignGrid(null); loadProfile() }
   if (name === 'tenant') loadSavedListings()
+  if (name === 'saved') loadSavedListings()
   if (name === 'roommates') loadRoommates()
 }
 

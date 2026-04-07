@@ -763,6 +763,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <!-- Tenant zone block -->
       <div style="background:#FFF0E8;padding:0.6rem 0.8rem">
         <div class="sb-label" style="font-weight:700;color:var(--dark)">Tenant / Sharer zone</div>
+        <button class="sb-item" id="si-saved" onclick="showPanel('saved')"><span class="sb-icon">❤️</span> Saved listings</button>
         <button class="sb-item" id="si-tenant" onclick="showPanel('tenant')"><span class="sb-icon">🔍</span> Renter account</button>
         <button class="sb-item" id="si-roommates" onclick="showPanel('roommates')"><span class="sb-icon">📖</span> Find a roommate</button>
         <button class="sb-item" id="si-profile" onclick="showPanel('profile')"><span class="sb-icon">👤</span> Profile</button>
@@ -1348,6 +1349,19 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         </div>
       </div>
 
+      <!-- ── SAVED LISTINGS ── -->
+      <div class="dash-panel" id="panel-saved">
+        <div class="panel-header">
+          <h1>Saved listings</h1>
+          <p>Listings you've hearted to revisit.</p>
+        </div>
+        <div class="fcard">
+          <div id="saved-listings-wrap">
+            <div style="text-align:center;padding:2rem;color:var(--light);font-size:0.86rem">No saved listings yet — browse listings and tap 🤍 to save them here.</div>
+          </div>
+        </div>
+      </div>
+
       <!-- ── TENANT DASHBOARD ── -->
       <div class="dash-panel" id="panel-tenant">
         <div class="panel-header">
@@ -1355,15 +1369,6 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <p>Your saved listings, subscription and message history.</p>
         </div>
 
-
-        <!-- Saved listings -->
-        <div class="fcard">
-          <div class="fcard-title">🤍 Saved listings</div>
-          <div class="fcard-sub">Listings you have saved to revisit.</div>
-          <div id="saved-listings-wrap">
-            <div style="text-align:center;padding:2rem;color:var(--light);font-size:0.86rem">No saved listings yet — browse listings and tap 🤍 to save them here.</div>
-          </div>
-        </div>
 
         <!-- Roommate directory opt-in -->
         <div class="fcard" style="background:#f0f4f1;border:1.5px solid #c4d4c9">
