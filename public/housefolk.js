@@ -1258,6 +1258,9 @@ function renderMessageBubble(m) {
 function escapeHtml(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 }
+function safeUrl(url) {
+  try { const u = new URL(url); return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : null } catch { return null }
+}
 
 async function sendChatMessage() {
   if (!_activeEnquiryId) return
@@ -1566,7 +1569,7 @@ async function openListing(id) {
   document.getElementById('detail-grid').innerHTML = `
     <div style="font-size:0.8rem;color:var(--mid)">Status</div><div style="font-size:0.85rem;font-weight:600">${statusLabel[l.status] || l.status}</div>
     ${l.goes_live_at ? `<div style="font-size:0.8rem;color:var(--mid)">Goes live</div><div style="font-size:0.85rem;font-weight:600">${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' })}</div>` : ''}
-    ${l.spotify_url ? `<div style="font-size:0.8rem;color:var(--mid)">Spotify</div><div style="font-size:0.85rem"><a href="${l.spotify_url}" target="_blank" style="color:var(--accent)">🎵 Playlist</a></div>` : ''}`
+    ${safeUrl(l.spotify_url) ? `<div style="font-size:0.8rem;color:var(--mid)">Spotify</div><div style="font-size:0.85rem"><a href="${safeUrl(l.spotify_url)}" target="_blank" rel="noopener" style="color:var(--accent)">🎵 Playlist</a></div>` : ''}`
 
   // Contact wrap — show enquiry button if logged in and not own listing
   const contactWrap = document.getElementById('detail-contact-wrap')
@@ -1679,8 +1682,8 @@ function openRoommateDetail(userId) {
     .join('')
 
   const socials = [
-    r.instagram ? `<a href="${r.instagram}" target="_blank" rel="noopener" style="background:#f0f4f1;border:1px solid #c4d4c9;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.8rem;color:#7C9885;text-decoration:none;font-weight:600">📸 Instagram</a>` : '',
-    r.linkedin ? `<a href="${r.linkedin}" target="_blank" rel="noopener" style="background:#f0f4f1;border:1px solid #c4d4c9;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.8rem;color:#7C9885;text-decoration:none;font-weight:600">🔗 LinkedIn</a>` : '',
+    safeUrl(r.instagram) ? `<a href="${safeUrl(r.instagram)}" target="_blank" rel="noopener" style="background:#f0f4f1;border:1px solid #c4d4c9;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.8rem;color:#7C9885;text-decoration:none;font-weight:600">📸 Instagram</a>` : '',
+    safeUrl(r.linkedin) ? `<a href="${safeUrl(r.linkedin)}" target="_blank" rel="noopener" style="background:#f0f4f1;border:1px solid #c4d4c9;border-radius:8px;padding:0.4rem 0.8rem;font-size:0.8rem;color:#7C9885;text-decoration:none;font-weight:600">🔗 LinkedIn</a>` : '',
   ].filter(Boolean)
   document.getElementById('rm-modal-socials').innerHTML = socials.join('')
 

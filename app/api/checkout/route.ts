@@ -36,11 +36,11 @@ export async function POST(req: NextRequest) {
         (promo.discount_type === 'free-any' || promo.discount_type === `free-${type}`)
 
       if (isValid) {
-        // Activate listing for free
+        // Activate listing for free — only if it belongs to this user
         await supabase.from('listings').update({
           status: 'active',
           promo_code_used: promo_code.toUpperCase(),
-        }).eq('id', listing_id)
+        }).eq('id', listing_id).eq('landlord_id', user.id)
 
         await supabase.from('promo_codes')
           .update({ uses_count: (promo.uses_count || 0) + 1 })

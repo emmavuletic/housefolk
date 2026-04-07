@@ -181,8 +181,10 @@ export async function POST(req: NextRequest) {
     if (profile?.star_sign) profileLines.push(`⭐ Star sign: ${profile.star_sign.charAt(0).toUpperCase() + profile.star_sign.slice(1)}`)
     if (profile?.bio) profileLines.push(`💬 About them: ${profile.bio}`)
     if (profile?.job_title) profileLines.push(`💼 ${profile.job_title}${profile.company ? ` at ${profile.company}` : ''}`)
-    if (profile?.instagram) profileLines.push(`📸 Instagram: <a href="${profile.instagram}">${profile.instagram}</a>`)
-    if (profile?.linkedin) profileLines.push(`🔗 LinkedIn: <a href="${profile.linkedin}">${profile.linkedin}</a>`)
+    const igUrl2 = profile?.instagram ? safeUrl(profile.instagram) : null
+    const liUrl2 = profile?.linkedin ? safeUrl(profile.linkedin) : null
+    if (igUrl2 && profile) profileLines.push(`📸 Instagram: <a href="${igUrl2}">${escapeHtml(profile.instagram)}</a>`)
+    if (liUrl2 && profile) profileLines.push(`🔗 LinkedIn: <a href="${liUrl2}">${escapeHtml(profile.linkedin)}</a>`)
     const profileHtml = profileLines.length > 0
       ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Renter profile</strong><br>${profileLines.join('<br>')}</p>`
       : ''
