@@ -183,46 +183,50 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
         </nav>
 
         <main style={styles.main}>
-          {/* Collage photo grid */}
-          <div style={{ position: 'relative', marginBottom: '2rem' }}>
-            {photos.length === 0 ? (
-              <div style={styles.heroPlaceholder}>🏡</div>
-            ) : photos.length === 1 ? (
-              <div style={{ borderRadius: 12, overflow: 'hidden', height: 480, cursor: 'zoom-in' }} onClick={() => openCarousel(0)}>
-                <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          {/* Motto + Collage row */}
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start', marginBottom: '2rem' }}>
+            {/* Motto — narrow left strip */}
+            {listing.motto && (
+              <div style={{ flexShrink: 0, width: 180, paddingTop: '3.5rem' }}>
+                <h4 style={styles.motto}>"{listing.motto}"</h4>
               </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: photos.length >= 4 ? '1fr 1fr' : '1fr', gap: 4, height: 480, borderRadius: 12, overflow: 'hidden' }}>
-                {/* Main large photo */}
-                <div style={{ gridRow: '1 / -1', overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(0)}>
-                  <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
-                    onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
-                    onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-                  />
+            )}
+            {/* Collage photo grid — fills remaining space */}
+            <div style={{ position: 'relative', flex: 1 }}>
+              {photos.length === 0 ? (
+                <div style={styles.heroPlaceholder}>🏡</div>
+              ) : photos.length === 1 ? (
+                <div style={{ borderRadius: 12, overflow: 'hidden', height: 480, cursor: 'zoom-in' }} onClick={() => openCarousel(0)}>
+                  <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
-                {/* Right column: up to 2 smaller photos */}
-                {photos.slice(1, 3).map((p, i) => (
-                  <div key={i} style={{ overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(i + 1)}>
-                    <img src={p} alt={`${listing.title} ${i + 2}`} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: photos.length >= 4 ? '1fr 1fr' : '1fr', gap: 4, height: 480, borderRadius: 12, overflow: 'hidden' }}>
+                  <div style={{ gridRow: '1 / -1', overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(0)}>
+                    <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
                       onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
                       onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
                     />
-                    {/* Show "X more" overlay on last visible tile if more photos exist */}
-                    {i === 1 && photos.length > 3 && (
-                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.02em' }}>
-                        +{photos.length - 3} more
-                      </div>
-                    )}
                   </div>
-                ))}
-              </div>
-            )}
-            {/* Type badge */}
-            <span style={styles.heroBadge}>{typeInfo.emoji} {typeInfo.label}</span>
-            {/* Save button */}
-            <button onClick={toggleSave} title={saved ? 'Remove from saved' : 'Save listing'}
-              style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: '50%', width: 42, height: 42, cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', zIndex: 2 }}
-            >{saved ? '❤️' : '🤍'}</button>
+                  {photos.slice(1, 3).map((p, i) => (
+                    <div key={i} style={{ overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(i + 1)}>
+                      <img src={p} alt={`${listing.title} ${i + 2}`} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
+                        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
+                        onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                      />
+                      {i === 1 && photos.length > 3 && (
+                        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.02em' }}>
+                          +{photos.length - 3} more
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <span style={styles.heroBadge}>{typeInfo.emoji} {typeInfo.label}</span>
+              <button onClick={toggleSave} title={saved ? 'Remove from saved' : 'Save listing'}
+                style={{ position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,0.9)', border: 'none', borderRadius: '50%', width: 42, height: 42, cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', zIndex: 2 }}
+              >{saved ? '❤️' : '🤍'}</button>
+            </div>
           </div>
 
           {/* Carousel modal */}
@@ -276,11 +280,6 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                 <span style={styles.metaTag}>🔚 Until {formatDate(listing.sublet_until)}</span>
               )}
             </div>
-
-            {/* Motto */}
-            {listing.motto && (
-              <h4 style={styles.motto}>"{listing.motto}"</h4>
-            )}
 
             {/* Description */}
             {listing.description && (
@@ -420,7 +419,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500,
   },
   main: {
-    maxWidth: 800,
+    maxWidth: 1060,
     margin: '0 auto',
     padding: '2.5rem 1.5rem 4rem',
   },
