@@ -2204,7 +2204,7 @@ function checkSuccessParam() {
   if (params.get('success') === 'listing') {
     showScreen('dash')
     showPanel('mylistings')
-    toast('✓ Payment confirmed — listing scheduled for Thursday!', 'green')
+    toast('✓ Payment confirmed — your listing is now live!', 'green')
     loadMyListings()
     window.history.replaceState({}, '', '/')
   } else if (params.get('success') === 'subscription') {
@@ -2261,11 +2261,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Check for active session (covers OAuth callback, magic link, persisted session)
   const { data: { session } } = await _supabase.auth.getSession()
   if (session && !_recoveryHandled) {
-    window.history.replaceState({}, '', window.location.pathname)
     const profile = await api('/api/users/me')
     const user = profile.user || { email: session.user.email, first_name: session.user.email?.split('@')[0] || 'You', last_name: '' }
     setSession(user, session.access_token)
     launchDash(user.first_name || user.email?.split('@')[0] || 'You', user.last_name || '')
+    checkSuccessParam()
+    window.history.replaceState({}, '', window.location.pathname)
     return
   }
 

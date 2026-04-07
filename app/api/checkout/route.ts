@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       if (isValid) {
         // Activate listing for free
         await supabase.from('listings').update({
-          status: 'pending',
+          status: 'active',
           promo_code_used: promo_code.toUpperCase(),
         }).eq('id', listing_id)
 

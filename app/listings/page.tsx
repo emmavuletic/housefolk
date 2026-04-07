@@ -172,14 +172,21 @@ export default function ListingsPage() {
       const params = new URLSearchParams()
       if (type) params.set('type', type)
       if (location) params.set('location', location)
-      else if (city) params.set('location', city)
+      else if (city && city !== 'Other places') params.set('location', city)
 
       fetch(`/api/listings?${params}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(r => r.json())
         .then(({ listings: data }) => {
-          setListings(data ?? [])
+          let results = data ?? []
+          if (city === 'Other places' && !location) {
+            const mainCities = ['london', 'melbourne', 'brooklyn']
+            results = results.filter((l: Listing) =>
+              !mainCities.some(c => l.location.toLowerCase().includes(c))
+            )
+          }
+          setListings(results)
           setLoading(false)
         })
         .catch(() => setLoading(false))
@@ -236,10 +243,10 @@ export default function ListingsPage() {
         <main style={styles.main}>
           {/* City tabs */}
           <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.2rem' }}>
-            {['London', 'Melbourne', 'Brooklyn'].map(c => (
+            {['London', 'Melbourne', 'Brooklyn', 'Other places'].map(c => (
               <button
                 key={c}
-                onClick={() => { setCity(c); setLocation('') }}
+                onClick={() => { setCity(c); setLocation(''); setLoading(true) }}
                 style={{
                   padding: '0.5rem 1.2rem',
                   borderRadius: '50px',

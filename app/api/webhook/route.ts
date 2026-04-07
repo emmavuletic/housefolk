@@ -41,26 +41,20 @@ export async function POST(req: NextRequest) {
         if (listing) {
           await supabase.from('listings').update({
             stripe_subscription_id: session.subscription as string,
-            status: 'pending',
+            status: 'active',
           }).eq('id', listing_id)
 
           // Email landlord confirmation
           const landlordData = listing.users as { email: string; first_name: string } | null
           if (landlordData?.email) {
-            const goesLive = listing.goes_live_at
-              ? new Date(listing.goes_live_at).toLocaleDateString('en-GB', {
-                  weekday: 'long', day: 'numeric', month: 'long'
-                })
-              : 'this Thursday'
-
             await resend.emails.send({
               from: FROM_EMAIL,
               to: landlordData.email,
-              subject: `Your Housefolk listing is confirmed — goes live ${goesLive}`,
+              subject: `Your Housefolk listing is now live`,
               html: `
                 <p>Hi ${landlordData.first_name},</p>
-                <p>Your listing <strong>${listing.title}</strong> has been confirmed and will go live on <strong>${goesLive}</strong> when the Thursday newsletter sends.</p>
-                <p>You'll start receiving enquiries from that date.</p>
+                <p>Your listing <strong>${listing.title}</strong> is now live on Housefolk and will be featured in the Thursday newsletter.</p>
+                <p>You'll start receiving enquiries shortly.</p>
                 <p>— The Housefolk team</p>
               `,
             })

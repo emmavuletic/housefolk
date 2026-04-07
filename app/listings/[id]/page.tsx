@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase-client'
 
 interface Listing {
   id: string
@@ -63,31 +64,29 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   const [photoIndex, setPhotoIndex] = useState(0)
 
   useEffect(() => {
-    fetch(`/api/listings/${params.id}`)
-      .then(r => r.json())
-      .then(({ listing: data }) => {
-        if (!data) { setNotFound(true); return }
-        const token = localStorage.getItem('hf_token')
-        if (!token) {
-          window.location.href = '/housefolk.html'
-          return
-        }
-        setListing(data)
-        // Check saved state
-        if (token) {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const token = session?.access_token
+      if (!token) { window.location.href = '/housefolk.html'; return }
+
+      fetch(`/api/listings/${params.id}`)
+        .then(r => r.json())
+        .then(({ listing: data }) => {
+          if (!data) { setNotFound(true); return }
+          setListing(data)
           fetch('/api/listings/saved', { headers: { Authorization: `Bearer ${token}` } })
             .then(r => r.json())
             .then(({ listings: saved }) => {
               setSaved((saved || []).some((l: { id: string }) => l.id === params.id))
             })
             .catch(() => {})
-        }
-      })
-      .catch(() => setNotFound(true))
+        })
+        .catch(() => setNotFound(true))
+    })
   }, [params.id])
 
   async function toggleSave() {
-    const token = localStorage.getItem('hf_token')
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
     if (!token) { window.location.href = '/housefolk.html'; return }
     if (saved) {
       await fetch(`/api/listings/${params.id}/save`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
@@ -99,7 +98,8 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
   }
 
   async function handleEnquiry() {
-    const token = localStorage.getItem('hf_token')
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
     if (!token) {
       window.location.href = '/housefolk.html'
       return
