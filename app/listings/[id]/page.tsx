@@ -422,7 +422,7 @@ const styles: Record<string, React.CSSProperties> = {
   main: {
     maxWidth: 800,
     margin: '0 auto',
-    padding: '0 1.5rem 4rem',
+    padding: '2.5rem 1.5rem 4rem',
   },
   hero: {
     position: 'relative' as const,
