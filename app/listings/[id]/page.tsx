@@ -187,8 +187,37 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
           <div className="photo-motto-row">
             {/* Motto — desktop only left strip */}
             {listing.motto && (
-              <div className="motto-strip">
-                <h4 style={styles.motto}>"{listing.motto}"</h4>
+              <div className="motto-strip" style={{ position: 'relative' }}>
+                {/* Hand-drawn vintage key illustration — sits behind the quote */}
+                <svg
+                  viewBox="0 0 120 260"
+                  width="110"
+                  height="240"
+                  style={{ position: 'absolute', top: '4.5rem', left: '50%', transform: 'translateX(-50%) rotate(-8deg)', opacity: 0.1, zIndex: 0, pointerEvents: 'none' }}
+                  fill="none"
+                  stroke="#1A1510"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  {/* Key bow (ring at top) — hand-drawn circle */}
+                  <path d="M42 14 C30 8, 14 12, 10 26 C6 40, 14 56, 28 60 C42 64, 58 56, 62 42 C66 28, 58 14, 44 12 Z" strokeWidth="4.5"/>
+                  {/* Inner circle of bow */}
+                  <path d="M38 24 C32 22, 24 26, 22 34 C20 42, 26 50, 34 50 C42 50, 48 44, 48 36 C48 28, 44 22, 38 24 Z" strokeWidth="3"/>
+                  {/* Key shaft — slightly wobbly hand-drawn feel */}
+                  <path d="M55 48 C58 52, 60 58, 61 66 C62 80, 61 96, 62 112 C63 128, 62 144, 63 158 C64 172, 63 188, 62 200 C61 212, 61 222, 60 232" strokeWidth="4.5"/>
+                  {/* First teeth on shaft */}
+                  <path d="M62 148 C68 146, 76 144, 80 140 C78 148, 76 154, 68 156" strokeWidth="3.5"/>
+                  {/* Second teeth */}
+                  <path d="M62 170 C70 168, 78 166, 84 160 C82 168, 78 176, 70 178" strokeWidth="3.5"/>
+                  {/* Third teeth (shorter) */}
+                  <path d="M61 196 C67 194, 73 192, 76 188 C75 194, 73 200, 67 202" strokeWidth="3.5"/>
+                  {/* Tip of key */}
+                  <path d="M59 232 C58 238, 58 244, 60 248" strokeWidth="4"/>
+                  {/* Sketch texture lines on bow */}
+                  <path d="M20 30 C22 28, 24 27, 26 28" strokeWidth="1.5" opacity="0.5"/>
+                  <path d="M18 38 C20 36, 23 35, 25 36" strokeWidth="1.5" opacity="0.5"/>
+                </svg>
+                <h4 style={{ ...styles.motto, position: 'relative', zIndex: 1 }}>"{listing.motto}"</h4>
               </div>
             )}
             {/* Collage photo grid — fills remaining space */}
