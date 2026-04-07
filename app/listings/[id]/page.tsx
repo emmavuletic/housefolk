@@ -514,7 +514,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#1A1A1A',
     marginBottom: '1.5rem',
     textAlign: 'left' as const,
-    fontFamily: "'Playfair Display', serif",
   },
   section: {
     marginBottom: '1.5rem',
