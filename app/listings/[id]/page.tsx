@@ -190,32 +190,45 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
               <div className="motto-strip" style={{ position: 'relative' }}>
                 {/* Hand-drawn vintage key illustration — sits behind the quote */}
                 <svg
-                  viewBox="0 0 120 260"
-                  width="110"
-                  height="240"
-                  style={{ position: 'absolute', top: '4.5rem', left: '50%', transform: 'translateX(-50%) rotate(-8deg)', opacity: 0.1, zIndex: 0, pointerEvents: 'none' }}
+                  viewBox="0 0 220 300"
+                  width="200"
+                  height="280"
+                  style={{ position: 'absolute', top: '3rem', left: '50%', transform: 'translateX(-52%) rotate(6deg)', opacity: 0.1, zIndex: 0, pointerEvents: 'none' }}
                   fill="none"
                   stroke="#1A1510"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  {/* Key bow (ring at top) — hand-drawn circle */}
-                  <path d="M42 14 C30 8, 14 12, 10 26 C6 40, 14 56, 28 60 C42 64, 58 56, 62 42 C66 28, 58 14, 44 12 Z" strokeWidth="4.5"/>
-                  {/* Inner circle of bow */}
-                  <path d="M38 24 C32 22, 24 26, 22 34 C20 42, 26 50, 34 50 C42 50, 48 44, 48 36 C48 28, 44 22, 38 24 Z" strokeWidth="3"/>
-                  {/* Key shaft — slightly wobbly hand-drawn feel */}
-                  <path d="M55 48 C58 52, 60 58, 61 66 C62 80, 61 96, 62 112 C63 128, 62 144, 63 158 C64 172, 63 188, 62 200 C61 212, 61 222, 60 232" strokeWidth="4.5"/>
-                  {/* First teeth on shaft */}
-                  <path d="M62 148 C68 146, 76 144, 80 140 C78 148, 76 154, 68 156" strokeWidth="3.5"/>
-                  {/* Second teeth */}
-                  <path d="M62 170 C70 168, 78 166, 84 160 C82 168, 78 176, 70 178" strokeWidth="3.5"/>
-                  {/* Third teeth (shorter) */}
-                  <path d="M61 196 C67 194, 73 192, 76 188 C75 194, 73 200, 67 202" strokeWidth="3.5"/>
-                  {/* Tip of key */}
-                  <path d="M59 232 C58 238, 58 244, 60 248" strokeWidth="4"/>
-                  {/* Sketch texture lines on bow */}
-                  <path d="M20 30 C22 28, 24 27, 26 28" strokeWidth="1.5" opacity="0.5"/>
-                  <path d="M18 38 C20 36, 23 35, 25 36" strokeWidth="1.5" opacity="0.5"/>
+                  {/* Centre of flower */}
+                  <path d="M108 118 C104 114, 100 112, 100 118 C100 124, 104 128, 110 128 C116 128, 120 124, 120 118 C120 112, 116 110, 110 116 Z" strokeWidth="3"/>
+                  {/* Petal top */}
+                  <path d="M110 116 C106 104, 98 90, 100 74 C102 60, 110 52, 114 66 C118 80, 116 100, 112 116" strokeWidth="3.5"/>
+                  {/* Petal top-right */}
+                  <path d="M118 114 C128 104, 140 96, 154 92 C168 88, 176 96, 166 106 C156 116, 138 118, 120 120" strokeWidth="3.5"/>
+                  {/* Petal right */}
+                  <path d="M120 122 C132 120, 148 118, 162 124 C176 130, 180 142, 168 146 C156 150, 140 140, 122 128" strokeWidth="3.5"/>
+                  {/* Petal bottom-right */}
+                  <path d="M116 128 C122 140, 126 156, 118 170 C110 184, 98 186, 96 172 C94 158, 102 142, 112 130" strokeWidth="3.5"/>
+                  {/* Petal bottom-left */}
+                  <path d="M106 128 C96 138, 82 148, 68 148 C54 148, 48 138, 58 130 C68 122, 88 122, 106 124" strokeWidth="3.5"/>
+                  {/* Petal left */}
+                  <path d="M102 122 C90 118, 74 112, 62 102 C50 92, 50 80, 62 80 C74 80, 90 94, 104 114" strokeWidth="3.5"/>
+                  {/* Petal top-left */}
+                  <path d="M104 116 C96 106, 84 94, 80 78 C76 62, 84 54, 94 62 C104 70, 108 92, 110 114" strokeWidth="3.5"/>
+                  {/* Stem — long wobbly */}
+                  <path d="M108 130 C106 148, 106 164, 104 180 C102 196, 100 212, 100 228 C100 244, 102 258, 102 270" strokeWidth="4"/>
+                  {/* Leaf left on stem */}
+                  <path d="M104 190 C96 182, 82 178, 72 184 C80 192, 92 194, 104 196" strokeWidth="3"/>
+                  {/* Leaf right on stem */}
+                  <path d="M102 220 C110 212, 124 210, 132 218 C124 226, 112 226, 102 224" strokeWidth="3"/>
+                  {/* Leaf vein left */}
+                  <path d="M104 192 C96 186, 88 184, 82 186" strokeWidth="1.5" opacity="0.6"/>
+                  {/* Leaf vein right */}
+                  <path d="M102 222 C110 216, 118 214, 124 216" strokeWidth="1.5" opacity="0.6"/>
+                  {/* Petal detail lines */}
+                  <path d="M110 80 C110 88, 110 96, 110 106" strokeWidth="1.5" opacity="0.5"/>
+                  <path d="M148 96 C144 102, 140 106, 136 110" strokeWidth="1.5" opacity="0.5"/>
+                  <path d="M70 148 C76 142, 82 138, 88 134" strokeWidth="1.5" opacity="0.5"/>
                 </svg>
                 <h4 style={{ ...styles.motto, position: 'relative', zIndex: 1 }}>"{listing.motto}"</h4>
               </div>
