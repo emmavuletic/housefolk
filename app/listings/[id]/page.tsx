@@ -279,7 +279,7 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
 
             {/* Motto */}
             {listing.motto && (
-              <blockquote style={styles.motto}>{listing.motto}</blockquote>
+              <h4 style={styles.motto}>"{listing.motto}"</h4>
             )}
 
             {/* Description */}
@@ -507,13 +507,14 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500,
   },
   motto: {
-    borderLeft: '3px solid #f7b188',
-    paddingLeft: '1rem',
+    fontFamily: "'Playfair Display', serif",
+    fontWeight: 400,
     fontStyle: 'italic',
-    color: '#f7b188',
-    fontSize: '1.05rem',
-    lineHeight: 1.6,
+    fontSize: '1.3rem',
+    lineHeight: 1.5,
+    color: '#1A1A1A',
     marginBottom: '1.5rem',
+    textAlign: 'left' as const,
     fontFamily: "'Playfair Display', serif",
   },
   section: {
