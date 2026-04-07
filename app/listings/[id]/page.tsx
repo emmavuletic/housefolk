@@ -190,45 +190,93 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
               <div className="motto-strip" style={{ position: 'relative' }}>
                 {/* Hand-drawn vintage key illustration — sits behind the quote */}
                 <svg
-                  viewBox="0 0 220 300"
-                  width="200"
-                  height="280"
-                  style={{ position: 'absolute', top: '3rem', left: '50%', transform: 'translateX(-52%) rotate(6deg)', opacity: 0.1, zIndex: 0, pointerEvents: 'none' }}
+                  viewBox="0 0 340 560"
+                  width="320"
+                  height="520"
+                  style={{ position: 'absolute', top: '1rem', left: '50%', transform: 'translateX(-50%)', opacity: 0.11, zIndex: 0, pointerEvents: 'none' }}
                   fill="none"
                   stroke="#1A1510"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  {/* Centre of flower */}
-                  <path d="M108 118 C104 114, 100 112, 100 118 C100 124, 104 128, 110 128 C116 128, 120 124, 120 118 C120 112, 116 110, 110 116 Z" strokeWidth="3"/>
-                  {/* Petal top */}
-                  <path d="M110 116 C106 104, 98 90, 100 74 C102 60, 110 52, 114 66 C118 80, 116 100, 112 116" strokeWidth="3.5"/>
-                  {/* Petal top-right */}
-                  <path d="M118 114 C128 104, 140 96, 154 92 C168 88, 176 96, 166 106 C156 116, 138 118, 120 120" strokeWidth="3.5"/>
-                  {/* Petal right */}
-                  <path d="M120 122 C132 120, 148 118, 162 124 C176 130, 180 142, 168 146 C156 150, 140 140, 122 128" strokeWidth="3.5"/>
-                  {/* Petal bottom-right */}
-                  <path d="M116 128 C122 140, 126 156, 118 170 C110 184, 98 186, 96 172 C94 158, 102 142, 112 130" strokeWidth="3.5"/>
-                  {/* Petal bottom-left */}
-                  <path d="M106 128 C96 138, 82 148, 68 148 C54 148, 48 138, 58 130 C68 122, 88 122, 106 124" strokeWidth="3.5"/>
-                  {/* Petal left */}
-                  <path d="M102 122 C90 118, 74 112, 62 102 C50 92, 50 80, 62 80 C74 80, 90 94, 104 114" strokeWidth="3.5"/>
+                  {/* ── MAIN STEM ── */}
+                  <path d="M172 200 C170 222, 168 244, 166 266 C164 288, 162 310, 160 332 C158 354, 156 376, 155 400 C154 420, 153 442, 152 460" strokeWidth="4.5"/>
+
+                  {/* ── MAIN FLOWER — head pointing left ── */}
+                  {/* Centre */}
+                  <path d="M148 190 C142 184, 134 182, 132 190 C130 198, 136 206, 144 206 C152 206, 158 200, 156 192 C154 184, 148 182, 146 190 Z" strokeWidth="3.5"/>
+                  {/* Petal left (pointing left — main direction) */}
+                  <path d="M134 194 C118 190, 100 186, 84 180 C68 174, 58 162, 70 156 C82 150, 102 162, 120 174 C132 182, 138 190, 136 196" strokeWidth="4"/>
+                  {/* Petal far left */}
+                  <path d="M132 188 C116 176, 96 160, 82 144 C68 128, 68 114, 80 118 C92 122, 108 142, 124 162 C134 174, 138 184, 134 190" strokeWidth="4"/>
                   {/* Petal top-left */}
-                  <path d="M104 116 C96 106, 84 94, 80 78 C76 62, 84 54, 94 62 C104 70, 108 92, 110 114" strokeWidth="3.5"/>
-                  {/* Stem — long wobbly */}
-                  <path d="M108 130 C106 148, 106 164, 104 180 C102 196, 100 212, 100 228 C100 244, 102 258, 102 270" strokeWidth="4"/>
-                  {/* Leaf left on stem */}
-                  <path d="M104 190 C96 182, 82 178, 72 184 C80 192, 92 194, 104 196" strokeWidth="3"/>
-                  {/* Leaf right on stem */}
-                  <path d="M102 220 C110 212, 124 210, 132 218 C124 226, 112 226, 102 224" strokeWidth="3"/>
-                  {/* Leaf vein left */}
-                  <path d="M104 192 C96 186, 88 184, 82 186" strokeWidth="1.5" opacity="0.6"/>
-                  {/* Leaf vein right */}
-                  <path d="M102 222 C110 216, 118 214, 124 216" strokeWidth="1.5" opacity="0.6"/>
+                  <path d="M140 182 C136 166, 130 148, 126 130 C122 112, 128 98, 138 104 C148 110, 152 130, 152 150 C152 166, 148 180, 144 184" strokeWidth="4"/>
+                  {/* Petal top */}
+                  <path d="M150 180 C152 164, 156 146, 162 130 C168 114, 178 104, 184 112 C190 120, 184 138, 174 154 C166 166, 156 178, 150 182" strokeWidth="4"/>
+                  {/* Petal top-right */}
+                  <path d="M158 184 C166 170, 178 156, 192 146 C206 136, 218 136, 216 148 C214 160, 200 166, 184 172 C172 176, 162 182, 158 186" strokeWidth="4"/>
+                  {/* Petal right */}
+                  <path d="M158 192 C170 188, 186 186, 200 190 C214 194, 220 204, 210 210 C200 216, 184 212, 170 206 C160 202, 156 196, 158 194" strokeWidth="4"/>
+                  {/* Petal bottom-right */}
+                  <path d="M154 202 C162 214, 170 228, 168 244 C166 260, 156 266, 148 256 C140 246, 140 228, 144 212 C148 202, 152 200, 154 204" strokeWidth="4"/>
                   {/* Petal detail lines */}
-                  <path d="M110 80 C110 88, 110 96, 110 106" strokeWidth="1.5" opacity="0.5"/>
-                  <path d="M148 96 C144 102, 140 106, 136 110" strokeWidth="1.5" opacity="0.5"/>
-                  <path d="M70 148 C76 142, 82 138, 88 134" strokeWidth="1.5" opacity="0.5"/>
+                  <path d="M80 164 C90 170, 100 174, 110 178" strokeWidth="1.8" opacity="0.5"/>
+                  <path d="M132 116 C136 126, 138 138, 140 148" strokeWidth="1.8" opacity="0.5"/>
+                  <path d="M176 118 C172 130, 168 140, 164 150" strokeWidth="1.8" opacity="0.5"/>
+                  <path d="M204 152 C196 158, 188 164, 180 168" strokeWidth="1.8" opacity="0.5"/>
+
+                  {/* ── BRANCH LEFT with small flower ── */}
+                  <path d="M164 280 C150 272, 132 266, 116 260 C100 254, 86 250, 76 244" strokeWidth="3.5"/>
+                  {/* Small flower left — centre */}
+                  <path d="M68 240 C64 236, 58 236, 58 242 C58 248, 64 252, 70 250 C76 248, 78 242, 74 238 C70 234, 66 236, 68 240 Z" strokeWidth="2.5"/>
+                  {/* Small flower left petals */}
+                  <path d="M60 240 C52 234, 44 226, 46 218 C48 210, 56 212, 62 220 C66 228, 64 236, 62 240" strokeWidth="3"/>
+                  <path d="M64 236 C60 226, 60 214, 66 208 C72 202, 78 208, 76 218 C74 226, 70 234, 66 238" strokeWidth="3"/>
+                  <path d="M72 236 C72 224, 76 212, 84 208 C92 204, 96 212, 90 220 C84 228, 76 234, 72 238" strokeWidth="3"/>
+                  <path d="M74 242 C82 238, 92 236, 98 242 C92 248, 82 248, 74 244" strokeWidth="3"/>
+                  <path d="M70 248 C66 256, 62 264, 64 272 C66 258, 70 254, 72 250" strokeWidth="3"/>
+
+                  {/* ── BRANCH RIGHT with bud ── */}
+                  <path d="M162 320 C174 312, 188 306, 202 302 C216 298, 228 298, 234 306" strokeWidth="3.5"/>
+                  {/* Bud right */}
+                  <path d="M234 306 C236 296, 240 284, 238 274 C236 264, 230 260, 226 268 C222 276, 224 292, 228 304" strokeWidth="3.5"/>
+                  <path d="M234 306 C242 298, 250 288, 248 276 C246 264, 238 262, 234 270" strokeWidth="3"/>
+                  {/* Bud tip */}
+                  <path d="M236 272 C236 266, 234 262, 232 260" strokeWidth="2.5"/>
+
+                  {/* ── LEAF cluster left on main stem ── */}
+                  <path d="M166 356 C152 344, 134 336, 118 334 C130 346, 146 352, 164 358" strokeWidth="3.5"/>
+                  <path d="M164 358 C154 358, 142 362, 130 370 C142 372, 156 368, 165 360" strokeWidth="3"/>
+                  {/* Leaf veins */}
+                  <path d="M166 358 C152 348, 140 342, 130 340" strokeWidth="1.5" opacity="0.5"/>
+                  <path d="M164 360 C154 362, 144 366, 136 370" strokeWidth="1.5" opacity="0.5"/>
+
+                  {/* ── LEAF right on main stem ── */}
+                  <path d="M160 390 C170 380, 184 374, 198 374 C186 382, 172 386, 161 392" strokeWidth="3.5"/>
+                  <path d="M160 392 C172 392, 184 396, 194 404 C182 406, 168 400, 160 394" strokeWidth="3"/>
+                  <path d="M160 392 C172 384, 182 378, 192 376" strokeWidth="1.5" opacity="0.5"/>
+
+                  {/* ── SMALL FLOWER on lower branch ── */}
+                  <path d="M156 420 C142 414, 126 412, 112 416" strokeWidth="3.5"/>
+                  {/* Tiny flower */}
+                  <path d="M106 412 C100 408, 94 408, 94 414 C94 420, 100 424, 106 422 C112 420, 114 414, 110 410 C106 406, 102 408, 104 412 Z" strokeWidth="2.5"/>
+                  <path d="M96 412 C90 406, 86 396, 90 390 C94 384, 100 388, 102 396 C104 404, 100 410, 98 414" strokeWidth="2.8"/>
+                  <path d="M100 408 C98 400, 100 390, 106 386 C112 382, 116 390, 112 398 C108 406, 102 410, 100 410" strokeWidth="2.8"/>
+                  <path d="M108 408 C112 400, 118 394, 124 394 C120 402, 114 406, 110 410" strokeWidth="2.8"/>
+                  <path d="M110 416 C116 414, 122 416, 124 422 C118 424, 112 420, 110 418" strokeWidth="2.8"/>
+
+                  {/* ── GRASS / small sprigs at base ── */}
+                  <path d="M148 458 C144 444, 140 432, 138 420" strokeWidth="2.5"/>
+                  <path d="M152 460 C156 446, 158 432, 162 420" strokeWidth="2.5"/>
+                  <path d="M150 460 C148 448, 144 438, 140 428" strokeWidth="2"/>
+                  <path d="M154 460 C158 448, 164 438, 168 428" strokeWidth="2"/>
+
+                  {/* ── LOOSE DOTS / seeds scattered ── */}
+                  <circle cx="220" cy="172" r="2.5" strokeWidth="2" fill="#1A1510"/>
+                  <circle cx="228" cy="180" r="2" strokeWidth="2" fill="#1A1510"/>
+                  <circle cx="214" cy="182" r="1.5" strokeWidth="1.5" fill="#1A1510"/>
+                  <circle cx="56" cy="206" r="2" strokeWidth="2" fill="#1A1510"/>
+                  <circle cx="62" cy="198" r="1.5" strokeWidth="1.5" fill="#1A1510"/>
                 </svg>
                 <h4 style={{ ...styles.motto, position: 'relative', zIndex: 1 }}>"{listing.motto}"</h4>
               </div>
