@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Housefolk — UK Rental Listings',
-  description: 'Find your perfect home. Flatshares, rentals and sublets across the UK, delivered every Thursday.',
+  description: 'Find your perfect home. Flatshares, rentals and sublets across the UK.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

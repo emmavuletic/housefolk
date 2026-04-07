@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>Housefolk — find your folk, find your place</title>
-<meta name="description" content="Find your folk, find your place. Flatshares, sublets and rentals — new listings every Thursday.">
+<meta name="description" content="Find your folk, find your place. Flatshares, sublets and rentals across the UK.">
 <meta property="og:title" content="Housefolk — find your folk, find your place">
-<meta property="og:description" content="Flatshares, sublets and rentals — new listings every Thursday.">
+<meta property="og:description" content="Flatshares, sublets and rentals across the UK.">
 <meta property="og:url" content="https://app.housefolk.co">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Housefolk — find your folk, find your place">
-<meta name="twitter:description" content="Flatshares, sublets and rentals — new listings every Thursday.">
+<meta name="twitter:description" content="Flatshares, sublets and rentals across the UK.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -587,7 +587,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <div class="cta-card post" onclick="goToPost()">
         <span class="cta-icon">🏠</span>
         <div class="cta-title">Post a listing</div>
-        <div class="cta-desc">List your flatshare, rental or sublet. Reach mindful renters every Thursday.</div>
+        <div class="cta-desc">List your flatshare, rental or sublet. Reach mindful renters.</div>
         <div class="cta-btn post">Post a listing →</div>
       </div>
       <div class="cta-card roommates" onclick="goToRoommates()">
@@ -602,7 +602,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
   <!-- Preview listings -->
   <div class="landing-listings-preview">
     <h2>This week's listings</h2>
-    <p>New homes added every Thursday · Sign up to browse and message landlords</p>
+    <p>Sign up to browse and message landlords</p>
     <div class="preview-grid" id="landing-preview-grid"></div>
   </div>
 
@@ -647,7 +647,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       </div>
     </div>
     <div>
-      <div class="auth-left-foot">📰 Listings every Thursday · Sign up to browse &amp; message landlords</div>
+      <div class="auth-left-foot">Sign up to browse &amp; message landlords</div>
     </div>
   </div>
 
@@ -813,8 +813,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <div class="embargo-banner">
             <span class="eb-icon">📰</span>
             <div class="eb-text">
-              <h3>New listings debut this Thursday</h3>
-              <p>Listings posted this week go live on Thursday when the newsletter sends. Subscribers get them first — in their inbox and on the site at the same time.</p>
+              <h3>Newsletter goes out every Thursday</h3>
+              <p>New listings go live immediately on payment. Subscribers also receive them in Thursday's newsletter — in their inbox and on the site.</p>
             </div>
             <div class="eb-countdown">
               <div class="eb-days" id="days-until-thu">—</div>
@@ -830,7 +830,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div id="overview-tenant" style="display:none">
           <div class="panel-header">
             <h1>Good morning, <span id="greeting-name-tenant">there</span> ☕</h1>
-            <p id="tenant-overview-sub">New listings arrive every Thursday.</p>
+            <p id="tenant-overview-sub">Browse the latest listings.</p>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem">
             <button onclick="showPanel('post')" style="background:#FAF7F5;color:#1A1510;border:1.5px solid #E2D9CE;border-radius:14px;padding:1.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.4rem">
@@ -855,16 +855,16 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           </div>
           <div id="tenant-wait-cta" class="fcard" style="text-align:center;padding:2.5rem">
             <div style="font-size:2.5rem;margin-bottom:0.8rem">📰</div>
-            <div style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:0.5rem">Sign back in on Thursday</div>
-            <p style="color:var(--mid);font-size:0.88rem;line-height:1.7;max-width:360px;margin:0 auto 1.2rem">New flatshares, sublets and rentals drop every Thursday. We'll have listings ready for you to browse and message landlords directly.</p>
+            <div style="font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:0.5rem">New listings live now</div>
+            <p style="color:var(--mid);font-size:0.88rem;line-height:1.7;max-width:360px;margin:0 auto 1.2rem">Browse flatshares, sublets and rentals and message landlords directly.</p>
             <div id="tenant-days-wrap" style="display:inline-block;background:var(--cream);border-radius:12px;padding:0.6rem 1.4rem;font-size:0.85rem;color:var(--mid)">
-              <strong id="tenant-days-thu" style="color:var(--dark);font-size:1.1rem">—</strong> days until Thursday
+              Newsletter in <strong id="tenant-days-thu" style="color:var(--dark);font-size:1.1rem">—</strong> days
             </div>
           </div>
           <div class="fcard" style="margin-top:0">
             <div class="fcard-title">💬 Your messages</div>
             <div class="fcard-sub">Messages you've sent to landlords will appear here.</div>
-            <div id="tenant-messages-wrap" style="text-align:center;padding:1.5rem;color:var(--light);font-size:0.86rem">No messages yet — browse listings on Thursday and message landlords directly.</div>
+            <div id="tenant-messages-wrap" style="text-align:center;padding:1.5rem;color:var(--light);font-size:0.86rem">No messages yet — browse listings and message landlords directly.</div>
             <div id="tenant-messages-open-btn" style="display:none;padding:0 0 0.5rem">
               <button class="btn btn-primary btn-auto" style="padding:0.5rem 1.2rem;font-size:0.84rem" onclick="showPanel('inbox')">Open messages →</button>
             </div>
@@ -877,7 +877,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <div class="dash-panel" id="panel-post">
         <div class="panel-header">
           <h1>Post a listing</h1>
-          <p>Choose your tier, fill in details, upload photos, and pay. Your listing debuts this Thursday.</p>
+          <p>Choose your tier, fill in details, upload photos, and pay. Your listing goes live immediately on payment.</p>
         </div>
 
         <div class="prog-bar" id="prog-bar">
@@ -901,7 +901,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
               <div class="tc-name">Flatshare</div>
               <div class="tc-price">£15/week</div>
               <div class="tc-desc">Find the right flatmate to share your home. Add photos and describe your space.</div>
-              <div class="nl-chip">📰 Debuts Thursday</div>
+              <div class="nl-chip">⚡ Live on payment</div>
               <ul class="tc-feats">
                 <li><span class="chk">✓</span> Up to 20 photos</li>
                 <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
@@ -916,7 +916,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
               <div class="tc-name">Apartment Rental</div>
               <div class="tc-price">£15/week</div>
               <div class="tc-desc">Rent out your whole property to a tenant or family.</div>
-              <div class="nl-chip">📰 Debuts Thursday</div>
+              <div class="nl-chip">⚡ Live on payment</div>
               <ul class="tc-feats">
                 <li><span class="chk">✓</span> Up to 20 photos</li>
                 <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
@@ -931,7 +931,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
               <div class="tc-name">Apartment Sublet</div>
               <div class="tc-price">£20/week</div>
               <div class="tc-desc">Subletting short-term? List your space for £20/week.</div>
-              <div class="nl-chip">📰 Debuts Thursday</div>
+              <div class="nl-chip">⚡ Live on payment</div>
               <ul class="tc-feats">
                 <li><span class="chk">✓</span> Up to 10 photos</li>
                 <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
@@ -951,7 +951,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div class="fcard-sub">The more detail you add, the better your enquiries will be.</div>
             <div class="field"><label>Listing title</label><input type="text" id="f-title" placeholder="e.g. Bright double room in Hackney flat — bills included"></div>
             <div class="field-row">
-              <div class="field"><label>City</label><select id="f-city"><option value="">Select city</option><option>London</option><option>Melbourne</option><option>Brooklyn</option></select></div>
+              <div class="field"><label>City</label><select id="f-city"><option value="">Select city</option><option>London</option><option>Melbourne</option><option>Brooklyn</option><option>Other places</option></select></div>
               <div class="field"><label>Location / postcode</label><input type="text" id="f-loc" placeholder="e.g. Hackney, E8 3JT"></div>
               <div class="field"><label id="f-price-lbl">Monthly rent (£)</label><input type="number" id="f-price" placeholder="850"></div>
             </div>
@@ -1077,7 +1077,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div id="psd" style="display:none" class="slide-in">
           <div class="fcard">
             <div class="fcard-title">📅 Review & confirm</div>
-            <div class="fcard-sub">Your listing will go live this Thursday when the newsletter sends.</div>
+            <div class="fcard-sub">Your listing will go live immediately on payment.</div>
             <div class="pay-summary" id="pay-summary"></div>
             <div class="info-box">
               <span>📰</span>
@@ -1087,7 +1087,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
             <div id="promo-section" style="display:none"><input id="promo-input"><div id="promo-result"></div></div>
             <div id="free-path" style="display:none"><span id="free-path-msg"></span></div>
             <div id="paid-path" style="display:none"><span id="pay-btn-amt"></span></div>
-            <button class="btn btn-primary" onclick="publishListing(this)">Confirm & schedule for Thursday →</button>
+            <button class="btn btn-primary" onclick="publishListing(this)">Confirm & publish →</button>
           </div>
           <button class="btn btn-ghost" style="margin-top:0.5rem" onclick="goStep('c')">← Back to photos</button>
         </div>
@@ -1096,8 +1096,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div id="pse" style="display:none">
           <div class="success-card fade-in">
             <span class="s-icon" id="s-icon">🎉</span>
-            <h2 id="s-title">Scheduled for Thursday!</h2>
-            <p id="s-msg">Your listing is confirmed and will go live this Thursday when the newsletter sends to subscribers.</p>
+            <h2 id="s-title">Your listing is live!</h2>
+            <p id="s-msg">Your listing is now live and visible to renters.</p>
             <div class="success-details" id="s-details"></div>
             <button class="btn btn-primary" style="margin-bottom:0.7rem" onclick="showPanel('mylistings')">View my listings →</button>
             <button class="btn btn-outline" onclick="resetPost()">Post another listing</button>
@@ -1197,7 +1197,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
               <button class="nl-fmt-btn" onclick="insertSnippet('tip')">💡 Tip</button>
             </div>
             <div class="field" style="margin-bottom:0.8rem">
-              <textarea id="nl-intro" style="min-height:130px" placeholder="Hi everyone,&#10;&#10;Welcome to this week's Housefolk listings — we have some brilliant new homes for you. These debut exclusively to subscribers before going public. &#10;&#10;Happy house hunting! 🏡&#10;&#10;The Housefolk team"></textarea>
+              <textarea id="nl-intro" style="min-height:130px" placeholder="Hi everyone,&#10;&#10;Welcome to this week's Housefolk listings — we have some brilliant new homes for you.&#10;&#10;Happy house hunting! 🏡&#10;&#10;The Housefolk team"></textarea>
             </div>
             <div style="font-size:0.75rem;color:var(--light);text-align:right" id="nl-char-count">0 characters</div>
           </div>
@@ -1532,7 +1532,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 
   <!-- Hero search -->
   <div style="background:var(--cream);padding:2rem 2.5rem 1.5rem;border-bottom:1px solid var(--border)">
-    <p style="color:var(--mid);font-size:0.83rem;margin-bottom:1.1rem">Your next chapter starts here · New listings every Thursday</p>
+    <p style="color:var(--mid);font-size:0.83rem;margin-bottom:1.1rem">Your next chapter starts here</p>
     <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center">
       <input type="text" id="pub-search-location" placeholder="🔍 Location or postcode…" oninput="pubFilterListings()" style="flex:1;min-width:160px;background:#fff;border:1px solid var(--border);border-radius:6px;padding:0.58rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;color:var(--dark);outline:none">
       <select id="pub-filter-price" onchange="pubFilterListings()" style="background:#fff;border:1px solid var(--border);border-radius:6px;padding:0.58rem 0.8rem;font-family:'DM Sans',sans-serif;font-size:0.84rem;color:var(--dark);outline:none">
@@ -1558,7 +1558,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
     <div style="color:#fff;font-size:0.85rem">📰 Sign up to browse and message landlords directly</div>
     <button onclick="showPubUnlockModal()" style="background:#fff;color:#f7b188;border:none;border-radius:8px;padding:0.4rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer">Sign up to get listings →</button>
   </div>
-  <div id="pub-unlocked-banner" style="display:none;background:#E8F5EE;border-bottom:1px solid rgba(46,125,82,0.2);padding:0.65rem 2rem;font-size:0.83rem;color:#2E7D52;font-weight:600">✅ You're signed up — listings coming every Thursday</div>
+  <div id="pub-unlocked-banner" style="display:none;background:#E8F5EE;border-bottom:1px solid rgba(46,125,82,0.2);padding:0.65rem 2rem;font-size:0.83rem;color:#2E7D52;font-weight:600">✅ You're signed up — browse listings now</div>
 
   <!-- Coming soon -->
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem">
@@ -1593,8 +1593,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <div style="font-size:0.85rem;color:var(--mid);margin-top:0.2rem" id="detail-location"></div>
         </div>
         <div style="background:#FEF0E8;border:1px solid #F5D5C0;border-radius:10px;padding:0.6rem 1rem;text-align:center;flex-shrink:0">
-          <div style="font-size:0.68rem;color:#f7b188;font-weight:700;text-transform:uppercase">Debuts</div>
-          <div style="font-size:0.82rem;font-weight:600;color:#f7b188">📰 Thursday</div>
+          <div style="font-size:0.68rem;color:#f7b188;font-weight:700;text-transform:uppercase">Status</div>
+          <div style="font-size:0.82rem;font-weight:600;color:#f7b188">⚡ Live now</div>
         </div>
       </div>
       <!-- Meta tags -->
@@ -1622,7 +1622,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:0.5rem">Sign in to contact landlords</div>
     <p style="font-size:0.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.2rem">Create a free account to message landlords directly — flatshares, sublets and rentals.</p>
     <div style="background:var(--cream);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.83rem;color:var(--mid);line-height:2.1">
-      ✅ Message any landlord directly<br>✅ All listings — flatshares, sublets, rentals<br>✅ New listings every Thursday<br>✅ Free to use
+      ✅ Message any landlord directly<br>✅ All listings — flatshares, sublets, rentals<br>✅ Free to use
     </div>
     <div class="field" style="margin-bottom:0.8rem"><label>Email address</label><input type="email" id="pub-unlock-email" placeholder="you@example.com"></div>
     <button class="btn btn-primary" onclick="pubUnlockContacts()" style="margin-bottom:0.6rem">Sign up to get listings →</button>
@@ -1651,7 +1651,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:0.5rem">Sign up to get listings</div>
     <p style="font-size:0.86rem;color:var(--mid);line-height:1.6;margin-bottom:1.2rem">Create a free account to message any landlord — flatshares, sublets and rentals.</p>
     <div style="background:var(--cream);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.83rem;color:var(--mid);line-height:2">
-      ✅ Message any landlord directly<br>✅ All listings — flatshares, sublets &amp; rentals<br>✅ New listings every Thursday<br>✅ Free to use
+      ✅ Message any landlord directly<br>✅ All listings — flatshares, sublets &amp; rentals<br>✅ Free to use
     </div>
     <button class="btn btn-primary" onclick="startTenantSubscription()" style="margin-bottom:0.6rem">Sign up to get listings →</button>
     <button class="btn btn-ghost" onclick="document.getElementById('unlock-modal').style.display='none'">Maybe later</button>
@@ -1785,7 +1785,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
     <!-- Photo -->
     <div id="dp-photo" style="height:340px;background:linear-gradient(135deg,#F0EFED,#E8E4DF);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:8rem;margin-bottom:2rem;position:relative;overflow:hidden"><span id="dp-photo-emoji" style="font-size:8rem">🏠</span>
       <div id="dp-type-badge" style="position:absolute;top:1rem;left:1rem;background:rgba(26,21,16,0.75);color:#fff;font-size:0.78rem;font-weight:700;padding:0.3rem 0.8rem;border-radius:8px"></div>
-      <div style="position:absolute;top:1rem;right:1rem;background:#f7b188;color:#fff;font-size:0.72rem;font-weight:700;padding:0.3rem 0.8rem;border-radius:8px">📰 Thursday debut</div>
+      <div style="position:absolute;top:1rem;right:1rem;background:#f7b188;color:#fff;font-size:0.72rem;font-weight:700;padding:0.3rem 0.8rem;border-radius:8px">⚡ Live now</div>
     </div>
 
     <!-- Price + title -->
@@ -1796,8 +1796,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
         <div style="font-size:0.9rem;color:var(--mid);margin-top:0.3rem" id="dp-location"></div>
       </div>
       <div style="background:#FEF0E8;border:1px solid #F5D5C0;border-radius:14px;padding:0.8rem 1.2rem;text-align:center;flex-shrink:0">
-        <div style="font-size:0.7rem;color:#f7b188;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Debuts</div>
-        <div style="font-size:0.9rem;font-weight:600;color:#f7b188;margin-top:0.2rem">📰 Thursday</div>
+        <div style="font-size:0.7rem;color:#f7b188;font-weight:700;text-transform:uppercase;letter-spacing:0.5px">Status</div>
+        <div style="font-size:0.9rem;font-weight:600;color:#f7b188;margin-top:0.2rem">⚡ Live now</div>
       </div>
     </div>
 
@@ -1851,7 +1851,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <div id="dp-contact-action"></div>
 
           <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
-            <div style="font-size:0.75rem;color:var(--light);line-height:1.7">🔒 Messages sent securely through Housefolk<br>⚡ Landlords typically reply within 24 hours<br>📰 This listing debuts Thursday</div>
+            <div style="font-size:0.75rem;color:var(--light);line-height:1.7">🔒 Messages sent securely through Housefolk<br>⚡ Landlords typically reply within 24 hours</div>
           </div>
         </div>
 
@@ -2117,8 +2117,8 @@ You help two types of users:
 KEY FACTS ABOUT HOUSEFOLK:
 - Listing is completely free for landlords. Post flatshares, rentals, or sublets at no cost.
 - All listings run for 7 days.
-- All listings DEBUT on Thursday — they go live when the Thursday newsletter sends.
-- The Thursday newsletter goes to subscribers every week.
+- Listings go live immediately on payment.
+- The Thursday newsletter goes to subscribers every week and includes all active listings.
 - Tenants sign in for free to message landlords directly.
 - After signing up, users can manage listings, view enquiries, and post from their dashboard.
 - The newsletter is sent every Thursday at 8am. Landlords can write a custom intro message.
@@ -2131,7 +2131,7 @@ TONE: Warm, friendly, concise. British English. Use "£" not "$". Keep answers s
 If asked something you don't know about Housefolk specifically, say you'll pass the question to the team and they'll follow up. Never make up information.`;
 
 const QUICK_REPLY_SETS = {
-  welcome: ["How much does it cost?", "How does Thursday debut work?", "What is the newsletter?", "How do I post a listing?"],
+  welcome: ["How much does it cost?", "When does my listing go live?", "What is the newsletter?", "How do I post a listing?"],
   pricing: ["Tell me about flatshares", "What is included in a listing?", "Do you have promo codes?", "Back to start"],
   listing: ["How do I upload photos?", "When does my listing go live?", "Can I edit my listing?", "Back to start"],
 };
@@ -2160,7 +2160,7 @@ function toggleChat() {
 
 function initChat() {
   // Welcome message from bot
-  addBotMessage("👋 Hi! I am the Housefolk Assistant. I can help with listing prices, how Thursday debuts work, the newsletter, and anything else about Housefolk.\n\nWhat can I help you with?");
+  addBotMessage("👋 Hi! I am the Housefolk Assistant. I can help with listing prices, how listings go live, the newsletter, and anything else about Housefolk.\n\nWhat can I help you with?");
   showQuickReplies(QUICK_REPLY_SETS.welcome);
   // Show unread dot after 3 seconds if chat has not been opened
   setTimeout(() => {
@@ -2244,19 +2244,19 @@ async function getAIResponse() {
 
   // Smart local answers - no API key needed
   if (q.includes('price') || q.includes('cost') || q.includes('how much')) {
-    reply = 'Listing is completely free! 🎉\n\n🏠 Flatshare — Free\n🏢 Apartment Rental — Free\n🌿 Sublet — Free\n\nAll listings run 7 days and debut in the Thursday newsletter to renters!';
-  } else if (q.includes('thursday') || q.includes('debut') || q.includes('when')) {
-    reply = 'Every listing debuts on Thursday when our newsletter sends to subscribers. Post any day — it goes live that Thursday! 📰';
+    reply = 'Listing on Housefolk is a weekly subscription:\n\n🏠 Flatshare — £15/week\n🏢 Apartment Rental — £15/week\n🌿 Sublet — £20/week\n\nAll listings go live immediately and are included in Thursday\'s newsletter to renters!';
+  } else if (q.includes('thursday') || q.includes('debut') || q.includes('when') || q.includes('live')) {
+    reply = 'Your listing goes live immediately on payment. It\'s also included in Thursday\'s newsletter which reaches all subscribers. 📰';
   } else if (q.includes('newsletter') || q.includes('subscribe')) {
-    reply = 'Our Thursday newsletter reaches renters every week. All listings included automatically. You can write a personal intro from your dashboard too! 📬';
+    reply = 'Our Thursday newsletter reaches renters every week. All active listings are included automatically. You can write a personal intro from your dashboard too! 📬';
   } else if (q.includes('photo') || q.includes('picture')) {
-    reply = 'You can upload up to 20 photos for paid listings, 10 for free sublets. Drag and drop straight from your device! 📷';
-  } else if (q.includes('promo') || q.includes('discount') || q.includes('code') || q.includes('free')) {
-    reply = 'Listing on Housefolk is completely free! Just sign up and post your listing. 🎉';
+    reply = 'You can upload up to 20 photos for flatshare and rental listings, 10 for sublets. Drag and drop straight from your device! 📷';
+  } else if (q.includes('promo') || q.includes('discount') || q.includes('code')) {
+    reply = 'We have promo codes for special offers. Enter yours at checkout! Contact the team if you need one. 🎉';
   } else if (q.includes('sublet')) {
-    reply = 'Sublets are free to list! Up to 10 photos, 7 days, and included in the Thursday newsletter. 🌿';
+    reply = 'Sublet listings are £20/week. Up to 10 photos, goes live immediately, and included in the Thursday newsletter. 🌿';
   } else if (q.includes('flatshare')) {
-    reply = 'Flatshare listings are free! You get 20 photos, 7 days, enquiry inbox, and Thursday newsletter inclusion. 🏠';
+    reply = 'Flatshare listings are £15/week. You get 20 photos, live immediately, enquiry inbox, and Thursday newsletter inclusion. 🏠';
   } else if (q.includes('rental') || q.includes('apartment')) {
     reply = 'Apartment Rental listings are free! Full property listing with 20 photos, 7 days, enquiry inbox and newsletter. 🏢';
   } else if (q.includes('contact') || q.includes('help') || q.includes('support') || q.includes('human')) {
@@ -2274,11 +2274,11 @@ async function getAIResponse() {
 
   // Contextual quick replies
   if (q.includes('price') || q.includes('cost')) {
-    showQuickReplies(['Tell me about flatshares', 'Promo codes?', 'How do I post?', 'Thursday debut?']);
+    showQuickReplies(['Tell me about flatshares', 'When does my listing go live?', 'How do I post?', 'Promo codes?']);
   } else if (q.includes('thursday') || q.includes('newsletter')) {
     showQuickReplies(['How many subscribers?', 'Can I write the intro?', 'Listing prices?', 'How to post?']);
   } else {
-    showQuickReplies(['Pricing?', 'How does Thursday work?', 'Do you have promo codes?', 'Contact the team']);
+    showQuickReplies(['Pricing?', 'When does my listing go live?', 'Do you have promo codes?', 'Contact the team']);
   }
 }
 
@@ -2364,7 +2364,7 @@ setTimeout(() => {
           <div class="tc-name">Flatshare</div>
           <div class="tc-price">£15/week</div>
           <div class="tc-desc">Find the right flatmate to share your home. Add photos and describe your space.</div>
-          <div class="nl-chip">📰 Debuts Thursday</div>
+          <div class="nl-chip">⚡ Live on payment</div>
           <ul class="tc-feats">
             <li><span class="chk">✓</span> Up to 20 photos</li>
             <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
@@ -2378,7 +2378,7 @@ setTimeout(() => {
           <div class="tc-name">Apartment Rental</div>
           <div class="tc-price">£15/week</div>
           <div class="tc-desc">Rent out your whole property to a tenant or family.</div>
-          <div class="nl-chip">📰 Debuts Thursday</div>
+          <div class="nl-chip">⚡ Live on payment</div>
           <ul class="tc-feats">
             <li><span class="chk">✓</span> Up to 20 photos</li>
             <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
@@ -2392,7 +2392,7 @@ setTimeout(() => {
           <div class="tc-name">Apartment Sublet</div>
           <div class="tc-price">£20/week</div>
           <div class="tc-desc">Subletting short-term? List your space for £20/week.</div>
-          <div class="nl-chip">📰 Debuts Thursday</div>
+          <div class="nl-chip">⚡ Live on payment</div>
           <ul class="tc-feats">
             <li><span class="chk">✓</span> Up to 10 photos</li>
             <li><span class="chk">✓</span> Weekly subscription, cancel anytime</li>
@@ -2415,9 +2415,9 @@ setTimeout(() => {
     <div style="padding:1.8rem;font-size:0.86rem;color:var(--mid);line-height:1.8" id="terms-body">
       <h3 style="font-family:'Playfair Display',serif;color:var(--dark);margin-bottom:0.5rem">Housefolk Terms of Service</h3>
       <p>Last updated: March 2026</p>
-      <p style="margin-top:1rem"><strong style="color:var(--dark)">1. Listing fees</strong><br>Listing on Housefolk is currently free for landlords. Listings run for 7 days from their Thursday debut date.</p>
+      <p style="margin-top:1rem"><strong style="color:var(--dark)">1. Listing fees</strong><br>Listings on Housefolk are charged as a weekly subscription (£15/week for flatshares and rentals, £20/week for sublets). Listings go live immediately on payment and run on a rolling weekly basis until cancelled.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">2. Contacting landlords</strong><br>Tenants create a free account to message landlords directly.</p>
-      <p style="margin-top:1rem"><strong style="color:var(--dark)">3. Thursday debut</strong><br>All listings debut exclusively on Thursday when the newsletter sends to subscribers. Listings posted any day of the week will go live that Thursday.</p>
+      <p style="margin-top:1rem"><strong style="color:var(--dark)">3. Newsletter</strong><br>All active listings are included in the Thursday newsletter which is sent weekly to subscribers. Landlords can also write a personal intro from their dashboard.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">4. Accuracy of listings</strong><br>Landlords are responsible for the accuracy of their listings. Housefolk does not verify properties and accepts no liability for inaccurate information.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">5. Service</strong><br>Housefolk reserves the right to remove listings that violate these terms. Accounts may be suspended for misuse.</p>
       <p style="margin-top:1rem"><strong style="color:var(--dark)">6. Prohibited content</strong><br>Listings must be genuine UK properties. Fraudulent, misleading or illegal listings will be removed without refund.</p>

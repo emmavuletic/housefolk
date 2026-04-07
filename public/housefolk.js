@@ -605,7 +605,7 @@ async function applyPromo() {
       result.className = 'promo-result ok'
       result.style.display = 'block'
       const fpmsg = document.getElementById('free-path-msg')
-      if (fpmsg) fpmsg.textContent = 'Promo code applied. Your listing will go live this Thursday when the newsletter sends.'
+      if (fpmsg) fpmsg.textContent = 'Promo code applied. Your listing is now live.'
       buildPaySummary()
     } else {
       result.textContent = '✗ This code doesn\'t apply to ' + PLANS[currentTier]?.name + ' listings.'
@@ -633,11 +633,6 @@ function buildPaySummary() {
   const furn = document.getElementById('f-furn')?.value
   const desc = document.getElementById('f-desc')?.value
   const isFree = promoApplied
-  const now = new Date()
-  const dtu = (4 - now.getDay() + 7) % 7 || 7
-  const thu = new Date(now)
-  thu.setDate(now.getDate() + dtu)
-  const thuStr = thu.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })
 
   const ptitle = document.getElementById('pay-title-h')
   if (ptitle) ptitle.textContent = isFree ? '✅ Review & publish' : '💳 Review & pay'
@@ -668,8 +663,8 @@ function buildPaySummary() {
       ${desc ? `<div class="pay-row" style="align-items:flex-start"><span class="pl">Description</span><span class="pv" style="max-width:230px;text-align:right;font-size:0.82rem">${escapeHtml(desc)}</span></div>` : ''}
       <div class="pay-row"><span class="pl">Photos</span><span class="pv">${photos.length} uploaded</span></div>
       <div class="pay-row"><span class="pl">Duration</span><span class="pv">Weekly subscription, cancel anytime</span></div>
-      <div class="pay-row"><span class="pl">Goes live</span><span class="pv">${thuStr}</span></div>
-      <div class="pay-row"><span class="pl">Newsletter debut</span><span class="pv">✓ Thursday edition</span></div>
+      <div class="pay-row"><span class="pl">Goes live</span><span class="pv">Immediately on payment</span></div>
+      <div class="pay-row"><span class="pl">Newsletter</span><span class="pv">✓ Thursday edition</span></div>
       ${isFree ? `<div class="pay-row"><span class="pl">Promo code</span><span class="pv" style="color:var(--green)">${promoApplied} ✓</span></div>` : ''}
       <div class="pay-row total"><span class="pl">Total today</span><span class="pv ${isFree ? 'free' : ''}">${isFree ? 'Free' : P.label}${isFree ? `<span class="strike">${P.label}</span>` : ''}</span></div>`
   }
@@ -684,7 +679,7 @@ async function publishListing(btnEl) {
 
   const btn = btnEl || event?.target
   if (btn) { btn.disabled = true; btn.textContent = 'Processing…' }
-  const resetBtn = () => { if (btn) { btn.disabled = false; btn.textContent = 'Confirm & schedule for Thursday →' } }
+  const resetBtn = () => { if (btn) { btn.disabled = false; btn.textContent = 'Confirm & publish →' } }
 
   try {
     // 1. Upload photos
@@ -793,19 +788,14 @@ async function publishListing(btnEl) {
 
 function showSuccessScreen(isFree) {
   const P = PLANS[currentTier]
-  const now = new Date()
-  const dtu = (4 - now.getDay() + 7) % 7 || 7
-  const thu = new Date(now)
-  thu.setDate(now.getDate() + dtu)
-  const thuStr = thu.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
-  const expStr = futureDate(dtu + 7)
+  const expStr = futureDate(7)
 
-  document.getElementById('s-icon').textContent = '📅'
-  document.getElementById('s-title').textContent = 'Scheduled for Thursday!'
-  document.getElementById('s-msg').textContent = `Your listing will go live on ${thuStr} when the newsletter sends.`
+  document.getElementById('s-icon').textContent = '✅'
+  document.getElementById('s-title').textContent = 'Your listing is live!'
+  document.getElementById('s-msg').textContent = `Your listing is now live and visible to renters.`
   document.getElementById('s-details').innerHTML = `
     <div class="sd-row"><span>Type</span><strong>${P.icon} ${P.name}</strong></div>
-    <div class="sd-row"><span>Debuts</span><strong>${thuStr}</strong></div>
+    <div class="sd-row"><span>Status</span><strong>Live now</strong></div>
     <div class="sd-row"><span>Expires</span><strong>${expStr}</strong></div>
     ${isFree ? `<div class="sd-row"><span>Payment</span><strong>Promo code applied — free ✓</strong></div>` : `<div class="sd-row"><span>Payment</span><strong>${P.label} via Stripe ✓</strong></div>`}`
   goStep('e')
@@ -910,7 +900,7 @@ async function loadMyListings() {
 
   const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
   const statusBadge = {
-    pending: '<span class="badge badge-thursday">📰 Thu debut</span>',
+    pending: '<span class="badge badge-pending">⏳ Pending</span>',
     active: '<span class="badge badge-live">● Live</span>',
     let: '<span class="badge badge-pending">Let</span>',
     expired: '<span class="badge badge-expired">Expired</span>',
@@ -1451,7 +1441,7 @@ async function loadBrowseListings(type = '', location = '') {
   const isLoggedIn = !!currentUser
 
   if (data.listings.length === 0) {
-    grid.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--light)">No listings available right now. Check back Thursday!</div>'
+    grid.innerHTML = '<div style="padding:2rem;text-align:center;color:var(--light)">No listings available right now. Check back soon!</div>'
     return
   }
 
@@ -1572,7 +1562,7 @@ async function openListing(id) {
   document.getElementById('detail-desc').textContent = l.description || ''
 
   // Status info
-  const statusLabel = { pending: '📰 Scheduled for Thursday', active: '● Live', let: 'Let', expired: 'Expired' }
+  const statusLabel = { pending: '⏳ Pending', active: '● Live', let: 'Let', expired: 'Expired' }
   document.getElementById('detail-grid').innerHTML = `
     <div style="font-size:0.8rem;color:var(--mid)">Status</div><div style="font-size:0.85rem;font-weight:600">${statusLabel[l.status] || l.status}</div>
     ${l.goes_live_at ? `<div style="font-size:0.8rem;color:var(--mid)">Goes live</div><div style="font-size:0.85rem;font-weight:600">${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' })}</div>` : ''}
@@ -2043,7 +2033,7 @@ async function scheduleNL() {
     body: JSON.stringify({ subject, intro, overrides: nlOverrides }),
   })
 
-  if (btn) { btn.disabled = false; btn.textContent = '📅 Schedule for Thursday →' }
+  if (btn) { btn.disabled = false; btn.textContent = '📧 Send newsletter →' }
 
   if (data.error) { toast(data.error); return }
   toast(`✓ Newsletter sent to ${data.sent} subscribers`, 'green')
