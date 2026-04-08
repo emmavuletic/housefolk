@@ -185,7 +185,7 @@ async function doMagicLink() {
   const { error } = await _supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: 'https://app.housefolk.co/homefolk.html',
+      emailRedirectTo: 'https://app.housefolk.co/housefolk.html',
       captchaToken: captchaToken || undefined,
     }
   })
