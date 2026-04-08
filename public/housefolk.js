@@ -1259,6 +1259,36 @@ async function openChatThread(enquiryId) {
   const listingLink = listing.id ? `<a href="/listings/${listing.id}">${escapeHtml(listing.title || 'Listing')} →</a>` : escapeHtml(listing.title || 'Listing')
   document.getElementById('chat-thread-sub').innerHTML = listingLink
 
+  // Profile strip — show sender's profile to landlord (or landlord's to tenant)
+  const profileEl = document.getElementById('chat-thread-profile')
+  if (profileEl) {
+    const p = other
+    const initials = ((p.first_name?.[0] || '') + (p.last_name?.[0] || '')).toUpperCase() || '?'
+    const jobLine = [p.job_title, p.company ? `at ${p.company}` : ''].filter(Boolean).join(' ')
+    const igUrl = safeUrl(p.instagram)
+    const liUrl = safeUrl(p.linkedin)
+    const socialsHtml = [
+      igUrl ? `<a href="${igUrl}" target="_blank" rel="noopener" style="color:var(--accent);font-size:0.8rem;text-decoration:none">📸 Instagram</a>` : '',
+      liUrl ? `<a href="${liUrl}" target="_blank" rel="noopener" style="color:var(--accent);font-size:0.8rem;text-decoration:none">🔗 LinkedIn</a>` : '',
+    ].filter(Boolean).join('<span style="color:var(--border)"> · </span>')
+
+    const hasProfile = p.bio || p.star_sign || jobLine || socialsHtml
+    profileEl.style.display = hasProfile ? '' : 'none'
+    profileEl.innerHTML = hasProfile ? `
+      <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.5rem">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f7b188,#c4856a);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0">${
+          p.avatar_url ? `<img src="${escapeHtml(p.avatar_url)}" style="width:36px;height:36px;border-radius:50%;object-fit:cover">` : initials
+        }</div>
+        <div>
+          <div style="font-weight:600;font-size:0.88rem;color:var(--dark)">${escapeHtml(otherName)}</div>
+          ${jobLine ? `<div style="font-size:0.78rem;color:var(--mid)">${escapeHtml(jobLine)}</div>` : ''}
+        </div>
+      </div>
+      ${p.star_sign ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.3rem">⭐ ${escapeHtml(p.star_sign.charAt(0).toUpperCase() + p.star_sign.slice(1))}</div>` : ''}
+      ${p.bio ? `<div style="font-size:0.82rem;color:var(--mid);line-height:1.5;margin-bottom:0.4rem">${escapeHtml(p.bio)}</div>` : ''}
+      ${socialsHtml ? `<div style="display:flex;gap:0.8rem">${socialsHtml}</div>` : ''}
+    ` : ''
+  }
 
   // Show "Suggest time" button only for landlords in received tab
   const suggestBtn = document.getElementById('chat-suggest-btn')
