@@ -21,10 +21,10 @@
     "stripe": "^16.2.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
-    "@types/node": "^20",
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "typescript": "^5"
+    "typescript": "^6"
   }
 }
