@@ -1346,6 +1346,7 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
           <div class="field"><label>Hopes &amp; dreams <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-hopes-dreams" placeholder="e.g. building a small business, travelling for a year…"></textarea></div>
           <div class="field"><label>Hard no to… <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-hard-nos" placeholder="e.g. smoking indoors, overnight guests every weekend…"></textarea></div>
           <div class="field"><label>Daily schedule <span style="font-weight:400;color:var(--light)">(optional)</span></label><textarea id="p-daily-schedule" placeholder="e.g. early riser, WFH Mon–Wed, gym most mornings…"></textarea></div>
+          <p style="font-size:0.8rem;color:var(--light);line-height:1.55;margin:0 0 0.8rem">💡 Landlords see your profile when you message them — a photo, bio and job title go a long way.</p>
           <button class="btn btn-primary btn-auto" style="padding:0.65rem 1.5rem" onclick="saveProfile()">Save profile</button>
         </div>
       </div>
@@ -1741,7 +1742,11 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
       <button onclick="document.getElementById('contact-modal').style.display='none'" style="background:var(--cream);border:1px solid var(--border);border-radius:50%;width:30px;height:30px;cursor:pointer">✕</button>
     </div>
     <div id="contact-details" style="background:var(--cream);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;font-size:0.86rem;line-height:2"></div>
-    <div class="field"><label>Your message</label><textarea id="contact-message" placeholder="Hi, I am interested in your listing…" style="min-height:90px"></textarea></div>
+    <div class="field">
+      <label>Your message</label>
+      <p style="margin:0 0 0.5rem;font-size:0.78rem;color:var(--light);line-height:1.5">To keep Housefolk a safe space, our system only allows one message per listing — so take a moment to make it count.</p>
+      <textarea id="contact-message" placeholder="Hi, I am interested in your listing…" style="min-height:90px"></textarea>
+    </div>
     <input type="hidden" id="contact-enquiry-type" value="listing">
     <input type="hidden" id="contact-recipient-id" value="">
     <button class="btn btn-primary" onclick="sendEnquiry()">Send message →</button>
@@ -1858,7 +1863,8 @@ body { font-family: 'DM Sans', sans-serif; background: #FFF8F4; color: var(--dar
 
         <!-- Message form (shows when unlocked) -->
         <div id="dp-message-form" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-top:1rem;box-shadow:var(--shadow)">
-          <div style="font-weight:600;font-size:0.9rem;margin-bottom:0.8rem">Send a message</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-bottom:0.5rem">Send a message</div>
+          <p style="margin:0 0 0.7rem;font-size:0.78rem;color:var(--light);line-height:1.5">To keep Housefolk a safe space, our system only allows one message per listing — so take a moment to make it count.</p>
           <textarea id="dp-message" placeholder="Hi! I am interested in your listing. Tell me a little about yourself…" style="width:100%;min-height:120px;border:1.5px solid var(--border);border-radius:12px;padding:0.8rem;font-family:'DM Sans',sans-serif;font-size:0.86rem;resize:vertical;outline:none;box-sizing:border-box"></textarea>
           <button onclick="dpSendMessage()" class="btn btn-primary" style="margin-top:0.8rem;width:100%">Send message →</button>
         </div>

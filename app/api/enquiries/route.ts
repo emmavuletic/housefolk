@@ -14,6 +14,130 @@ function safeUrl(url: string): string | null {
   } catch { return null }
 }
 
+interface ProfileData {
+  first_name?: string | null
+  last_name?: string | null
+  star_sign?: string | null
+  bio?: string | null
+  instagram?: string | null
+  linkedin?: string | null
+  job_title?: string | null
+  company?: string | null
+  daily_schedule?: string | null
+  avatar_url?: string | null
+}
+
+function buildEnquiryEmail({
+  recipientFirstName,
+  intro,
+  message,
+  profile,
+  replyId,
+}: {
+  recipientFirstName: string | null | undefined
+  intro: string
+  message: string
+  profile: ProfileData | null
+  replyId: string
+}): string {
+  const name = [profile?.first_name, profile?.last_name].filter(Boolean).map(s => escapeHtml(s!)).join(' ')
+  const jobLine = [profile?.job_title, profile?.company].filter(Boolean).map(s => escapeHtml(s!)).join(' at ')
+  const avatarInitials = [profile?.first_name?.[0], profile?.last_name?.[0]].filter(Boolean).join('').toUpperCase()
+
+  const avatarHtml = profile?.avatar_url
+    ? `<img src="${escapeHtml(profile.avatar_url)}" alt="${name}" width="56" height="56" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:block">`
+    : `<div style="width:56px;height:56px;border-radius:50%;background:#E8E0D5;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:600;color:#5C4A32;line-height:56px;text-align:center">${escapeHtml(avatarInitials)}</div>`
+
+  const socialLinks: string[] = []
+  const igUrl = profile?.instagram ? safeUrl(profile.instagram.startsWith('http') ? profile.instagram : `https://instagram.com/${profile.instagram}`) : null
+  const liUrl = profile?.linkedin ? safeUrl(profile.linkedin.startsWith('http') ? profile.linkedin : `https://linkedin.com/in/${profile.linkedin}`) : null
+  if (igUrl) socialLinks.push(`<a href="${escapeHtml(igUrl)}" style="color:#C13584;text-decoration:none;margin-right:12px">Instagram</a>`)
+  if (liUrl) socialLinks.push(`<a href="${escapeHtml(liUrl)}" style="color:#0077B5;text-decoration:none">LinkedIn</a>`)
+
+  const scheduleLabel: Record<string, string> = {
+    early_bird: '🌅 Early bird',
+    night_owl: '🦉 Night owl',
+    flexible: '☀️ Flexible',
+  }
+
+  const replyUrl = `https://app.housefolk.co/housefolk.html?inbox=${replyId}`
+
+  return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F5F0EA;font-family:'Helvetica Neue',Arial,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0EA;padding:32px 0">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%">
+
+        <!-- Header -->
+        <tr><td style="padding-bottom:20px;text-align:center">
+          <span style="font-size:1.1rem;font-weight:700;color:#3D2B1A;letter-spacing:0.5px">housefolk</span>
+        </td></tr>
+
+        <!-- Card -->
+        <tr><td style="background:#FFFFFF;border-radius:12px;padding:32px;border:1px solid #E8E0D5">
+
+          <!-- Intro -->
+          <p style="margin:0 0 24px;font-size:0.95rem;color:#3D2B1A;line-height:1.5">
+            Hi ${escapeHtml(recipientFirstName || '')}! ${intro}
+          </p>
+
+          <!-- Profile header -->
+          <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;border:1px solid #F0E8DF;border-radius:10px;overflow:hidden;width:100%">
+            <tr>
+              <td style="padding:16px 20px;background:#FDFAF7;vertical-align:top;width:72px">
+                ${avatarHtml}
+              </td>
+              <td style="padding:16px 20px 16px 0;vertical-align:top">
+                <p style="margin:0 0 2px;font-size:1rem;font-weight:700;color:#3D2B1A">${name}</p>
+                ${jobLine ? `<p style="margin:0 0 6px;font-size:0.82rem;color:#7A6452">${jobLine}</p>` : ''}
+                ${profile?.star_sign ? `<p style="margin:0 0 6px;font-size:0.82rem;color:#A08060">☽ ${escapeHtml(profile.star_sign)}</p>` : ''}
+                ${profile?.daily_schedule && scheduleLabel[profile.daily_schedule] ? `<p style="margin:0 0 6px;font-size:0.82rem;color:#A08060">${scheduleLabel[profile.daily_schedule]}</p>` : ''}
+                ${socialLinks.length ? `<p style="margin:0;font-size:0.82rem">${socialLinks.join('')}</p>` : ''}
+              </td>
+            </tr>
+            ${profile?.bio ? `
+            <tr>
+              <td colspan="2" style="padding:0 20px 16px 20px;border-top:1px solid #F0E8DF">
+                <p style="margin:12px 0 0;font-size:0.83rem;color:#5C4A32;line-height:1.55">${escapeHtml(profile.bio)}</p>
+              </td>
+            </tr>` : ''}
+          </table>
+
+          <!-- Message -->
+          <p style="margin:0 0 8px;font-size:0.78rem;font-weight:600;color:#A08060;text-transform:uppercase;letter-spacing:0.6px">Their message</p>
+          <blockquote style="margin:0 0 28px;padding:14px 18px;background:#F9F5F0;border-left:3px solid #C9A97A;border-radius:0 6px 6px 0;font-size:0.9rem;color:#3D2B1A;line-height:1.6">
+            ${escapeHtml(message)}
+          </blockquote>
+
+          <!-- CTA -->
+          <table cellpadding="0" cellspacing="0"><tr><td>
+            <a href="${escapeHtml(replyUrl)}" style="display:inline-block;background:#3D2B1A;color:#FFFFFF;text-decoration:none;font-size:0.88rem;font-weight:600;padding:12px 24px;border-radius:7px">
+              Reply on Housefolk →
+            </a>
+          </td></tr></table>
+
+          <p style="margin:20px 0 0;font-size:0.78rem;color:#A09080;line-height:1.4">
+            Or reply directly to this email — your email address won't be shared with the other person.
+          </p>
+
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="padding:20px 0;text-align:center;font-size:0.75rem;color:#B0A090">
+          © Housefolk · <a href="https://www.housefolk.co" style="color:#B0A090">housefolk.co</a>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>
+  `.trim()
+}
+
 // GET /api/enquiries — get enquiries for logged-in user (landlord or tenant)
 export async function GET(req: NextRequest) {
   const supabase = createServerClient()
@@ -82,7 +206,7 @@ export async function POST(req: NextRequest) {
 
   const { data: profile } = await supabase
     .from('users')
-    .select('first_name, last_name, star_sign, bio, instagram, linkedin, job_title, company')
+    .select('first_name, last_name, star_sign, bio, instagram, linkedin, job_title, company, daily_schedule, avatar_url')
     .eq('id', user.id)
     .single()
 
@@ -120,30 +244,18 @@ export async function POST(req: NextRequest) {
 
     if (recipientData.email) {
       const senderName = `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim()
-      const profileLines: string[] = []
-      if (profile?.star_sign) profileLines.push(`⭐ Star sign: ${profile.star_sign.charAt(0).toUpperCase() + profile.star_sign.slice(1)}`)
-      if (profile?.bio) profileLines.push(`💬 About them: ${profile.bio}`)
-      if (profile?.job_title) profileLines.push(`💼 ${profile.job_title}${profile.company ? ` at ${profile.company}` : ''}`)
-      const igUrl = profile?.instagram ? safeUrl(profile.instagram) : null
-      const liUrl = profile?.linkedin ? safeUrl(profile.linkedin) : null
-      if (igUrl && profile) profileLines.push(`📸 Instagram: <a href="${igUrl}">${escapeHtml(profile.instagram)}</a>`)
-      if (liUrl && profile) profileLines.push(`🔗 LinkedIn: <a href="${liUrl}">${escapeHtml(profile.linkedin)}</a>`)
-      const profileHtml = profileLines.length > 0
-        ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Their profile</strong><br>${profileLines.join('<br>')}</p>`
-        : ''
       await resend.emails.send({
         from: FROM_EMAIL,
         to: recipientData.email,
         reply_to: `reply+${enquiry.id}@inbound.housefolk.co`,
-        subject: `Someone wants to connect on Housefolk`,
-        html: `
-          <p>Hi ${recipientData.first_name},</p>
-          <p><strong>${senderName}</strong> wants to connect with you on Housefolk.</p>
-          <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${escapeHtml(message.trim())}</blockquote>
-          ${profileHtml}
-          <p style="margin-top:1.2rem">Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
-          <p>— The Housefolk team</p>
-        `,
+        subject: `${senderName} wants to connect on Housefolk`,
+        html: buildEnquiryEmail({
+          recipientFirstName: recipientData.first_name,
+          intro: `<strong>${escapeHtml(senderName)}</strong> wants to connect with you on Housefolk.`,
+          message: message.trim(),
+          profile,
+          replyId: enquiry.id,
+        }),
       })
     }
 
@@ -190,37 +302,24 @@ export async function POST(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  // Email landlord with renter profile
   if (!landlordData?.email) {
     console.error('[enquiries POST] No landlord email found for landlord_id:', listing.landlord_id)
   }
   if (landlordData?.email) {
     const tenantName = `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim()
-    const profileLines: string[] = []
-    if (profile?.star_sign) profileLines.push(`⭐ Star sign: ${profile.star_sign.charAt(0).toUpperCase() + profile.star_sign.slice(1)}`)
-    if (profile?.bio) profileLines.push(`💬 About them: ${profile.bio}`)
-    if (profile?.job_title) profileLines.push(`💼 ${profile.job_title}${profile.company ? ` at ${profile.company}` : ''}`)
-    const igUrl2 = profile?.instagram ? safeUrl(profile.instagram) : null
-    const liUrl2 = profile?.linkedin ? safeUrl(profile.linkedin) : null
-    if (igUrl2 && profile) profileLines.push(`📸 Instagram: <a href="${igUrl2}">${escapeHtml(profile.instagram)}</a>`)
-    if (liUrl2 && profile) profileLines.push(`🔗 LinkedIn: <a href="${liUrl2}">${escapeHtml(profile.linkedin)}</a>`)
-    const profileHtml = profileLines.length > 0
-      ? `<p style="margin-top:1.2rem;font-size:0.9rem;color:#888;border-top:1px solid #eee;padding-top:1rem"><strong>Renter profile</strong><br>${profileLines.join('<br>')}</p>`
-      : ''
     console.log('[enquiries POST] Sending email to:', landlordData.email, 'from:', FROM_EMAIL)
     const emailResult = await resend.emails.send({
       from: FROM_EMAIL,
       to: landlordData.email,
       reply_to: `reply+${enquiry.id}@inbound.housefolk.co`,
-      subject: `New enquiry on your Housefolk listing: ${listing.title}`,
-      html: `
-        <p>Hi ${landlordData.first_name},</p>
-        <p>You have a new enquiry from <strong>${tenantName}</strong> about your listing <strong>${listing.title}</strong>.</p>
-        <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${escapeHtml(message.trim())}</blockquote>
-        ${profileHtml}
-        <p style="margin-top:1.2rem">Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
-        <p>— The Housefolk team</p>
-      `,
+      subject: `New enquiry from ${tenantName} — ${listing.title}`,
+      html: buildEnquiryEmail({
+        recipientFirstName: landlordData.first_name,
+        intro: `You have a new enquiry about your listing <strong>${escapeHtml(listing.title)}</strong>.`,
+        message: message.trim(),
+        profile,
+        replyId: enquiry.id,
+      }),
     })
     if (emailResult.error) {
       console.error('[enquiries POST] Resend error:', emailResult.error)

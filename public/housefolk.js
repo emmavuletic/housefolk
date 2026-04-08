@@ -1272,22 +1272,23 @@ async function openChatThread(enquiryId) {
       liUrl ? `<a href="${liUrl}" target="_blank" rel="noopener" style="color:var(--accent);font-size:0.8rem;text-decoration:none">🔗 LinkedIn</a>` : '',
     ].filter(Boolean).join('<span style="color:var(--border)"> · </span>')
 
-    const hasProfile = p.bio || p.star_sign || jobLine || socialsHtml
-    profileEl.style.display = hasProfile ? '' : 'none'
-    profileEl.innerHTML = hasProfile ? `
-      <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.5rem">
-        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f7b188,#c4856a);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0">${
-          p.avatar_url ? `<img src="${escapeHtml(p.avatar_url)}" style="width:36px;height:36px;border-radius:50%;object-fit:cover">` : initials
+    profileEl.style.display = ''
+    const hasExtra = p.bio || p.star_sign || jobLine || socialsHtml
+    profileEl.innerHTML = `
+      <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:${hasExtra ? '0.6rem' : '0'}">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#f7b188,#c4856a);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden">${
+          p.avatar_url ? `<img src="${escapeHtml(p.avatar_url)}" style="width:38px;height:38px;border-radius:50%;object-fit:cover">` : initials
         }</div>
         <div>
-          <div style="font-weight:600;font-size:0.88rem;color:var(--dark)">${escapeHtml(otherName)}</div>
+          <div style="font-weight:600;font-size:0.9rem;color:var(--dark)">${escapeHtml(otherName)}</div>
           ${jobLine ? `<div style="font-size:0.78rem;color:var(--mid)">${escapeHtml(jobLine)}</div>` : ''}
         </div>
       </div>
-      ${p.star_sign ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.3rem">⭐ ${escapeHtml(p.star_sign.charAt(0).toUpperCase() + p.star_sign.slice(1))}</div>` : ''}
-      ${p.bio ? `<div style="font-size:0.82rem;color:var(--mid);line-height:1.5;margin-bottom:0.4rem">${escapeHtml(p.bio)}</div>` : ''}
+      ${p.star_sign ? `<div style="font-size:0.78rem;color:var(--mid);margin-bottom:0.35rem">✨ ${escapeHtml(p.star_sign.charAt(0).toUpperCase() + p.star_sign.slice(1))}</div>` : ''}
+      ${p.bio ? `<div style="font-size:0.82rem;color:var(--mid);line-height:1.55;margin-bottom:0.4rem">${escapeHtml(p.bio)}</div>` : ''}
       ${socialsHtml ? `<div style="display:flex;gap:0.8rem">${socialsHtml}</div>` : ''}
-    ` : ''
+      ${!hasExtra ? `<div style="font-size:0.78rem;color:var(--light);font-style:italic">This person hasn't added profile details yet.</div>` : ''}
+    `
   }
 
   // Show "Suggest time" button only for landlords in received tab
