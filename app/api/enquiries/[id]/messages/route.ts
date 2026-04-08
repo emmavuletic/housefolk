@@ -57,6 +57,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({ error: 'Forbidden.' }, { status: 403 })
   }
 
+  // Mark as read when the user opens the thread
+  await supabase.from('enquiries').update({ read: true }).eq('id', params.id)
+
   const { data: messages, error } = await supabase
     .from('messages')
     .select('id, body, created_at, sender_id, sender:users!messages_sender_id_fkey(id, first_name, last_name)')
@@ -114,28 +117,38 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  // Email the other party
+  // Determine who the recipient is
   const isLandlord = enquiry.landlord_id === user.id
-  const recipient = isLandlord
-    ? (enquiry.tenant as unknown as { email: string; first_name: string })
-    : (enquiry.landlord as unknown as { email: string; first_name: string })
+  const recipientId = isLandlord ? enquiry.tenant_id : enquiry.landlord_id
   const senderName = `${profile.first_name ?? ''} ${profile.last_name ?? ''}`.trim()
   const listingTitle = (enquiry.listing as unknown as { title: string } | null)?.title ?? 'your listing'
 
-  if (recipient?.email) {
+  // Mark conversation as unread for the recipient (reliable read tracking)
+  await supabase.from('enquiries').update({ read: false }).eq('id', params.id)
+
+  // Fetch recipient email directly — more reliable than FK join which can silently return null
+  const { data: recipientUser } = await supabase
+    .from('users')
+    .select('email, first_name')
+    .eq('id', recipientId)
+    .single()
+
+  if (recipientUser?.email) {
     await resend.emails.send({
       from: FROM_EMAIL,
-      to: recipient.email,
+      to: recipientUser.email,
       reply_to: `reply+${params.id}@inbound.housefolk.co`,
       subject: `New message from ${senderName} on Housefolk`,
       html: `
-        <p>Hi ${escapeHtml(recipient.first_name || '')},</p>
+        <p>Hi ${escapeHtml(recipientUser.first_name || '')},</p>
         <p><strong>${escapeHtml(senderName)}</strong> sent you a message about <strong>${escapeHtml(listingTitle)}</strong>.</p>
         <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${escapeHtml(body.trim())}</blockquote>
         <p>Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
         <p>— The Housefolk team</p>
       `,
     })
+  } else {
+    console.error('[messages POST] Could not find recipient email for user id:', recipientId)
   }
 
   return NextResponse.json({ message }, { status: 201 })

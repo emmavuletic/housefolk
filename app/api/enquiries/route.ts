@@ -40,9 +40,28 @@ export async function GET(req: NextRequest) {
   if (sentRes.error) return NextResponse.json({ error: sentRes.error.message }, { status: 500 })
   if (receivedRes.error) return NextResponse.json({ error: receivedRes.error.message }, { status: 500 })
 
+  const sent = sentRes.data ?? []
+  const received = receivedRes.data ?? []
+  const allIds = [...sent, ...received].map(e => e.id)
+
+  // Fetch the latest message per enquiry so the conversation list can show a live preview
+  const lastMsgMap: Record<string, { body: string; created_at: string; sender_id: string }> = {}
+  if (allIds.length > 0) {
+    const { data: msgs } = await supabase
+      .from('messages')
+      .select('enquiry_id, body, created_at, sender_id')
+      .in('enquiry_id', allIds)
+      .order('created_at', { ascending: false })
+    for (const m of msgs ?? []) {
+      if (!lastMsgMap[m.enquiry_id]) lastMsgMap[m.enquiry_id] = m
+    }
+  }
+
+  const attach = (e: any) => ({ ...e, last_message: lastMsgMap[e.id] ?? null })
+
   return NextResponse.json({
-    sent: sentRes.data ?? [],
-    received: receivedRes.data ?? [],
+    sent: sent.map(attach),
+    received: received.map(attach),
   })
 }
 

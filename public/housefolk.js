@@ -450,6 +450,9 @@ function showPanel(name) {
     const defaultTab = (currentUser?.role === 'landlord' || currentUser?.role === 'admin') ? 'received' : 'sent'
     if (_activeMsgTab !== defaultTab) switchMsgTab(defaultTab)
     loadEnquiries()
+    startInboxPolling()
+  } else {
+    stopInboxPolling()
   }
   if (name === 'mylistings') loadMyListings()
   if (name === 'post') resetPost()
@@ -1053,6 +1056,35 @@ let _sentEnquiries = []      // enquiries this user sent as a tenant
 let _receivedEnquiries = []  // enquiries this user received as a landlord
 let _activeMsgTab = 'sent'
 let _activeEnquiryId = null
+let _inboxPollTimer = null
+
+function startInboxPolling() {
+  stopInboxPolling()
+  _inboxPollTimer = setInterval(async () => {
+    const panel = document.getElementById('panel-inbox')
+    if (!panel?.classList.contains('active')) { stopInboxPolling(); return }
+    await loadEnquiries()
+    // If a thread is open, also refresh the messages in it
+    if (_activeEnquiryId) await refreshOpenThread()
+  }, 20000) // every 20 seconds
+}
+function stopInboxPolling() {
+  if (_inboxPollTimer) { clearInterval(_inboxPollTimer); _inboxPollTimer = null }
+}
+async function refreshOpenThread() {
+  if (!_activeEnquiryId) return
+  const data = await api(`/api/enquiries/${_activeEnquiryId}/messages`)
+  const enquiry = currentTabEnquiries().find(e => e.id === _activeEnquiryId)
+  if (!enquiry) return
+  const tenantId = enquiry.tenant_id || enquiry.tenant?.id
+  const seedBubble = renderMessageBubble({ id: 'seed', body: enquiry.message, created_at: enquiry.created_at, sender_id: tenantId })
+  const allMessages = data.messages || []
+  const msgList = document.getElementById('chat-messages-list')
+  if (!msgList) return
+  const wasAtBottom = msgList.scrollHeight - msgList.scrollTop - msgList.clientHeight < 60
+  msgList.innerHTML = seedBubble + allMessages.map(m => renderMessageBubble(m)).join('')
+  if (wasAtBottom) msgList.scrollTop = msgList.scrollHeight
+}
 
 function currentTabEnquiries() {
   return _activeMsgTab === 'sent' ? _sentEnquiries : _receivedEnquiries
@@ -1067,8 +1099,13 @@ async function loadEnquiries() {
   _sentEnquiries = data.sent || []
   _receivedEnquiries = data.received || []
 
-  // Badge: unread received enquiries
-  const unread = _receivedEnquiries.filter(e => !e.read).length
+  // Badge: conversations where the latest message is from the other person and not yet read
+  const hasUnread = (e) => {
+    if (e.last_message) return !e.read && e.last_message.sender_id !== currentUser?.id
+    return !e.read
+  }
+  const allConvs = [..._sentEnquiries, ..._receivedEnquiries]
+  const unread = allConvs.filter(hasUnread).length
   const badge = document.getElementById('inbox-badge')
   if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? '' : 'none' }
   const dot = document.getElementById('notif-dot')
@@ -1170,17 +1207,29 @@ function renderConvList() {
     const name = `${other.first_name || ''} ${other.last_name || ''}`.trim() || 'Housefolk user'
     const initials = (name[0] || '?').toUpperCase()
     const listing = e.listing || {}
-    const preview = e.message || ''
-    const timeStr = formatTimeAgo(e.created_at)
+
+    // Show latest message as preview if there is one, otherwise show original enquiry message
+    const lastMsg = e.last_message
+    const preview = lastMsg?.body || e.message || ''
+    const previewTime = lastMsg?.created_at || e.created_at
+    const timeStr = formatTimeAgo(previewTime)
+
+    // Unread if: enquiry is marked unread AND the last message was sent by the other person
+    const lastSenderIsOther = lastMsg ? lastMsg.sender_id !== currentUser?.id : false
+    const isUnread = !e.read && lastSenderIsOther
     const isActive = e.id === _activeEnquiryId
-    const isUnread = !e.read
+
+    const previewPrefix = lastMsg
+      ? (lastMsg.sender_id === currentUser?.id ? 'You: ' : `${other.first_name || 'Them'}: `)
+      : ''
+
     return `
       <div class="chat-conv-item ${isActive ? 'active' : ''} ${isUnread ? 'unread' : ''}" onclick="openChatThread('${e.id}')">
         <div class="i-avatar" style="background:linear-gradient(135deg,#4A90D9,#7B68EE);width:34px;height:34px;font-size:0.75rem;flex-shrink:0">${initials}</div>
         <div class="chat-conv-meta">
           <div class="chat-conv-name">${escapeHtml(name)}</div>
           <div class="chat-conv-listing">Re: ${escapeHtml(listing.title || 'Listing')}</div>
-          <div class="chat-conv-preview">${escapeHtml(preview)}</div>
+          <div class="chat-conv-preview">${escapeHtml(previewPrefix)}${escapeHtml(preview)}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.3rem">
           <div class="chat-conv-time">${timeStr}</div>
