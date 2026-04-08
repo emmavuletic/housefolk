@@ -66,7 +66,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     .eq('enquiry_id', params.id)
     .order('created_at', { ascending: true })
 
-  if (error) return NextResponse.json({ messages: [] }) // table may not exist yet
+  if (error) { console.error('[messages GET] DB error:', error.message); return NextResponse.json({ messages: [] }) }
   return NextResponse.json({ messages })
 }
 
