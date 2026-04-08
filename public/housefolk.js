@@ -2320,14 +2320,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (el) { el.style.display = 'flex' }
   }
 
-  // Listen for PASSWORD_RECOVERY event (works for both PKCE and implicit flows)
+  // Guard against double-launch (onAuthStateChange + getSession can both fire)
+  let _authed = false
   let _recoveryHandled = false
-  _supabase.auth.onAuthStateChange((event, session) => {
+
+  async function handleSession(session) {
+    if (_authed || _recoveryHandled) return
+    _authed = true
+    const profile = await api('/api/users/me')
+    const user = profile.user || { email: session.user.email, first_name: session.user.email?.split('@')[0] || 'You', last_name: '' }
+    setSession(user, session.access_token)
+    launchDash(user.first_name || user.email?.split('@')[0] || 'You', user.last_name || '')
+    checkSuccessParam()
+    window.history.replaceState({}, '', window.location.pathname)
+  }
+
+  // Listen for auth events — catches magic link SIGNED_IN even if getSession() fires too early
+  _supabase.auth.onAuthStateChange(async (event, session) => {
     if (event === 'PASSWORD_RECOVERY' && !_recoveryHandled) {
       _recoveryHandled = true
       window.history.replaceState({}, '', window.location.pathname)
       showScreen('auth')
       switchTab('setnew')
+      return
+    }
+    if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
+      await handleSession(session)
     }
   })
 
@@ -2342,15 +2360,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     return
   }
 
-  // Check for active session (covers OAuth callback, magic link, persisted session)
+  // Check for active session — covers persisted sessions and cases where SDK
+  // processes the magic link hash before onAuthStateChange fires
   const { data: { session } } = await _supabase.auth.getSession()
-  if (session && !_recoveryHandled) {
-    const profile = await api('/api/users/me')
-    const user = profile.user || { email: session.user.email, first_name: session.user.email?.split('@')[0] || 'You', last_name: '' }
-    setSession(user, session.access_token)
-    launchDash(user.first_name || user.email?.split('@')[0] || 'You', user.last_name || '')
-    checkSuccessParam()
-    window.history.replaceState({}, '', window.location.pathname)
+  if (session) {
+    await handleSession(session)
     return
   }
 
