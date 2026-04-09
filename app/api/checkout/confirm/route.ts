@@ -51,8 +51,12 @@ export async function POST(req: NextRequest) {
   if (listing.status === 'active') return NextResponse.json({ ok: true })
 
   // Activate listing and save subscription ID
+  const expiresAt = new Date()
+  expiresAt.setDate(expiresAt.getDate() + 7)
   await supabase.from('listings').update({
     status: 'active',
+    goes_live_at: new Date().toISOString(),
+    expires_at: expiresAt.toISOString(),
     stripe_subscription_id: session.subscription as string ?? listing.stripe_subscription_id,
   }).eq('id', listing_id)
 

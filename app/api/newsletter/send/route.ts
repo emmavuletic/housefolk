@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
 import { resend, FROM_EMAIL } from '@/lib/resend'
+import { createHmac } from 'crypto'
+
+function unsubscribeToken(email: string): string {
+  const secret = process.env.UNSUBSCRIBE_SECRET || ''
+  return createHmac('sha256', secret).update(email.toLowerCase()).digest('hex')
+}
 
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim())
 
@@ -74,7 +80,7 @@ export async function POST(req: NextRequest) {
     const batch = subscribers.slice(i, i + BATCH_SIZE)
 
     await Promise.all(batch.map(sub => {
-      const unsubUrl = `${appUrl}/api/subscribers/unsubscribe?email=${encodeURIComponent(sub.email)}`
+      const unsubUrl = `${appUrl}/api/subscribers/unsubscribe?email=${encodeURIComponent(sub.email)}&token=${unsubscribeToken(sub.email)}`
       return resend.emails.send({
         from: FROM_EMAIL,
         to: sub.email,

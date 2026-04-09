@@ -39,9 +39,13 @@ export async function POST(req: NextRequest) {
           .single()
 
         if (listing) {
+          const expiresAt = new Date()
+          expiresAt.setDate(expiresAt.getDate() + 7)
           await supabase.from('listings').update({
             stripe_subscription_id: session.subscription as string,
             status: 'active',
+            goes_live_at: new Date().toISOString(),
+            expires_at: expiresAt.toISOString(),
           }).eq('id', listing_id)
 
           // Email landlord confirmation
@@ -60,6 +64,20 @@ export async function POST(req: NextRequest) {
             })
           }
         }
+      }
+      break
+    }
+
+    case 'invoice.payment_succeeded': {
+      // Extend listing by 7 days on each successful weekly renewal
+      const invoice = event.data.object as Stripe.Invoice
+      const subId = typeof invoice.subscription === 'string' ? invoice.subscription : invoice.subscription?.id
+      if (subId && invoice.billing_reason === 'subscription_cycle') {
+        const expiresAt = new Date()
+        expiresAt.setDate(expiresAt.getDate() + 7)
+        await supabase.from('listings')
+          .update({ status: 'active', expires_at: expiresAt.toISOString() })
+          .eq('stripe_subscription_id', subId)
       }
       break
     }

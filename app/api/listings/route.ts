@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
       landlord_id
     `)
     .eq('status', 'active')
+    .gt('expires_at', new Date().toISOString())
     .order('goes_live_at', { ascending: false })
 
   if (type) query = query.eq('type', type)

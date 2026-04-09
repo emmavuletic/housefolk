@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
 import { resend, FROM_EMAIL } from '@/lib/resend'
+import { timingSafeEqual } from 'crypto'
 
 // Strip quoted reply text — everything after the first quoted block
 function extractReplyText(text: string): string {
@@ -22,8 +23,12 @@ function extractReplyText(text: string): string {
 export async function POST(req: NextRequest) {
   const secret = process.env.INBOUND_WEBHOOK_SECRET
   if (!secret) return NextResponse.json({ error: 'Server misconfigured.' }, { status: 500 })
-  const sig = req.headers.get('x-resend-signature') || req.headers.get('authorization')
-  if (sig !== secret) {
+  const sig = req.headers.get('x-webhook-secret') ?? ''
+  let match = false
+  try {
+    match = sig.length === secret.length && timingSafeEqual(Buffer.from(sig), Buffer.from(secret))
+  } catch { match = false }
+  if (!match) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
