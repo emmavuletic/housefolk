@@ -24,11 +24,11 @@ export async function POST(req: NextRequest) {
   const secret = process.env.INBOUND_WEBHOOK_SECRET
   if (!secret) return NextResponse.json({ error: 'Server misconfigured.' }, { status: 500 })
   const sig = req.headers.get('x-webhook-secret') ?? ''
-  let match = false
+  let sigValid = false
   try {
-    match = sig.length === secret.length && timingSafeEqual(Buffer.from(sig), Buffer.from(secret))
-  } catch { match = false }
-  if (!match) {
+    sigValid = sig.length === secret.length && timingSafeEqual(Buffer.from(sig), Buffer.from(secret))
+  } catch { sigValid = false }
+  if (!sigValid) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
