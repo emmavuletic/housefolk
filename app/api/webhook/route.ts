@@ -82,6 +82,23 @@ export async function POST(req: NextRequest) {
       break
     }
 
+    case 'charge.refunded': {
+      // Expire listing immediately when a refund is issued
+      const charge = event.data.object as Stripe.Charge
+      const paymentIntent = typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent?.id
+      if (paymentIntent) {
+        // Find the checkout session linked to this payment intent
+        const sessions = await stripe.checkout.sessions.list({ payment_intent: paymentIntent, limit: 1 })
+        const listingId = sessions.data[0]?.metadata?.listing_id
+        if (listingId) {
+          await supabase.from('listings')
+            .update({ status: 'expired' })
+            .eq('id', listingId)
+        }
+      }
+      break
+    }
+
     case 'customer.subscription.deleted': {
       const sub = event.data.object as Stripe.Subscription
       // Expire listing if this is a listing subscription
