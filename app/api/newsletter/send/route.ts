@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
             </div>
             <div style="padding:1.5rem 2rem;background:#FDF9F7">
               <div style="background:#fff;border:1px solid #E2D9CE;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.2rem;font-size:0.85rem;color:#5A4F45;line-height:1.65;font-style:italic">
-                ${intro.replace(/\n/g, '<br>')}
+                ${intro.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}
               </div>
               <div style="font-family:Georgia,serif;font-size:1.1rem;margin-bottom:0.8rem;color:#1A1510">🏠 This week's new listings</div>
               ${listingsHtml}

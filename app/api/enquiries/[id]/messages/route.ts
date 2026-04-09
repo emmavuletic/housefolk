@@ -5,7 +5,19 @@ import Anthropic from '@anthropic-ai/sdk'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
 
+const BLOCKED_KEYWORDS = ['fuck', 'cunt', 'nigger', 'faggot', 'kill yourself', 'kys', 'i will kill', 'i\'ll kill', 'rape']
+
+function keywordCheck(text: string): { blocked: boolean; reason?: string } {
+  const lower = text.toLowerCase()
+  const hit = BLOCKED_KEYWORDS.find(w => lower.includes(w))
+  return hit ? { blocked: true, reason: 'Message contains prohibited content.' } : { blocked: false }
+}
+
 async function moderateMessage(text: string): Promise<{ blocked: boolean; reason?: string }> {
+  // Always run keyword check first as a baseline
+  const keyword = keywordCheck(text)
+  if (keyword.blocked) return keyword
+
   try {
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
@@ -21,7 +33,8 @@ async function moderateMessage(text: string): Promise<{ blocked: boolean; reason
     }
     return { blocked: false }
   } catch {
-    return { blocked: false } // fail open — don't block messages if AI is unavailable
+    // AI unavailable — keyword check already ran above, allow message through
+    return { blocked: false }
   }
 }
 
