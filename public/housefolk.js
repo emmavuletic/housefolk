@@ -2392,6 +2392,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (tierParam) _pendingTier = tierParam
     goToPost()
   } else if (goto === 'browse') goToBrowse()
+  else if (goto === 'signup') { showScreen('auth'); switchTab('up') }
+  else if (goto === 'signin') { showScreen('auth'); switchTab('in') }
 
   // Close dropdowns on outside click
   document.addEventListener('click', e => {
