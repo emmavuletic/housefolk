@@ -566,7 +566,9 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#1A1A1A',
   },
   content: {
-    padding: '0 0.5rem',
+    maxWidth: 680,
+    margin: '0 auto',
+    padding: '0 1rem',
   },
   header: {
     display: 'flex',

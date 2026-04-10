@@ -234,7 +234,7 @@ export default function ListingsPage() {
 
         {/* Hero header */}
         <div style={{ background: '#ffffff', borderBottom: '1px solid #E2D9CE', padding: '3rem 2rem 2.5rem' }}>
-          <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+          <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 400, color: '#1A1A1A', marginBottom: '0.5rem' }}>Browse listings</h1>
             <p style={{ fontSize: '0.95rem', color: '#5A4F45' }}>Flatshares, rentals and sublets across the UK.</p>
           </div>
@@ -380,9 +380,9 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 600,
   },
   main: {
-    maxWidth: 1160,
+    maxWidth: 960,
     margin: '0 auto',
-    padding: '2.5rem 1.5rem 4rem',
+    padding: '2.5rem 2rem 4rem',
   },
   heading: {
     fontFamily: "'Playfair Display', serif",
