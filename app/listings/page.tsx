@@ -446,6 +446,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: '100%',
     objectFit: 'cover' as const,
     display: 'block',
+    filter: 'saturate(0.72) sepia(0.18) brightness(0.97)',
   },
   cardPlaceholder: {
     display: 'flex',

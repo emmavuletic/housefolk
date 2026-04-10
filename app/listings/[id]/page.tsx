@@ -287,19 +287,19 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
                 <div style={styles.heroPlaceholder}>🏡</div>
               ) : photos.length === 1 ? (
                 <div className="photo-single" style={{ borderRadius: 12, overflow: 'hidden', height: 480, cursor: 'zoom-in' }} onClick={() => openCarousel(0)}>
-                  <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(0.72) sepia(0.18) brightness(0.97)' }} />
                 </div>
               ) : (
                 <div className="photo-collage-inner" style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gridTemplateRows: photos.length >= 4 ? '1fr 1fr' : '1fr', gap: 4, height: 480, borderRadius: 12, overflow: 'hidden' }}>
                   <div style={{ gridRow: '1 / -1', overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(0)}>
-                    <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
+                    <img src={photos[0]} alt={listing.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block', filter: 'saturate(0.72) sepia(0.18) brightness(0.97)' }}
                       onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
                       onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
                     />
                   </div>
                   {photos.slice(1, 3).map((p, i) => (
                     <div key={i} style={{ overflow: 'hidden', cursor: 'zoom-in', position: 'relative' }} onClick={() => openCarousel(i + 1)}>
-                      <img src={p} alt={`${listing.title} ${i + 2}`} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block' }}
+                      <img src={p} alt={`${listing.title} ${i + 2}`} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s', display: 'block', filter: 'saturate(0.72) sepia(0.18) brightness(0.97)' }}
                         onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
                         onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
                       />
