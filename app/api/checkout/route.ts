@@ -36,10 +36,18 @@ export async function POST(req: NextRequest) {
         (promo.discount_type === 'free-any' || promo.discount_type === `free-${type}`)
 
       if (isValid) {
-        // Activate listing for free — only if it belongs to this user
+        // Verify listing belongs to this user before activating
+        const { data: ownedListing } = await supabase
+          .from('listings').select('id').eq('id', listing_id).eq('landlord_id', user.id).single()
+        if (!ownedListing) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
+
+        const expiresAt = new Date()
+        expiresAt.setDate(expiresAt.getDate() + 7)
         await supabase.from('listings').update({
           status: 'active',
           promo_code_used: promo_code.toUpperCase(),
+          goes_live_at: new Date().toISOString(),
+          expires_at: expiresAt.toISOString(),
         }).eq('id', listing_id).eq('landlord_id', user.id)
 
         await supabase.from('promo_codes')

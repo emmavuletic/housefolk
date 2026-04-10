@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
       html: `
         <p>Hi ${recipient.first_name},</p>
         <p><strong>${senderName}</strong> replied to your conversation about <strong>${listingTitle}</strong>.</p>
-        <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${trimmedBody.replace(/\n/g, '<br>')}</blockquote>
+        <blockquote style="border-left:3px solid #ccc;padding-left:1rem;color:#555">${trimmedBody.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, '<br>')}</blockquote>
         <p>Reply to this email to respond, or <a href="https://app.housefolk.co">view in your Housefolk account</a>.</p>
         <p>— The Housefolk team</p>
       `,

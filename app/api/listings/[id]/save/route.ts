@@ -16,6 +16,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const { supabase, user } = await getUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorised.' }, { status: 401 })
 
+  const { data: listing } = await supabase.from('listings').select('id').eq('id', params.id).single()
+  if (!listing) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
+
   const { error } = await supabase
     .from('saved_listings')
     .upsert({ user_id: user.id, listing_id: params.id }, { onConflict: 'user_id,listing_id' })

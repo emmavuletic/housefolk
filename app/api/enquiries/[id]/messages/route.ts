@@ -79,7 +79,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     .eq('enquiry_id', params.id)
     .order('created_at', { ascending: true })
 
-  if (error) { console.error('[messages GET] DB error:', error.message); return NextResponse.json({ messages: [] }) }
+  if (error) { console.error('[messages GET] DB error:', error.message); return NextResponse.json({ error: 'Failed to load messages.' }, { status: 500 }) }
   return NextResponse.json({ messages })
 }
 
@@ -104,14 +104,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: 'Forbidden.' }, { status: 403 })
   }
 
-  // Check if either party has blocked the other
+  // Check if either party has blocked the other (two explicit queries — more reliable than OR)
   const otherId = enquiry.tenant_id === user.id ? enquiry.landlord_id : enquiry.tenant_id
-  const { data: block } = await supabase
-    .from('user_blocks')
-    .select('id')
-    .or(`and(blocker_id.eq.${user.id},blocked_id.eq.${otherId}),and(blocker_id.eq.${otherId},blocked_id.eq.${user.id})`)
-    .maybeSingle()
-  if (block) return NextResponse.json({ error: 'You cannot send messages in this conversation.' }, { status: 403 })
+  const [{ data: blockFwd }, { data: blockRev }] = await Promise.all([
+    supabase.from('user_blocks').select('id').eq('blocker_id', user.id).eq('blocked_id', otherId).maybeSingle(),
+    supabase.from('user_blocks').select('id').eq('blocker_id', otherId).eq('blocked_id', user.id).maybeSingle(),
+  ])
+  if (blockFwd || blockRev) return NextResponse.json({ error: 'You cannot send messages in this conversation.' }, { status: 403 })
 
   const { body } = await req.json()
   if (!body?.trim()) return NextResponse.json({ error: 'Message body required.' }, { status: 400 })

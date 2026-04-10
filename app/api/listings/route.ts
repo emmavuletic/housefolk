@@ -51,8 +51,20 @@ export async function POST(req: NextRequest) {
     music_vibes, spotify_url, instagram, linkedin, airbnb, photos
   } = body
 
-  if (!type || !title || !location) {
-    return NextResponse.json({ error: 'Type, title and location are required.' }, { status: 400 })
+  const ALLOWED_TYPES = ['flatshare', 'rental', 'sublet']
+  if (!type || !ALLOWED_TYPES.includes(type)) {
+    return NextResponse.json({ error: 'Type must be flatshare, rental or sublet.' }, { status: 400 })
+  }
+
+  if (!title || !location) {
+    return NextResponse.json({ error: 'Title and location are required.' }, { status: 400 })
+  }
+
+  if (price !== undefined && price !== null && price !== '') {
+    const priceNum = parseFloat(price)
+    if (isNaN(priceNum) || priceNum < 0 || priceNum > 100000) {
+      return NextResponse.json({ error: 'Price must be between 0 and 100,000.' }, { status: 400 })
+    }
   }
 
   if (Array.isArray(photos) && photos.length > 10) {

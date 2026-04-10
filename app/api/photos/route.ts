@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
+import { randomBytes } from 'crypto'
 
 // POST /api/photos — upload photo to Supabase Storage, returns public URL
 export async function POST(req: NextRequest) {
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
 
   const extMap: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }
   const ext = extMap[file.type] || 'jpg'
-  const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+  const path = `${user.id}/${Date.now()}-${randomBytes(8).toString('hex')}.${ext}`
 
   const { error: uploadError } = await supabase.storage
     .from('listing-photos')
