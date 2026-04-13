@@ -8,23 +8,23 @@
     "start": "next start"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.82.0",
-    "@react-email/components": "^0.0.22",
-    "@stripe/stripe-js": "^4.1.0",
-    "@supabase/ssr": "^0.5.1",
+    "@anthropic-ai/sdk": "^0.88.0",
+    "@react-email/components": "^1.0.12",
+    "@stripe/stripe-js": "^9.1.0",
+    "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.45.0",
-    "next": "^14.2.35",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-email": "^2.1.5",
-    "resend": "^3.4.0",
-    "stripe": "^16.2.0"
+    "next": "^16.2.3",
+    "react": "^19",
+    "react-dom": "^19",
+    "react-email": "^5.2.10",
+    "resend": "^6.10.0",
+    "stripe": "^22.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "typescript": "^5"
   }
 }
