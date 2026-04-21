@@ -902,11 +902,24 @@ async function loadMyListings() {
   if (!container) return
 
   const typeIcon = { flatshare: '🏠', rental: '🏢', sublet: '🌿' }
-  const statusBadge = {
-    pending: '<span class="badge badge-pending">⏳ Pending</span>',
-    active: '<span class="badge badge-live">● Live</span>',
-    let: '<span class="badge badge-pending">Let</span>',
-    expired: '<span class="badge badge-expired">Expired</span>',
+
+  function listingStatusBadge(l) {
+    if (l.status === 'draft') return '<span class="badge badge-pending">Draft</span>'
+    if (l.status === 'expired') return '<span class="badge badge-expired">Expired</span>'
+    if (l.status === 'let') return '<span class="badge badge-pending">Let</span>'
+    if (l.status === 'active') {
+      const expiry = l.access_expires_at
+        ? new Date(l.access_expires_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+        : null
+      if (l.cancel_at_period_end || l.subscription_status === 'canceled') {
+        return `<span class="badge badge-live">● Live</span><span style="font-size:0.72rem;color:var(--mid)">Cancelling — live until ${expiry || '—'}</span>`
+      }
+      if (l.subscription_status === 'past_due') {
+        return `<span class="badge badge-expired">Payment overdue</span>`
+      }
+      return `<span class="badge badge-live">● Live</span>${expiry ? `<span style="font-size:0.72rem;color:var(--mid)">Renews ${expiry}</span>` : ''}`
+    }
+    return `<span class="badge badge-pending">${l.status}</span>`
   }
 
   if (data.listings.length === 0) {
@@ -922,9 +935,8 @@ async function loadMyListings() {
           <div style="font-weight:700;font-size:0.93rem;margin-bottom:0.15rem">${escapeHtml(l.title)}</div>
           <div style="font-size:0.75rem;color:var(--light);margin-bottom:0.4rem">📍 ${escapeHtml(l.location)}</div>
           <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center">
-            ${statusBadge[l.status] || ''}
+            ${listingStatusBadge(l)}
             <span class="badge badge-type">${typeIcon[l.type]} ${l.type}</span>
-            ${l.goes_live_at ? `<span style="font-size:0.72rem;color:var(--mid)">Goes live ${new Date(l.goes_live_at).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span>` : ''}
           </div>
         </div>
       </div>
@@ -932,6 +944,7 @@ async function loadMyListings() {
         <button class="btn btn-ghost btn-sm" onclick="openListing('${l.id}')">Preview</button>
         ${l.status !== 'expired' ? `<button class="btn btn-ghost btn-sm" onclick="editListing('${l.id}')">Edit</button>` : ''}
         ${l.status !== 'expired' ? `<button class="btn btn-ghost btn-sm" onclick="markAsLet('${l.id}')">Mark let</button>` : ''}
+        ${currentUser?.role === 'admin' && l.status === 'draft' ? `<button class="btn btn-ghost btn-sm" onclick="adminActivateListing('${l.id}')" style="color:#2E7D52;border-color:#2E7D52">Activate</button>` : ''}
         <button class="btn btn-ghost btn-sm" onclick="deleteListing('${l.id}')" style="color:#C0392B;border-color:#FADBD8">Delete</button>
       </div>
     </div>`).join('')
@@ -942,6 +955,19 @@ async function markAsLet(id) {
   if (!token) return
   await api(`/api/listings/${id}`, { method: 'PATCH', body: JSON.stringify({ status: 'let' }) })
   toast('✓ Listing marked as let', 'green')
+  loadMyListings()
+}
+
+async function adminActivateListing(id) {
+  if (currentUser?.role !== 'admin') return
+  const expiresAt = new Date()
+  expiresAt.setDate(expiresAt.getDate() + 7)
+  const result = await api(`/api/listings/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: 'active', goes_live_at: new Date().toISOString(), expires_at: expiresAt.toISOString() }),
+  })
+  if (result.error) { toast(result.error); return }
+  toast('✓ Listing activated', 'green')
   loadMyListings()
 }
 
@@ -2276,22 +2302,8 @@ function switchTab(tab) {
 async function checkSuccessParam() {
   const params = new URLSearchParams(window.location.search)
   if (params.get('success') === 'listing') {
-    showScreen('dash')
-    showPanel('mylistings')
-    window.history.replaceState({}, '', '/')
-    // Confirm payment with Stripe directly — activates listing even if webhook failed
-    const sessionId = params.get('session_id')
-    const listingId = params.get('listing_id')
-    if (sessionId && listingId) {
-      const result = await api('/api/checkout/confirm', {
-        method: 'POST',
-        body: JSON.stringify({ session_id: sessionId, listing_id: listingId }),
-      })
-      toast(result.ok ? '✓ Payment confirmed — your listing is now live!' : '✓ Payment received — listing activating shortly.', 'green')
-    } else {
-      toast('✓ Payment confirmed — your listing is now live!', 'green')
-    }
-    loadMyListings()
+    // Activation is handled by Stripe webhook (invoice.paid) — just redirect
+    window.location.href = '/listings'
   } else if (params.get('success') === 'subscription') {
     toast('✓ Subscription active — you can now message landlords!', 'green')
     window.history.replaceState({}, '', '/')

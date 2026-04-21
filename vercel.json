@@ -3,5 +3,11 @@
     { "source": "/", "destination": "/housefolk.html", "permanent": false },
     { "source": "/post", "destination": "/housefolk.html?goto=post", "permanent": false },
     { "source": "/browse", "destination": "/listings", "permanent": false }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/expire-listings",
+      "schedule": "0 * * * *"
+    }
   ]
 }

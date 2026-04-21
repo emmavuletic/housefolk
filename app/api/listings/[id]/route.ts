@@ -54,6 +54,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     'sublet_until', 'star_signs', 'music_vibes', 'spotify_url',
     'instagram', 'linkedin', 'airbnb', 'photos', 'newsletter_included',
   ]
+
+  // Admins can also set status and dates (e.g. to activate a draft listing)
+  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  if (profile?.role === 'admin') {
+    ALLOWED_FIELDS.push('status', 'goes_live_at', 'expires_at')
+  }
+
   const updates: Record<string, unknown> = {}
   for (const key of ALLOWED_FIELDS) {
     if (key in body) updates[key] = body[key]
