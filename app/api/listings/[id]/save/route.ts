@@ -12,23 +12,25 @@ async function getUser(req: NextRequest) {
 }
 
 // POST /api/listings/[id]/save — save a listing
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const { supabase, user } = await getUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorised.' }, { status: 401 })
 
-  const { data: listing } = await supabase.from('listings').select('id').eq('id', params.id).single()
+  const { data: listing } = await supabase.from('listings').select('id').eq('id', id).single()
   if (!listing) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
 
   const { error } = await supabase
     .from('saved_listings')
-    .upsert({ user_id: user.id, listing_id: params.id }, { onConflict: 'user_id,listing_id' })
+    .upsert({ user_id: user.id, listing_id: id }, { onConflict: 'user_id,listing_id' })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ saved: true })
 }
 
 // DELETE /api/listings/[id]/save — unsave a listing
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const { supabase, user } = await getUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorised.' }, { status: 401 })
 
@@ -36,7 +38,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     .from('saved_listings')
     .delete()
     .eq('user_id', user.id)
-    .eq('listing_id', params.id)
+    .eq('listing_id', id)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ saved: false })

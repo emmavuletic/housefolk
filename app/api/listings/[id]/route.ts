@@ -12,7 +12,8 @@ async function getAuthUser(req: NextRequest) {
 
 // GET /api/listings/[id] — single listing
 // Active listings are public. Draft/expired/other statuses require owner or admin.
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = createServerClient()
   const { data, error } = await supabase
     .from('listings')
@@ -23,7 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       spotify_url, instagram, linkedin, airbnb,
       status, goes_live_at, expires_at, landlord_id
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !data) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
@@ -44,7 +45,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // PATCH /api/listings/[id] — update listing (owner only)
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = createServerClient()
   const user = await getAuthUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorised.' }, { status: 401 })
@@ -52,7 +54,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const { data: existing } = await supabase
     .from('listings')
     .select('landlord_id')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!existing || existing.landlord_id !== user.id) {
@@ -87,7 +89,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const { data, error } = await supabase
     .from('listings')
     .update(updates)
-    .eq('id', params.id)
+    .eq('id', id)
     .select()
     .single()
 
@@ -96,7 +98,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 }
 
 // DELETE /api/listings/[id] — delete listing (owner only)
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = createServerClient()
   const user = await getAuthUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorised.' }, { status: 401 })
@@ -104,14 +107,14 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   const { data: existing } = await supabase
     .from('listings')
     .select('landlord_id')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!existing || existing.landlord_id !== user.id) {
     return NextResponse.json({ error: 'Forbidden.' }, { status: 403 })
   }
 
-  const { error } = await supabase.from('listings').delete().eq('id', params.id)
+  const { error } = await supabase.from('listings').delete().eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ success: true })
 }

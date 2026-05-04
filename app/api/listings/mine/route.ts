@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabase
     .from('listings')
-    .select('*')
+    .select('id, type, title, location, status, access_expires_at, subscription_status, cancel_at_period_end')
     .eq('landlord_id', user.id)
     .order('created_at', { ascending: false })
 

@@ -54,7 +54,8 @@ async function getAuthedUser(req: NextRequest) {
 }
 
 // GET /api/enquiries/[id]/messages — fetch all messages for a conversation
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const { supabase, user } = await getAuthedUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorised.' }, { status: 401 })
 
@@ -62,7 +63,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   const { data: enquiry } = await supabase
     .from('enquiries')
     .select('id, tenant_id, landlord_id')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!enquiry) return NextResponse.json({ error: 'Enquiry not found.' }, { status: 404 })
@@ -71,12 +72,12 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 
   // Mark as read when the user opens the thread
-  await supabase.from('enquiries').update({ read: true }).eq('id', params.id)
+  await supabase.from('enquiries').update({ read: true }).eq('id', id)
 
   const { data: messages, error } = await supabase
     .from('messages')
     .select('id, body, created_at, sender_id, sender:users!messages_sender_id_fkey(id, first_name, last_name)')
-    .eq('enquiry_id', params.id)
+    .eq('enquiry_id', id)
     .order('created_at', { ascending: true })
 
   if (error) { console.error('[messages GET] DB error:', error.message); return NextResponse.json({ error: 'Failed to load messages.' }, { status: 500 }) }
@@ -84,7 +85,8 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // POST /api/enquiries/[id]/messages — send a reply in a conversation
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const { supabase, user, profile } = await getAuthedUser(req)
   if (!user || !profile) return NextResponse.json({ error: 'Unauthorised.' }, { status: 401 })
 
@@ -96,7 +98,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       tenant:users!enquiries_tenant_id_fkey(id, first_name, last_name, email),
       landlord:users!enquiries_landlord_id_fkey(id, first_name, last_name, email)
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!enquiry) return NextResponse.json({ error: 'Enquiry not found.' }, { status: 404 })
@@ -123,7 +125,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   const { data: message, error } = await supabase
     .from('messages')
-    .insert({ enquiry_id: params.id, sender_id: user.id, body: body.trim() })
+    .insert({ enquiry_id: id, sender_id: user.id, body: body.trim() })
     .select()
     .single()
 
@@ -136,7 +138,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const listingTitle = (enquiry.listing as unknown as { title: string } | null)?.title ?? 'your listing'
 
   // Mark conversation as unread for the recipient (reliable read tracking)
-  await supabase.from('enquiries').update({ read: false }).eq('id', params.id)
+  await supabase.from('enquiries').update({ read: false }).eq('id', id)
 
   // Fetch recipient email directly — more reliable than FK join which can silently return null
   const { data: recipientUser } = await supabase
@@ -149,7 +151,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     await resend.emails.send({
       from: FROM_EMAIL,
       to: recipientUser.email,
-      reply_to: `reply+${params.id}@inbound.housefolk.co`,
+      reply_to: `reply+${id}@inbound.housefolk.co`,
       subject: `New message from ${senderName} on Housefolk`,
       html: `
         <p>Hi ${escapeHtml(recipientUser.first_name || '')},</p>

@@ -23,13 +23,11 @@ export async function POST(req: NextRequest) {
   // both attempt the insert; exactly one succeeds, the other gets 0 rows back.
   const { count } = await supabase
     .from('stripe_events')
-    .insert({
+    .upsert({
       id:      event.id,
       type:    event.type,
       created: new Date(event.created * 1000).toISOString(),
-    }, { count: 'exact' })
-    .onConflict('id')
-    .ignore()
+    }, { onConflict: 'id', ignoreDuplicates: true, count: 'exact' })
 
   if (count === 0) {
     // Already processed — safe to acknowledge without doing anything
@@ -122,7 +120,7 @@ export async function POST(req: NextRequest) {
 
       // Confirmation email on first activation only
       if (isFirstActivation) {
-        const landlord = listing.users as { email: string; first_name: string } | null
+        const landlord = listing.users as unknown as { email: string; first_name: string } | null
         if (landlord?.email) {
           await resend.emails.send({
             from: FROM_EMAIL,

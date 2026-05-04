@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase-client'
 
 interface Listing {
@@ -54,7 +55,8 @@ function formatDate(iso: string | null): string {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-export default function ListingDetailPage({ params }: { params: { id: string } }) {
+export default function ListingDetailPage() {
+  const params = useParams<{ id: string }>()
   const [listing, setListing] = useState<Listing | null>(null)
   const [notFound, setNotFound] = useState(false)
   const [enquirySent, setEnquirySent] = useState(false)
