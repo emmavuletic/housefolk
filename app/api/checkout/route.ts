@@ -20,44 +20,32 @@ export async function POST(req: NextRequest) {
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.housefolk.co'
 
-  // Validate promo code if provided
+  // Validate and atomically claim promo code if provided
   if (promo_code) {
-    const { data: promo } = await supabase
-      .from('promo_codes')
-      .select('*')
-      .eq('code', promo_code.toUpperCase())
-      .eq('active', true)
-      .single()
+    // Verify listing belongs to this user before claiming the code
+    const { data: ownedListing } = await supabase
+      .from('listings').select('id').eq('id', listing_id).eq('landlord_id', user.id).single()
+    if (!ownedListing) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
 
-    if (promo) {
-      const isValid =
-        (!promo.expiry || new Date(promo.expiry) > new Date()) &&
-        (!promo.max_uses || promo.uses_count < promo.max_uses) &&
-        (promo.discount_type === 'free-any' || promo.discount_type === `free-${type}`)
+    // Single atomic UPDATE: only succeeds if code is valid, active, not expired, and under limit.
+    // Prevents two concurrent checkouts from both consuming the last use of a limited code.
+    const { data: claimed } = await supabase
+      .rpc('claim_promo_code', { p_code: promo_code.toUpperCase(), p_listing_type: type })
 
-      if (isValid) {
-        // Verify listing belongs to this user before activating
-        const { data: ownedListing } = await supabase
-          .from('listings').select('id').eq('id', listing_id).eq('landlord_id', user.id).single()
-        if (!ownedListing) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
-
-        const expiresAt = new Date()
-        expiresAt.setDate(expiresAt.getDate() + 7)
-        await supabase.from('listings').update({
-          status: 'active',
-          promo_code_used: promo_code.toUpperCase(),
-          goes_live_at: new Date().toISOString(),
-          expires_at: expiresAt.toISOString(),
-        }).eq('id', listing_id).eq('landlord_id', user.id)
-
-        await supabase.from('promo_codes')
-          .update({ uses_count: (promo.uses_count || 0) + 1 })
-          .eq('id', promo.id)
-
-        return NextResponse.json({ free: true, redirect: `${appUrl}?success=listing` })
-      }
+    if (!claimed || claimed.length === 0) {
+      return NextResponse.json({ error: 'Invalid or expired promo code.' }, { status: 400 })
     }
-    return NextResponse.json({ error: 'Invalid or expired promo code.' }, { status: 400 })
+
+    const expiresAt = new Date()
+    expiresAt.setDate(expiresAt.getDate() + 7)
+    await supabase.from('listings').update({
+      status: 'active',
+      promo_code_used: promo_code.toUpperCase(),
+      goes_live_at: new Date().toISOString(),
+      expires_at: expiresAt.toISOString(),
+    }).eq('id', listing_id).eq('landlord_id', user.id)
+
+    return NextResponse.json({ free: true, redirect: `${appUrl}?success=listing` })
   }
 
   const priceId = PRICES[type as keyof typeof PRICES]

@@ -10,8 +10,9 @@ async function getAuthUser(req: NextRequest) {
   return user
 }
 
-// GET /api/listings/[id] — single listing (public)
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+// GET /api/listings/[id] — single listing
+// Active listings are public. Draft/expired/other statuses require owner or admin.
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   const supabase = createServerClient()
   const { data, error } = await supabase
     .from('listings')
@@ -25,8 +26,21 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     .eq('id', params.id)
     .single()
 
-  if (error) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
-  return NextResponse.json({ listing: data })
+  if (error || !data) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
+
+  // Active listings are visible to everyone
+  if (data.status === 'active') return NextResponse.json({ listing: data })
+
+  // Non-active listings: require the requesting user to be owner or admin
+  const user = await getAuthUser(req)
+  if (!user) return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
+
+  if (data.landlord_id === user.id) return NextResponse.json({ listing: data })
+
+  const { data: profile } = await supabase.from('users').select('role').eq('id', user.id).single()
+  if (profile?.role === 'admin') return NextResponse.json({ listing: data })
+
+  return NextResponse.json({ error: 'Listing not found.' }, { status: 404 })
 }
 
 // PATCH /api/listings/[id] — update listing (owner only)

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Housefolk — Join the Waitlist</title>
+  <meta name="description" content="Housefolk connects design-aware renters with landlords who care about good light. Join the waitlist.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #FAF7F5;
+      --warm-white: #FFF8F4;
+      --dark: #1A1A1A;
+      --mid: #5A4F45;
+      --light: #8A7E74;
+      --accent: #f7b188;
+      --accent-light: #fad4b8;
+      --border: #E2D9CE;
+      --shadow: 0 6px 28px rgba(26,26,26,0.1);
+      --shadow-lg: 0 20px 60px rgba(26,26,26,0.15);
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--warm-white);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+    }
+
+    /* ── Left panel ── */
+    .left {
+      position: relative;
+      background: #F0EFED;
+      display: flex;
+      flex-direction: column;
+      padding: 3rem 3.5rem;
+      overflow: hidden;
+    }
+
+    .left-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 30%, rgba(247,177,136,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 20% 80%, rgba(247,177,136,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--dark);
+      text-decoration: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .left-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+      max-width: 440px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.4rem;
+    }
+
+    .eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .left-body h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.2vw, 2.8rem);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -0.5px;
+      color: var(--dark);
+      margin-bottom: 1.2rem;
+    }
+
+    .left-body h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .left-body p {
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--mid);
+      max-width: 380px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Proof points */
+    .proofs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .proof {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.84rem;
+      color: var(--mid);
+    }
+
+    .proof-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(247,177,136,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.85rem;
+    }
+
+    .left-foot {
+      font-size: 0.72rem;
+      color: #9A8E84;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Right panel ── */
+    .right {
+      background: var(--warm-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+    }
+
+    .form-wrap {
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .form-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9A8E84;
+      margin-bottom: 1.8rem;
+    }
+
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.65rem;
+      font-weight: 400;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.3px;
+    }
+
+    .form-sub {
+      font-size: 0.86rem;
+      color: var(--light);
+      margin-bottom: 2rem;
+      line-height: 1.55;
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.79rem;
+      font-weight: 500;
+      color: var(--mid);
+      margin-bottom: 0.4rem;
+    }
+
+    .field input {
+      width: 100%;
+      background: var(--cream);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 0.78rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      color: var(--dark);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(247,177,136,0.18);
+    }
+
+    .field input::placeholder {
+      color: #C0B4AA;
+    }
+
+    .btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.85rem 1.6rem;
+      border: none;
+      border-radius: 6px;
+      background: var(--dark);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.91rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.15s, box-shadow 0.18s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      margin-top: 0.5rem;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #2A2520;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .error-msg {
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      color: #C0392B;
+      text-align: center;
+      display: none;
+    }
+
+    /* Success state */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(247,177,136,0.15);
+      border: 1.5px solid var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin: 0 auto 1.2rem;
+    }
+
+    .success-state h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.3px;
+    }
+
+    .success-state p {
+      font-size: 0.87rem;
+      color: var(--light);
+      line-height: 1.6;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.4rem 0;
+      color: #C0B4AA;
+      font-size: 0.75rem;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .signin-link {
+      text-align: center;
+      font-size: 0.83rem;
+      color: var(--light);
+    }
+
+    .signin-link a {
+      color: var(--dark);
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.15s;
+    }
+
+    .signin-link a:hover {
+      border-color: var(--dark);
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 800px) {
+      .page {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+
+      .left {
+        padding: 2.5rem 2rem 2.8rem;
+        min-height: 0;
+      }
+
+      .left-body {
+        margin: 2rem 0 0;
+      }
+
+      .left-body h1 {
+        font-size: 2rem;
+      }
+
+      .left-body p {
+        margin-bottom: 1.8rem;
+      }
+
+      .left-foot {
+        margin-top: 2rem;
+      }
+
+      .right {
+        padding: 2.5rem 1.5rem 3rem;
+        align-items: flex-start;
+      }
+
+      .form-wrap {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ── Left ── -->
+  <div class="left">
+    <div class="left-bg"></div>
+
+    <a class="logo" href="/">Housefolk</a>
+
+    <div class="left-body">
+      <div class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        Opening soon
+      </div>
+
+      <h1>Homes for people who notice <em>good light.</em></h1>
+
+      <p>Housefolk connects design-aware renters with landlords who care — about original floors, south-facing windows, and rooms that feel like somewhere.</p>
+
+      <div class="proofs">
+        <div class="proof">
+          <div class="proof-icon">✦</div>
+          Curated listings from landlords who get it
+        </div>
+        <div class="proof">
+          <div class="proof-icon">✉</div>
+          Weekly newsletter — new homes every Thursday
+        </div>
+        <div class="proof">
+          <div class="proof-icon">◎</div>
+          Free for renters, always
+        </div>
+      </div>
+    </div>
+
+    <div class="left-foot">
+      © 2025 Housefolk
+    </div>
+  </div>
+
+  <!-- ── Right ── -->
+  <div class="right">
+    <div class="form-wrap">
+
+      <!-- Form -->
+      <div id="formState">
+        <div class="form-label">Waitlist</div>
+        <h2 class="form-title">Get early access</h2>
+        <p class="form-sub">Be the first to know when we launch in your city. No spam — just homes worth seeing.</p>
+
+        <form id="waitlistForm" novalidate>
+          <div class="field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" placeholder="Ada Lovelace" autocomplete="given-name">
+          </div>
+
+          <div class="field">
+            <label for="email">Email address <span style="color:#C0392B">*</span></label>
+            <input type="email" id="email" name="email" placeholder="ada@example.com" autocomplete="email" required>
+          </div>
+
+          <button type="submit" class="btn" id="submitBtn">
+            <span id="btnText">Join the waitlist</span>
+          </button>
+
+          <div class="error-msg" id="errorMsg"></div>
+        </form>
+
+        <div class="divider">already have an account?</div>
+
+        <div class="signin-link">
+          <a href="/housefolk.html?goto=signin">Sign in to Housefolk →</a>
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">✦</div>
+        <h2>You're on the list.</h2>
+        <p>We'll be in touch when we launch near you. Keep an eye on your inbox — especially on Thursdays.</p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const form = document.getElementById('waitlistForm');
+  const btn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const errorMsg = document.getElementById('errorMsg');
+
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorMsg.style.display = 'block';
+  }
+
+  function clearError() {
+    errorMsg.style.display = 'none';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearError();
+
+    const email = document.getElementById('email').value.trim();
+    const name = document.getElementById('name').value.trim();
+
+    if (!email) {
+      showError('Please enter your email address.');
+      return;
+    }
+
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(email)) {
+      showError('That doesn\'t look like a valid email.');
+      return;
+    }
+
+    btn.disabled = true;
+    btnText.textContent = 'Adding you…';
+
+    try {
+      const res = await fetch('/api/subscribers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, name: name || undefined }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
+
+      document.getElementById('formState').style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+
+    } catch (err) {
+      showError(err.message);
+      btn.disabled = false;
+      btnText.textContent = 'Join the waitlist';
+    }
+  });
+</script>
+
+</body>
+</html>

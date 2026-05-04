@@ -216,7 +216,7 @@ async function loadProfile() {
   const preview = document.getElementById('p-avatar-preview')
   if (preview) {
     if (u.avatar_url) {
-      preview.innerHTML = `<img src="${u.avatar_url}" style="width:100%;height:100%;object-fit:cover">`
+      preview.innerHTML = `<img src="${escapeHtml(u.avatar_url)}" style="width:100%;height:100%;object-fit:cover">`
     } else {
       const initials = ((u.first_name?.[0] || '') + (u.last_name?.[0] || '')).toUpperCase() || '?'
       preview.textContent = initials
@@ -1784,7 +1784,7 @@ function openRoommateDetail(userId) {
   ]
   document.getElementById('rm-modal-fields').innerHTML = fields
     .filter(f => f.value)
-    .map(f => `<div><div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--mid);margin-bottom:0.2rem">${f.label}</div><div style="font-size:0.88rem;color:var(--dark);line-height:1.55">${f.value}</div></div>`)
+    .map(f => `<div><div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--mid);margin-bottom:0.2rem">${f.label}</div><div style="font-size:0.88rem;color:var(--dark);line-height:1.55">${escapeHtml(f.value)}</div></div>`)
     .join('')
 
   const socials = [
