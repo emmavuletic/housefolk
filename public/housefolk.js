@@ -1561,7 +1561,7 @@ async function loadBrowseListings(type = '', location = '') {
     return `
       <div class="listing-card" onclick="window.location.href='/listings/${l.id}'" style="cursor:pointer">
         <div class="lc-photo">
-          ${photo ? `<img src="${photo}" alt="${escapeHtml(l.title)}">` : `<div class="lc-photo-placeholder">${typeIcon[l.type] || '🏠'}</div>`}
+          ${photo ? `<img src="${escapeHtml(photo)}" alt="${escapeHtml(l.title)}">` : `<div class="lc-photo-placeholder">${typeIcon[l.type] || '🏠'}</div>`}
           <span class="lc-type-badge">${typeIcon[l.type]} ${l.type}</span>
         </div>
         <div class="lc-body">
@@ -1727,7 +1727,7 @@ async function loadRoommates() {
   if (!grid) return
   grid.innerHTML = '<div style="color:var(--light);font-size:0.86rem;padding:1rem">Loading…</div>'
   const data = await api('/api/roommates')
-  if (data.error) { grid.innerHTML = `<div style="color:var(--light);font-size:0.86rem;padding:1rem">${data.error}</div>`; return }
+  if (data.error) { grid.innerHTML = `<div style="color:var(--light);font-size:0.86rem;padding:1rem">${escapeHtml(data.error)}</div>`; return }
   const roommates = data.roommates || []
   _roommateCache = roommates
   if (roommates.length === 0) {
@@ -1740,19 +1740,19 @@ async function loadRoommates() {
     const jobLine = r.job_title ? `${r.job_title}${r.company ? ` at ${r.company}` : ''}` : ''
     const bio = r.bio ? (r.bio.length > 80 ? r.bio.slice(0, 77) + '…' : r.bio) : ''
     const avatarHtml = r.avatar_url
-      ? `<img src="${r.avatar_url}" style="width:100%;height:100%;object-fit:cover">`
+      ? `<img src="${escapeHtml(r.avatar_url)}" style="width:100%;height:100%;object-fit:cover">`
       : initials
     return `
       <div onclick="openRoommateDetail('${r.id}')" style="background:#f0f4f1;border-radius:16px;padding:1.4rem 1.4rem 1.2rem;display:flex;flex-direction:column;gap:0.5rem;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
         <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.2rem">
           <div style="width:40px;height:40px;border-radius:50%;background:#7C9885;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.95rem;flex-shrink:0;overflow:hidden">${avatarHtml}</div>
           <div>
-            <div style="font-weight:700;font-size:0.95rem;color:var(--dark)">${name}</div>
-            ${r.star_sign ? `<div style="font-size:0.75rem;color:var(--mid)">⭐ ${r.star_sign.charAt(0).toUpperCase() + r.star_sign.slice(1)}</div>` : ''}
+            <div style="font-weight:700;font-size:0.95rem;color:var(--dark)">${escapeHtml(name)}</div>
+            ${r.star_sign ? `<div style="font-size:0.75rem;color:var(--mid)">⭐ ${escapeHtml(r.star_sign.charAt(0).toUpperCase() + r.star_sign.slice(1))}</div>` : ''}
           </div>
         </div>
-        ${bio ? `<div style="font-size:0.82rem;color:var(--mid);line-height:1.5">${bio}</div>` : ''}
-        ${jobLine ? `<div style="font-size:0.8rem;color:var(--mid)">💼 ${jobLine}</div>` : ''}
+        ${bio ? `<div style="font-size:0.82rem;color:var(--mid);line-height:1.5">${escapeHtml(bio)}</div>` : ''}
+        ${jobLine ? `<div style="font-size:0.8rem;color:var(--mid)">💼 ${escapeHtml(jobLine)}</div>` : ''}
         <div style="font-size:0.78rem;color:#7C9885;font-weight:600;margin-top:0.3rem">View profile →</div>
       </div>`
   }).join('')
@@ -1767,7 +1767,7 @@ function openRoommateDetail(userId) {
   document.getElementById('rm-modal-name').textContent = name
 
   const avatar = document.getElementById('rm-modal-avatar')
-  avatar.innerHTML = r.avatar_url ? `<img src="${r.avatar_url}" style="width:100%;height:100%;object-fit:cover">` : initials
+  avatar.innerHTML = r.avatar_url ? `<img src="${escapeHtml(r.avatar_url)}" style="width:100%;height:100%;object-fit:cover">` : initials
   avatar.style.fontSize = r.avatar_url ? '' : '1.3rem'
 
   const jobLine = [r.job_title, r.company ? `at ${r.company}` : ''].filter(Boolean).join(' ')
