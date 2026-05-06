@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, FormEvent } from 'react'
 
 export default function WaitlistPage() {
   const [name, setName] = useState('')
@@ -9,7 +9,7 @@ export default function WaitlistPage() {
   const [error, setError] = useState('')
   const [done, setDone] = useState(false)
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError('')
 
